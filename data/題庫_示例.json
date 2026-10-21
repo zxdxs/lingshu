@@ -1,8 +1,8 @@
 {
  "說明": "規則式生成，每題附原文出處；干擾項取自同書他處，非編造",
- "題數": 900,
+ "題數": 932,
  "層級分布": {
-  "L0": 849,
+  "L0": 881,
   "L1": 51
  },
  "依據分布": {
@@ -14,7 +14,7 @@
   "　精度·段末注（未必針對本題所問之句）": 5
  },
  "題型分布": {
-  "fill_blank": 583,
+  "fill_blank": 615,
   "mcq": 298,
   "error_identification": 19
  },
@@ -18387,6 +18387,518 @@
     "條號": "靈樞九宫八風篇全○三十五"
    },
    "auto_grading": "exact"
+  },
+  {
+   "item_id": "Q-LS006-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·夀夭剛柔》：「在內者，五藏為陰，六府爲____」",
+   "answer": "陽",
+   "distractors": [],
+   "source": {
+    "篇序": 6,
+    "篇名": "夀夭剛柔"
+   },
+   "note": "內外各有陰陽；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS006-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·夀夭剛柔》：「病在陰之陰者，刺陰之____」",
+   "answer": "滎輸",
+   "distractors": [],
+   "source": {
+    "篇序": 6,
+    "篇名": "夀夭剛柔"
+   },
+   "note": "四種病位的刺法；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS011-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經別》：「十二經脉者，人之所以生，____」",
+   "answer": "病之所以成",
+   "distractors": [],
+   "source": {
+    "篇序": 11,
+    "篇名": "經別"
+   },
+   "note": "經脈為病之樞；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS011-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經別》：「成以諸陰之別，皆爲____也」",
+   "answer": "正",
+   "distractors": [],
+   "source": {
+    "篇序": 11,
+    "篇名": "經別"
+   },
+   "note": "陰經之別稱正；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS020-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五邪》：「邪在肺，則病____，寒熱，上氣喘」",
+   "answer": "皮膚痛",
+   "distractors": [],
+   "source": {
+    "篇序": 20,
+    "篇名": "五邪"
+   },
+   "note": "五邪之肺；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS020-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五邪》：「皆調于____」",
+   "answer": "三里",
+   "distractors": [],
+   "source": {
+    "篇序": 20,
+    "篇名": "五邪"
+   },
+   "note": "脾胃之邪取三里；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS027-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·周痹》：「周痹者，在于____，隨脉以上」",
+   "answer": "血脉之中",
+   "distractors": [],
+   "source": {
+    "篇序": 27,
+    "篇名": "周痹"
+   },
+   "note": "周痹在血脈；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS027-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·周痹》：「痛雖已止，____」",
+   "answer": "必刺其處",
+   "distractors": [],
+   "source": {
+    "篇序": 27,
+    "篇名": "周痹"
+   },
+   "note": "眾痹刺法；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS045-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·外揣》：「遠者司外揣內，近者____」",
+   "answer": "司內揣外",
+   "distractors": [],
+   "source": {
+    "篇序": 45,
+    "篇名": "外揣"
+   },
+   "note": "外揣之法；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS045-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·外揣》：「動摇則應和，____」",
+   "answer": "盡得其情",
+   "distractors": [],
+   "source": {
+    "篇序": 45,
+    "篇名": "外揣"
+   },
+   "note": "以形察神；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS047-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·本藏》：「五藏者，所以藏____者也」",
+   "answer": "精神血氣魂魄",
+   "distractors": [],
+   "source": {
+    "篇序": 47,
+    "篇名": "本藏"
+   },
+   "note": "五藏所藏；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS047-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·本藏》：「衛氣者，所以____，充皮膚」",
+   "answer": "温分肉",
+   "distractors": [],
+   "source": {
+    "篇序": 47,
+    "篇名": "本藏"
+   },
+   "note": "衛氣之用；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS050-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論勇》：「黃色薄皮弱肉者，不勝____」",
+   "answer": "春之虚風",
+   "distractors": [],
+   "source": {
+    "篇序": 50,
+    "篇名": "論勇"
+   },
+   "note": "五色不勝四時之風；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS050-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論勇》：「皮厚而肌肉堅者，必____」",
+   "answer": "重感于寒",
+   "distractors": [],
+   "source": {
+    "篇序": 50,
+    "篇名": "論勇"
+   },
+   "note": "皮厚者不易病；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS053-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論痛》：「骨强筋弱肉緩皮膚厚者____」",
+   "answer": "耐痛",
+   "distractors": [],
+   "source": {
+    "篇序": 53,
+    "篇名": "論痛"
+   },
+   "note": "形質與耐痛；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS053-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論痛》：「同時而傷，其身____，多寒者難已」",
+   "answer": "多熱者易已",
+   "distractors": [],
+   "source": {
+    "篇序": 53,
+    "篇名": "論痛"
+   },
+   "note": "易已難已；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS058-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·賊風》：「此皆嘗有所傷于____，藏于血脉之中」",
+   "answer": "濕氣",
+   "distractors": [],
+   "source": {
+    "篇序": 58,
+    "篇名": "賊風"
+   },
+   "note": "賊風非必外來；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS058-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·賊風》：「其所從來者微，____，聽而不聞」",
+   "answer": "視之不見",
+   "distractors": [],
+   "source": {
+    "篇序": 58,
+    "篇名": "賊風"
+   },
+   "note": "似鬼神之由；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS060-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·玉版》：「癰疽之生，膿血之成也，不從天下，不從地出，____也」",
+   "answer": "積微之所生",
+   "distractors": [],
+   "source": {
+    "篇序": 60,
+    "篇名": "玉版"
+   },
+   "note": "癰疽由微而生；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS060-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·玉版》：「聖人自治于____也，愚者遭其已成也」",
+   "answer": "未有形",
+   "distractors": [],
+   "source": {
+    "篇序": 60,
+    "篇名": "玉版"
+   },
+   "note": "治未形；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS062-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·動輸》：「胃為____，其清氣上注于肺」",
+   "answer": "五藏六府之海",
+   "distractors": [],
+   "source": {
+    "篇序": 62,
+    "篇名": "動輸"
+   },
+   "note": "胃為海；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS062-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·動輸》：「人一呼脉再動，____」",
+   "answer": "一吸脉亦再動",
+   "distractors": [],
+   "source": {
+    "篇序": 62,
+    "篇名": "動輸"
+   },
+   "note": "脈動與息；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS065-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五音五味》：「上徵與右徵同，穀____，畜羊，果杏」",
+   "answer": "麥",
+   "distractors": [],
+   "source": {
+    "篇序": 65,
+    "篇名": "五音五味"
+   },
+   "note": "五音配五味穀畜；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS065-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五音五味》：「上宮與大宮同，穀____，畜牛，果棗」",
+   "answer": "稷",
+   "distractors": [],
+   "source": {
+    "篇序": 65,
+    "篇名": "五音五味"
+   },
+   "note": "宮音之配；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS067-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·行鍼》：「重陽之人，其____，其氣易徃也」",
+   "answer": "神易動",
+   "distractors": [],
+   "source": {
+    "篇序": 67,
+    "篇名": "行鍼"
+   },
+   "note": "重陽之人的針感；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS067-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·行鍼》：「多陽者多喜，多陰者____」",
+   "answer": "多怒",
+   "distractors": [],
+   "source": {
+    "篇序": 67,
+    "篇名": "行鍼"
+   },
+   "note": "陰陽與性情；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS068-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·上膈》：「氣爲上膈者，____」",
+   "answer": "食飲入而還出",
+   "distractors": [],
+   "source": {
+    "篇序": 68,
+    "篇名": "上膈"
+   },
+   "note": "上膈之候；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS068-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·上膈》：「微按其癰，視氣所行，____」",
+   "answer": "先淺刺其傍",
+   "distractors": [],
+   "source": {
+    "篇序": 68,
+    "篇名": "上膈"
+   },
+   "note": "下膈之刺；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS070-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·寒熱》：「鼠瘻之本，皆在於藏，其末上出於____」",
+   "answer": "頸腋之間",
+   "distractors": [],
+   "source": {
+    "篇序": 70,
+    "篇名": "寒熱"
+   },
+   "note": "寒熱之本末；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS070-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·寒熱》：「見一脉，____」",
+   "answer": "一歳死",
+   "distractors": [],
+   "source": {
+    "篇序": 70,
+    "篇名": "寒熱"
+   },
+   "note": "決生死；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS080-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·大惑論》：「五藏六府之精氣，____而為之精」",
+   "answer": "皆上注於目",
+   "distractors": [],
+   "source": {
+    "篇序": 80,
+    "篇名": "大惑論"
+   },
+   "note": "目為精之窠；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS080-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·大惑論》：「目者，____也」",
+   "answer": "五藏六府之精",
+   "distractors": [],
+   "source": {
+    "篇序": 80,
+    "篇名": "大惑論"
+   },
+   "note": "目與藏府；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
   }
  ]
 }

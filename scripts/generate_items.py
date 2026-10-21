@@ -1205,6 +1205,23 @@ for _it in items:
     if _src.get('篇序') in _SEQ_NAME:
         _src['篇名'] = _SEQ_NAME[_src['篇序']]
 
+# ---------- BP 薄篇補題（data/模組_薄篇.json，docs/96） ----------
+_BP = os.path.join(ROOT, 'data', '模組_薄篇.json')
+if os.path.exists(_BP):
+    _bp = json.load(open(_BP, encoding='utf-8'))
+    _cnt = {}
+    for r in _bp['條目']:
+        _seq = r['篇序']
+        _cnt[_seq] = _cnt.get(_seq, 0) + 1
+        _name = next((p['篇名_規範'] for p in S.values() if p['序'] == _seq), '')
+        items.append({'item_id': f'Q-LS{_seq:03d}-BP-{_cnt[_seq]}',
+                      'type': 'fill_blank', 'bloom': 'understand', '層級': 'L0',
+                      'stem': f"《靈樞·{_name}》：「{r['句'].replace(r['挖'], '____', 1)}」",
+                      'answer': r['挖'], 'distractors': [],
+                      'source': {'篇序': _seq, '篇名': _name},
+                      'note': r.get('說明', '') + '；薄篇補題',
+                      'auto_grading': 'exact'})
+
 # ---------- 答案類型：原文／推算／整理語（docs/94） ----------
 from check_quotes import norm as _an
 

@@ -1,8 +1,8 @@
 {
  "說明": "規則式生成，每題附原文出處；干擾項取自同書他處，非編造",
- "題數": 1001,
+ "題數": 1031,
  "層級分布": {
-  "L0": 950,
+  "L0": 980,
   "L1": 51
  },
  "依據分布": {
@@ -14,7 +14,7 @@
   "　精度·段末注（未必針對本題所問之句）": 5
  },
  "題型分布": {
-  "fill_blank": 678,
+  "fill_blank": 708,
   "mcq": 304,
   "error_identification": 19
  },
@@ -19905,6 +19905,486 @@
     "篇名": "大惑論"
    },
    "note": "視歧之由；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS018-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·營衛生會》：「其清者為營，____」",
+   "answer": "濁者為衛",
+   "distractors": [],
+   "source": {
+    "篇序": 18,
+    "篇名": "營衛生會"
+   },
+   "note": "清濁分營衛；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS018-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·營衛生會》：「營在脉中，衛在____」",
+   "answer": "脉外",
+   "distractors": [],
+   "source": {
+    "篇序": 18,
+    "篇名": "營衛生會"
+   },
+   "note": "營衛之位；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS018-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·營衛生會》：「營出于中焦，衛出于____」",
+   "answer": "下焦",
+   "distractors": [],
+   "source": {
+    "篇序": 18,
+    "篇名": "營衛生會"
+   },
+   "note": "營衛所出；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS055-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·逆順》：「無刺熇熇之熱，無刺____」",
+   "answer": "漉漉之汗",
+   "distractors": [],
+   "source": {
+    "篇序": 55,
+    "篇名": "逆順"
+   },
+   "note": "四無刺；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS055-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·逆順》：「上工刺其____者也」",
+   "answer": "未生",
+   "distractors": [],
+   "source": {
+    "篇序": 55,
+    "篇名": "逆順"
+   },
+   "note": "上工刺未生；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS055-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·逆順》：「上工____，不治已病」",
+   "answer": "治未病",
+   "distractors": [],
+   "source": {
+    "篇序": 55,
+    "篇名": "逆順"
+   },
+   "note": "治未病；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS059-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·衛氣失常》：「積于胸中者，上取之；積于腹中者，____」",
+   "answer": "下取之",
+   "distractors": [],
+   "source": {
+    "篇序": 59,
+    "篇名": "衛氣失常"
+   },
+   "note": "積之上下；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS059-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·衛氣失常》：「色起兩眉薄澤者，____」",
+   "answer": "病在皮",
+   "distractors": [],
+   "source": {
+    "篇序": 59,
+    "篇名": "衛氣失常"
+   },
+   "note": "五部之診；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS059-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·衛氣失常》：「膏者多氣，多氣者熱，熱者____」",
+   "answer": "耐寒",
+   "distractors": [],
+   "source": {
+    "篇序": 59,
+    "篇名": "衛氣失常"
+   },
+   "note": "膏者耐寒；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS069-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·憂恚無言》：「咽喉者，____也」",
+   "answer": "水穀之道",
+   "distractors": [],
+   "source": {
+    "篇序": 69,
+    "篇名": "憂恚無言"
+   },
+   "note": "咽喉；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS069-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·憂恚無言》：「會厭者，____也」",
+   "answer": "音聲之戶",
+   "distractors": [],
+   "source": {
+    "篇序": 69,
+    "篇名": "憂恚無言"
+   },
+   "note": "會厭；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS069-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·憂恚無言》：「寒氣客于厭，則____」",
+   "answer": "厭不能發",
+   "distractors": [],
+   "source": {
+    "篇序": 69,
+    "篇名": "憂恚無言"
+   },
+   "note": "無音之由；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS073-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·官能》：「用鍼之理，必知____」",
+   "answer": "形氣之所在",
+   "distractors": [],
+   "source": {
+    "篇序": 73,
+    "篇名": "官能"
+   },
+   "note": "用鍼之理；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS073-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·官能》：「上氣不足，____」",
+   "answer": "推而揚之",
+   "distractors": [],
+   "source": {
+    "篇序": 73,
+    "篇名": "官能"
+   },
+   "note": "上氣不足之刺；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS073-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·官能》：「鍼所不為，____」",
+   "answer": "灸之所宜",
+   "distractors": [],
+   "source": {
+    "篇序": 73,
+    "篇名": "官能"
+   },
+   "note": "鍼灸分工；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS013-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經筋》：「治在燔鍼劫刺，以知爲數，____」",
+   "answer": "以痛爲輸",
+   "distractors": [],
+   "source": {
+    "篇序": 13,
+    "篇名": "經筋"
+   },
+   "note": "經筋治法；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS013-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經筋》：「足太陽之筋，____，上結于踝」",
+   "answer": "起于足小指",
+   "distractors": [],
+   "source": {
+    "篇序": 13,
+    "篇名": "經筋"
+   },
+   "note": "太陽之筋；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS013-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經筋》：「名曰____」",
+   "answer": "仲春痹",
+   "distractors": [],
+   "source": {
+    "篇序": 13,
+    "篇名": "經筋"
+   },
+   "note": "太陽經筋之名；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS023-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·熱病》：「熱病三日，而氣口靜、人迎躁者，____」",
+   "answer": "取之諸陽",
+   "distractors": [],
+   "source": {
+    "篇序": 23,
+    "篇名": "熱病"
+   },
+   "note": "熱病三日之刺；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS023-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·熱病》：「身熱甚，陰陽皆靜者，____也」",
+   "answer": "勿刺",
+   "distractors": [],
+   "source": {
+    "篇序": 23,
+    "篇名": "熱病"
+   },
+   "note": "陰陽俱靜勿刺；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS035-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·脹論》：「夫脹者，皆在于____，排藏府而郭胸脇」",
+   "answer": "藏府之外",
+   "distractors": [],
+   "source": {
+    "篇序": 35,
+    "篇名": "脹論"
+   },
+   "note": "脹之舍；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS035-BP-2",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·脹論》：「其脉____者，脹也」",
+   "answer": "大堅以濇",
+   "distractors": [],
+   "source": {
+    "篇序": 35,
+    "篇名": "脹論"
+   },
+   "note": "脹之脈；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS035-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·脹論》：「三里而寫，____，逺者三下」",
+   "answer": "近者一下",
+   "distractors": [],
+   "source": {
+    "篇序": 35,
+    "篇名": "脹論"
+   },
+   "note": "脹之刺；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS038-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·逆順肥瘦》：「年質壯大，血氣充盈，____」",
+   "answer": "膚革堅固",
+   "distractors": [],
+   "source": {
+    "篇序": 38,
+    "篇名": "逆順肥瘦"
+   },
+   "note": "肥壯之形；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS046-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五變》：「夫天之生風者，____也」",
+   "answer": "非以私百姓",
+   "distractors": [],
+   "source": {
+    "篇序": 46,
+    "篇名": "五變"
+   },
+   "note": "風無私；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS048-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·禁服》：「緊則____之」",
+   "answer": "先刺而後灸",
+   "distractors": [],
+   "source": {
+    "篇序": 48,
+    "篇名": "禁服"
+   },
+   "note": "緊者之治；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS057-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·水脹》：「膚脹者，寒氣客于____」",
+   "answer": "皮膚之間",
+   "distractors": [],
+   "source": {
+    "篇序": 57,
+    "篇名": "水脹"
+   },
+   "note": "膚脹之因；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS061-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五禁》：「戊巳日自乘四季，____」",
+   "answer": "無刺腹",
+   "distractors": [],
+   "source": {
+    "篇序": 61,
+    "篇名": "五禁"
+   },
+   "note": "五禁之時禁；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS063-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五味論》：「五味入于口也，____，各有所病」",
+   "answer": "各有所走",
+   "distractors": [],
+   "source": {
+    "篇序": 63,
+    "篇名": "五味論"
+   },
+   "note": "五味所走；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS075-BP-1",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·刺節真邪》：「氣積於胃，____」",
+   "answer": "以通營衛",
+   "distractors": [],
+   "source": {
+    "篇序": 75,
+    "篇名": "刺節真邪"
+   },
+   "note": "調氣之義；薄篇補題",
    "auto_grading": "exact",
    "答案類型": "原文"
   },

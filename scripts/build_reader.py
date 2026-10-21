@@ -21,14 +21,27 @@ def main():
     items = load('data/題庫_示例.json')
     idx = list(csv.DictReader(open(os.path.join(ROOT, 'export', '索引.csv'), encoding='utf-8-sig')))
     lim = list(csv.DictReader(open(os.path.join(ROOT, 'data', '能力邊界.csv'), encoding='utf-8-sig')))
-    con = load('data/矛盾清單.csv'.replace('.csv', '.csv')) if False else list(
-        csv.DictReader(open(os.path.join(ROOT, 'data', '矛盾清單.csv'), encoding='utf-8-sig')))
+    con = list(csv.DictReader(open(os.path.join(ROOT, 'data', '矛盾清單.csv'), encoding='utf-8-sig')))
+    col = list(csv.DictReader(open(os.path.join(ROOT, 'data', '校勘點.csv'), encoding='utf-8-sig')))
+    nd = list(csv.DictReader(open(os.path.join(ROOT, 'data', '表_九鍼.csv'), encoding='utf-8-sig')))
+    yin = load('底本/音釋層.json')['音釋']
+    import glob as _g
+    cpts = []
+    for f in sorted(_g.glob(os.path.join(ROOT, 'data', '多層_*.json'))):
+        d = json.load(open(f, encoding='utf-8'))
+        g = (d.get('組') or [{}])[0]
+        cpts.append({'t': d.get('標題', ''), 's': d.get('副標', ''), 'w': g.get('字', ''),
+                     'note': g.get('註', ''), 'layers': [{'ctx': L.get('語境', ''), 'txt': L.get('式', ''),
+                                                          'src': L.get('出處', '')} for L in g.get('層', [])],
+                     'png': '多層_' + g.get('字', '') + '.png'})
 
     juan = {}
     for p in ch:
         j = p.get('卷') or ''
         juan.setdefault(j, []).append(p)
 
+    from collections import Counter as _C
+    per = _C(i['source']['篇序'] for i in items['題'])
     pian = []
     for p in ch:
         seq = p['序']
@@ -37,6 +50,7 @@ def main():
             'chars': len(p['經文']),
             'text': ju.get(seq, {}).get('句讀', p['經文']),
             'note': p.get('校記', ''),
+            'items': per.get(seq, 0),
         })
 
     its = []
@@ -56,6 +70,7 @@ def main():
             'title': '靈樞自學材料',
             'bendi': '四部叢刊景明嘉靖趙府居敬堂本（Kanripo KR3e0002）',
             'stats': {'pian': len(ch), 'chars': sum(len(p['經文']) for p in ch),
+                      'quote_seg': sum(len(__import__('re').findall(r'「([^」]{2,})」', i['stem'])) for i in items['題']),
                       'items': items['題數'], 'fill': items['題型分布'].get('fill_blank', 0),
                       'mcq': items['題型分布'].get('mcq', 0),
                       'err': items['題型分布'].get('error_identification', 0),
@@ -73,6 +88,13 @@ def main():
                     'sev': r.get('嚴重度', ''), 'status': r.get('現狀', '')} for r in lim],
         'contradictions': [{'id': r.get('編號', ''), 'type': r.get('類型', ''), 'point': r.get('爭點', ''),
                             'verdict': r.get('判定', '')} for r in con],
+        'collation': [{'id': r.get('編號', ''), 'seq': r.get('篇序', ''), 'pian': r.get('篇名', ''),
+                       'base': r.get('底本讀法', ''), 'other': r.get('太素', '') or r.get('類經', ''),
+                       'verdict': r.get('判定', '')} for r in col],
+        'needles': [{'no': r.get('序', ''), 'name': r.get('鍼', ''), 'len': r.get('長', ''),
+                     'use': r.get('功能', ''), 'src': r.get('原文', '')} for r in nd],
+        'yinshi': [{'juan': r.get('卷', ''), 'text': r.get('音釋', '')[:220]} for r in yin],
+        'concepts': cpts,
     }
     os.makedirs(OUT, exist_ok=True)
     js = '/* 由 scripts/build_reader.py 生成，請勿手改。 */\nwindow.LS = ' + \

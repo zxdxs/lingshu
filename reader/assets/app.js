@@ -19,7 +19,8 @@ function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
 var NAV = [['home','首頁'],['read','通讀'],['items','題庫'],['concept','概念'],['index','索引'],
-           ['prep','準備'],['method','方法'],['limits','限制'],['mine','我的'],['about','關於']];
+           ['coverage','覆蓋'],['prep','準備'],['method','方法'],['collation','校勘'],['limits','限制'],
+           ['mine','我的'],['about','關於']];
 var VIEWS = {};
 
 /* ---------------- 首頁 ---------------- */
@@ -318,14 +319,11 @@ VIEWS.prep = function (box) {
 VIEWS.method = function (box) {
   box.appendChild(h('h1', '方法與校勘'));
   box.appendChild(h('p', '這一頁回答「這本書可不可信」。完整方法見 docs/01、33、82、88。', 'small muted'));
-  box.appendChild(h('h2', '校勘點（' + (LS.collation || []).length + '）'));
-  var t = h('table', '');
-  t.innerHTML = '<tr><th style="width:48px">#</th><th style="width:100px">篇</th><th>底本</th><th>他本</th><th style="width:90px">判定</th></tr>';
-  (LS.collation || []).forEach(function (r) {
-    t.innerHTML += '<tr><td>' + esc(r.id) + '</td><td>' + esc(r.pian) + '</td><td class="small">' + esc((r.base || '').slice(0, 34)) +
-      '</td><td class="small">' + esc((r.other || '').slice(0, 30)) + '</td><td class="small">' + esc((r.verdict || '').slice(0, 12)) + '</td></tr>';
-  });
-  box.appendChild(t);
+  var c = h('div', 'card', '');
+  c.innerHTML = '<h3>校勘（' + (LS.collation || []).length + ' 點）</h3>' +
+    '<p class="small">三源並排（底本／太素／類經）與覆蓋率另成一頁。</p>' +
+    '<a class="btn ghost" href="#/collation">看三源並排 →</a>';
+  box.appendChild(c);
   box.appendChild(h('h2', '矛盾（' + (LS.contradictions || []).length + '）'));
   var t2 = h('table', '');
   t2.innerHTML = '<tr><th style="width:48px">#</th><th>爭點</th><th style="width:80px">判定</th></tr>';
@@ -333,6 +331,78 @@ VIEWS.method = function (box) {
     t2.innerHTML += '<tr><td>' + esc(r.id) + '</td><td>' + esc(r.point) + '</td><td>' + esc(r.verdict) + '</td></tr>';
   });
   box.appendChild(t2);
+};
+
+/* ---------------- 覆蓋 ---------------- */
+VIEWS.coverage = function (box) {
+  box.appendChild(h('h1', '覆蓋表'));
+  box.appendChild(h('p', '81 篇 × 字數 × 題數 × 已讀 × 正確率。聲韻站用 376 章分工表推進度；這裡用同一種表看自己讀到哪。', 'small muted'));
+  var log = STATE.log || {}, idx = {};
+  (LS.items || []).forEach(function (i) { idx[i.id] = i; });
+  var per = {};
+  Object.keys(log).forEach(function (id) {
+    var it = idx[id]; if (!it) return;
+    var k = per[it.seq] = per[it.seq] || [0, 0];
+    k[1]++; if (log[id] === 'ok') k[0]++;
+  });
+  var row = h('div', 'row');
+  var sel = document.createElement('select');
+  [['', '全部篇'], ['todo', '未讀'], ['thin', '題少（≤6）'], ['wrong', '曾答錯']].forEach(function (x) { sel.appendChild(new Option(x[1], x[0])); });
+  var note = el('span', 'small muted', '');
+  row.appendChild(sel); row.appendChild(note); box.appendChild(row);
+  var out = h('div', ''); box.appendChild(out);
+  function render() {
+    out.innerHTML = '';
+    var t = h('table', '');
+    t.innerHTML = '<tr><th style="width:52px">#</th><th>篇</th><th style="width:70px">字數</th>' +
+      '<th style="width:52px">題</th><th style="width:52px">已讀</th><th style="width:64px">作答</th><th style="width:64px">正確率</th></tr>';
+    var n = 0, items = 0, read = 0;
+    (LS.pian || []).forEach(function (p) {
+      var rd = STATE.read && STATE.read[p.seq];
+      var st = per[p.seq] || [0, 0];
+      if (sel.value === 'todo' && rd) return;
+      if (sel.value === 'thin' && (p.items || 0) > 6) return;
+      if (sel.value === 'wrong' && !(st[1] > st[0])) return;
+      n++; items += p.items || 0; if (rd) read++;
+      t.innerHTML += '<tr><td>' + p.seq + '</td><td><a href="#/read?seq=' + p.seq + '">' + esc(p.name) + '</a></td>' +
+        '<td class="num">' + p.chars + '</td><td class="num">' + (p.items || 0) + '</td>' +
+        '<td>' + (rd ? '<span class="pill g">已讀</span>' : '<span class="small muted">—</span>') + '</td>' +
+        '<td class="num">' + st[1] + '</td><td class="num">' + (st[1] ? pct(st[0], st[1]) + '%' : '—') + '</td></tr>';
+    });
+    out.appendChild(t);
+    note.textContent = '顯示 ' + n + ' 篇　·　題 ' + items + '　·　已讀 ' + read;
+  }
+  sel.onchange = render; render();
+
+  var det = document.createElement('details');
+  det.className = 'card';
+  var t2 = h('table', '');
+  t2.innerHTML = '<tr><th style="width:52px">#</th><th>篇</th><th style="width:120px">太素 K4/K12</th><th style="width:120px">類經 K4/K12</th><th style="width:140px">判讀</th></tr>';
+  (LS.coverage || []).forEach(function (r) {
+    t2.innerHTML += '<tr><td>' + esc(r.seq) + '</td><td class="small">' + esc(r.pian) + '</td>' +
+      '<td class="num small">' + (r.t4 == null ? '—' : r.t4 + ' / ' + r.t12) + '</td>' +
+      '<td class="num small">' + (r.l4 == null ? '—' : r.l4 + ' / ' + r.l12) + '</td>' +
+      '<td class="small">' + esc(r.verdict || '') + '</td></tr>';
+  });
+  det.innerHTML = '<summary><b>三源覆蓋率</b>　<span class="small muted">81 篇；K4／K12 為 4-gram／12-gram 重合率</span></summary>';
+  det.appendChild(t2);
+  box.appendChild(det);
+};
+
+/* ---------------- 校勘 ---------------- */
+VIEWS.collation = function (box) {
+  box.appendChild(h('h1', '校勘：三源並排'));
+  box.appendChild(h('p', '左為底本（SBCK），中為《太素》，右為《類經》。「—」表示該源無此句或未收此篇。', 'small muted'));
+  var t = h('table', '');
+  t.innerHTML = '<tr><th style="width:44px">#</th><th style="width:96px">篇</th><th>底本</th><th>太素</th><th>類經</th><th style="width:70px">判定</th></tr>';
+  (LS.collation || []).forEach(function (r) {
+    t.innerHTML += '<tr><td>' + esc(r.id) + '</td><td class="small">' + esc(r.pian) + '<br><span class="muted">' + esc(r.anchor || '') + '</span></td>' +
+      '<td class="small">' + esc(r.base || '') + '</td>' +
+      '<td class="small">' + esc(r.taisu || '—') + '</td>' +
+      '<td class="small">' + esc(r.leijing || '—') + '</td>' +
+      '<td class="small">' + esc((r.verdict || '').slice(0, 14)) + '</td></tr>';
+  });
+  box.appendChild(t);
 };
 
 /* ---------------- 限制 ---------------- */

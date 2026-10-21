@@ -40,10 +40,10 @@
 ## 線上閱讀器（離線可用）
 
 `reader/index.html`：純靜態、零依賴，雙擊即可開（或 `cd reader && python3 -m http.server 8765`）。
-十個視圖：首頁、通讀 81 篇、題庫 1031 題、概念（12 卡）、索引 834 條、準備（九鍼／音釋）、方法（校勘 19／矛盾 14）、限制、我的進度、關於。
+十二個視圖：首頁、通讀 81 篇、題庫 1031 題、概念（12 卡）、索引 834 條、覆蓋表（81 篇 × 題數 × 正確率）、準備（九鍼／音釋）、方法（矛盾 14）、校勘（19 點三源並排）、限制、我的進度、關於。
 資料由 `scripts/build_reader.py` 生成；渲染檢查 `node scripts/check_reader.js`。
 （做法參考本機另一個傷寒站，只借架構；見 `docs/104`、`docs/105`。）
-首頁截圖：`export/reader_home.png`；題庫：`export/reader_items.png`；概念：`export/reader_concept.png`。
+截圖：`export/reader_home.png`、`reader_items.png`、`reader_concept.png`、`reader_coverage.png`、`reader_collation.png`。
 
 ## 從哪裡開始
 
@@ -122,7 +122,7 @@
 ```
 底本/       L0 原文、經文、正規化、音釋、異體字表
 data/       題庫、模組、表格、校勘記錄、能力邊界
-docs/       107 份說明文件
+docs/       108 份說明文件
 scripts/    產線腳本（解析、抽取、生成、校準、匯出）
 export/     Anki 牌組、全題表、實體索引（可直接用）
 vendor/     見證本與來源（SBCK、太素、類經、素問）

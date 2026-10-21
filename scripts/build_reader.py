@@ -25,6 +25,7 @@ def main():
     col = list(csv.DictReader(open(os.path.join(ROOT, 'data', '校勘點.csv'), encoding='utf-8-sig')))
     nd = list(csv.DictReader(open(os.path.join(ROOT, 'data', '表_九鍼.csv'), encoding='utf-8-sig')))
     yin = load('底本/音釋層.json')['音釋']
+    cov = load('data/三源覆蓋率.json')['篇']
     import glob as _g
     cpts = []
     for f in sorted(_g.glob(os.path.join(ROOT, 'data', '多層_*.json'))):
@@ -89,8 +90,14 @@ def main():
         'contradictions': [{'id': r.get('編號', ''), 'type': r.get('類型', ''), 'point': r.get('爭點', ''),
                             'verdict': r.get('判定', '')} for r in con],
         'collation': [{'id': r.get('編號', ''), 'seq': r.get('篇序', ''), 'pian': r.get('篇名', ''),
-                       'base': r.get('底本讀法', ''), 'other': r.get('太素', '') or r.get('類經', ''),
-                       'verdict': r.get('判定', '')} for r in col],
+                       'anchor': r.get('錨點', ''),
+                       'base': r.get('底本讀法', ''), 'taisu': r.get('太素', '') or '—',
+                       'leijing': r.get('類經', '') or '—', 'verdict': r.get('判定', ''),
+                       'basis': r.get('依據', ''), 'impact': r.get('影響', '')} for r in col],
+        'coverage': [{'seq': r.get('篇序', ''), 'pian': r.get('篇名', ''), 'chars': r.get('字數', 0),
+                      't4': r.get('太素K4'), 't12': r.get('太素K12'),
+                      'l4': r.get('類經K4'), 'l12': r.get('類經K12'),
+                      'verdict': r.get('判讀', '')} for r in cov],
         'needles': [{'no': r.get('序', ''), 'name': r.get('鍼', ''), 'len': r.get('長', ''),
                      'use': r.get('功能', ''), 'src': r.get('原文', '')} for r in nd],
         'yinshi': [{'juan': r.get('卷', ''), 'text': r.get('音釋', '')[:220]} for r in yin],

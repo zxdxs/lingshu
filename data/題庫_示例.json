@@ -1,8 +1,8 @@
 {
  "說明": "規則式生成，每題附原文出處；干擾項取自同書他處，非編造",
- "題數": 932,
+ "題數": 1001,
  "層級分布": {
-  "L0": 881,
+  "L0": 950,
   "L1": 51
  },
  "依據分布": {
@@ -14,8 +14,8 @@
   "　精度·段末注（未必針對本題所問之句）": 5
  },
  "題型分布": {
-  "fill_blank": 615,
-  "mcq": 298,
+  "fill_blank": 678,
+  "mcq": 304,
   "error_identification": 19
  },
  "已知限制": [
@@ -18899,6 +18899,1128 @@
    "note": "目與藏府；薄篇補題",
    "auto_grading": "exact",
    "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS006-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·夀夭剛柔》：「風寒傷形，____」",
+   "answer": "憂恐忿怒傷氣",
+   "distractors": [],
+   "source": {
+    "篇序": 6,
+    "篇名": "夀夭剛柔"
+   },
+   "note": "形氣所傷不同；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS006-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·夀夭剛柔》：「氣傷藏，乃____」",
+   "answer": "病藏",
+   "distractors": [],
+   "source": {
+    "篇序": 6,
+    "篇名": "夀夭剛柔"
+   },
+   "note": "氣傷及藏；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS006-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·夀夭剛柔》：「病有形而不痛者，____也」",
+   "answer": "陽之類",
+   "distractors": [],
+   "source": {
+    "篇序": 6,
+    "篇名": "夀夭剛柔"
+   },
+   "note": "有形不痛屬陽；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS006-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·夀夭剛柔》：「無形而痛者，其陽完而____也」",
+   "answer": "陰傷之",
+   "distractors": [],
+   "source": {
+    "篇序": 6,
+    "篇名": "夀夭剛柔"
+   },
+   "note": "無形而痛屬陰；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS011-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經別》：「內有五藏，以應____、五色、五時、五味、五位也」",
+   "answer": "五音",
+   "distractors": [],
+   "source": {
+    "篇序": 11,
+    "篇名": "經別"
+   },
+   "note": "五藏應五音五色；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS011-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經別》：「外有六府，____」",
+   "answer": "以應六律",
+   "distractors": [],
+   "source": {
+    "篇序": 11,
+    "篇名": "經別"
+   },
+   "note": "六府應六律；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS011-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經別》：「足太陽之正，____」",
+   "answer": "別入于膕中",
+   "distractors": [],
+   "source": {
+    "篇序": 11,
+    "篇名": "經別"
+   },
+   "note": "太陽之正；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS011-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·經別》：「此粗之所過，____也」",
+   "answer": "上之所息",
+   "distractors": [],
+   "source": {
+    "篇序": 11,
+    "篇名": "經別"
+   },
+   "note": "粗工與上工；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS020-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五邪》：「邪在肝，則____」",
+   "answer": "兩脇中痛",
+   "distractors": [],
+   "source": {
+    "篇序": 20,
+    "篇名": "五邪"
+   },
+   "note": "五邪之肝；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS020-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五邪》：「取之____以引脇下」",
+   "answer": "行間",
+   "distractors": [],
+   "source": {
+    "篇序": 20,
+    "篇名": "五邪"
+   },
+   "note": "肝邪取行間；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS020-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五邪》：「陽氣有餘，陰氣不足，則____」",
+   "answer": "熱中善饑",
+   "distractors": [],
+   "source": {
+    "篇序": 20,
+    "篇名": "五邪"
+   },
+   "note": "脾胃寒熱；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS020-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五邪》：「邪在腎，則病____」",
+   "answer": "骨痛陰痹",
+   "distractors": [],
+   "source": {
+    "篇序": 20,
+    "篇名": "五邪"
+   },
+   "note": "五邪之腎；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS027-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·周痹》：「此衆痹也，____」",
+   "answer": "非周痹也",
+   "distractors": [],
+   "source": {
+    "篇序": 27,
+    "篇名": "周痹"
+   },
+   "note": "眾痹與周痹；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS027-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·周痹》：「此各在其處，____」",
+   "answer": "更發更止",
+   "distractors": [],
+   "source": {
+    "篇序": 27,
+    "篇名": "周痹"
+   },
+   "note": "眾痹之候；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS027-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·周痹》：「痛從上下者，____以過之」",
+   "answer": "先刺其下",
+   "distractors": [],
+   "source": {
+    "篇序": 27,
+    "篇名": "周痹"
+   },
+   "note": "周痹刺法；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS027-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·周痹》：「風寒濕氣客于外____」",
+   "answer": "分肉之間",
+   "distractors": [],
+   "source": {
+    "篇序": 27,
+    "篇名": "周痹"
+   },
+   "note": "周痹成因；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS045-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·外揣》：「夫九鍼者，小之則無內，____」",
+   "answer": "大之則無外",
+   "distractors": [],
+   "source": {
+    "篇序": 45,
+    "篇名": "外揣"
+   },
+   "note": "九鍼之大；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS045-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·外揣》：「日與月焉，____，鼓與響焉」",
+   "answer": "水與鏡焉",
+   "distractors": [],
+   "source": {
+    "篇序": 45,
+    "篇名": "外揣"
+   },
+   "note": "取象；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS045-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·外揣》：「昭昭之明____」",
+   "answer": "不可蔽",
+   "distractors": [],
+   "source": {
+    "篇序": 45,
+    "篇名": "外揣"
+   },
+   "note": "明不可蔽；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS045-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·外揣》：「若清水明鏡之____也」",
+   "answer": "不失其形",
+   "distractors": [],
+   "source": {
+    "篇序": 45,
+    "篇名": "外揣"
+   },
+   "note": "診法之喻；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS047-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·本藏》：「經脉者，所以____而營陰陽」",
+   "answer": "行血氣",
+   "distractors": [],
+   "source": {
+    "篇序": 47,
+    "篇名": "本藏"
+   },
+   "note": "經脈之用；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS047-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·本藏》：「志意者，所以____，收魂魄」",
+   "answer": "御精神",
+   "distractors": [],
+   "source": {
+    "篇序": 47,
+    "篇名": "本藏"
+   },
+   "note": "志意之用；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS047-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·本藏》：「血和則____」",
+   "answer": "經脉流行",
+   "distractors": [],
+   "source": {
+    "篇序": 47,
+    "篇名": "本藏"
+   },
+   "note": "血和之效；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS047-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·本藏》：「衛氣和則____」",
+   "answer": "分肉解利",
+   "distractors": [],
+   "source": {
+    "篇序": 47,
+    "篇名": "本藏"
+   },
+   "note": "衛氣和之效；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS050-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論勇》：「春青風，夏陽風，____，冬寒風」",
+   "answer": "秋凉風",
+   "distractors": [],
+   "source": {
+    "篇序": 50,
+    "篇名": "論勇"
+   },
+   "note": "四時之風；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS050-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論勇》：「黑色而皮厚肉堅，固____」",
+   "answer": "不傷于四時之風",
+   "distractors": [],
+   "source": {
+    "篇序": 50,
+    "篇名": "論勇"
+   },
+   "note": "黑色皮厚；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS050-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論勇》：「夫勇士之不忍痛者，見難則前，____」",
+   "answer": "見痛則止",
+   "distractors": [],
+   "source": {
+    "篇序": 50,
+    "篇名": "論勇"
+   },
+   "note": "勇與忍痛；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS050-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論勇》：「夫怯士之忍痛者，聞難則恐，____」",
+   "answer": "遇痛不動",
+   "distractors": [],
+   "source": {
+    "篇序": 50,
+    "篇名": "論勇"
+   },
+   "note": "怯與忍痛；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS053-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論痛》：「堅肉薄皮者，____」",
+   "answer": "不耐鍼石之痛",
+   "distractors": [],
+   "source": {
+    "篇序": 53,
+    "篇名": "論痛"
+   },
+   "note": "耐痛之反；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS053-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論痛》：「胃厚、色黒、大骨及肥者，____」",
+   "answer": "皆勝毒",
+   "distractors": [],
+   "source": {
+    "篇序": 53,
+    "篇名": "論痛"
+   },
+   "note": "勝毒之形；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS053-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論痛》：「骨瘦而薄胃者，皆____也」",
+   "answer": "不勝毒",
+   "distractors": [],
+   "source": {
+    "篇序": 53,
+    "篇名": "論痛"
+   },
+   "note": "不勝毒之形；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS053-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·論痛》：「加以黒色而美骨者，____」",
+   "answer": "耐火焫",
+   "distractors": [],
+   "source": {
+    "篇序": 53,
+    "篇名": "論痛"
+   },
+   "note": "耐火焫；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS058-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·賊風》：「其開而遇風寒，則____」",
+   "answer": "血氣凝結",
+   "distractors": [],
+   "source": {
+    "篇序": 58,
+    "篇名": "賊風"
+   },
+   "note": "故邪相襲；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS058-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·賊風》：「先巫者，因____」",
+   "answer": "知百病之勝",
+   "distractors": [],
+   "source": {
+    "篇序": 58,
+    "篇名": "賊風"
+   },
+   "note": "祝由之由；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS058-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·賊風》：「邪留而____」",
+   "answer": "未發",
+   "distractors": [],
+   "source": {
+    "篇序": 58,
+    "篇名": "賊風"
+   },
+   "note": "伏邪；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS058-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·賊風》：「血氣內亂，____」",
+   "answer": "兩氣相摶",
+   "distractors": [],
+   "source": {
+    "篇序": 58,
+    "篇名": "賊風"
+   },
+   "note": "似鬼神之機；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS060-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·玉版》：「夫大于鍼者，惟____者焉」",
+   "answer": "五兵",
+   "distractors": [],
+   "source": {
+    "篇序": 60,
+    "篇名": "玉版"
+   },
+   "note": "鍼與五兵；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS060-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·玉版》：「陰陽不通，兩熱相摶，乃____」",
+   "answer": "化爲膿",
+   "distractors": [],
+   "source": {
+    "篇序": 60,
+    "篇名": "玉版"
+   },
+   "note": "癰疽成膿；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS060-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·玉版》：「愚者遭其____也」",
+   "answer": "已成",
+   "distractors": [],
+   "source": {
+    "篇序": 60,
+    "篇名": "玉版"
+   },
+   "note": "治未形；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS060-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·玉版》：「____能取之乎」",
+   "answer": "小鍼",
+   "distractors": [],
+   "source": {
+    "篇序": 60,
+    "篇名": "玉版"
+   },
+   "note": "以小鍼治大癰；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS062-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·動輸》：「衝脉者，____也」",
+   "answer": "十二經之海",
+   "distractors": [],
+   "source": {
+    "篇序": 62,
+    "篇名": "動輸"
+   },
+   "note": "衝脈為海；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS062-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·動輸》：「陽病而陽脉小者____」",
+   "answer": "為逆",
+   "distractors": [],
+   "source": {
+    "篇序": 62,
+    "篇名": "動輸"
+   },
+   "note": "脈與病相反；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS062-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·動輸》：「氣之離藏也，卒然____」",
+   "answer": "如弓弩之發",
+   "distractors": [],
+   "source": {
+    "篇序": 62,
+    "篇名": "動輸"
+   },
+   "note": "氣行之速；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS062-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·動輸》：「胃氣____」",
+   "answer": "上注于肺",
+   "distractors": [],
+   "source": {
+    "篇序": 62,
+    "篇名": "動輸"
+   },
+   "note": "胃氣上注；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS065-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五音五味》：「上羽與大羽同，穀大豆，____，果栗」",
+   "answer": "畜彘",
+   "distractors": [],
+   "source": {
+    "篇序": 65,
+    "篇名": "五音五味"
+   },
+   "note": "羽音之配；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS065-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五音五味》：「上商與右商同，穀黍，畜雞，____」",
+   "answer": "果桃",
+   "distractors": [],
+   "source": {
+    "篇序": 65,
+    "篇名": "五音五味"
+   },
+   "note": "商音之配；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS065-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五音五味》：「上角與大角同，穀麻，____，果李」",
+   "answer": "畜犬",
+   "distractors": [],
+   "source": {
+    "篇序": 65,
+    "篇名": "五音五味"
+   },
+   "note": "角音之配；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS065-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·五音五味》：「藏心，色赤，____，時夏」",
+   "answer": "味苦",
+   "distractors": [],
+   "source": {
+    "篇序": 65,
+    "篇名": "五音五味"
+   },
+   "note": "徵音之配；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS067-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·行鍼》：「陰陽和調而血氣____」",
+   "answer": "淖澤滑利",
+   "distractors": [],
+   "source": {
+    "篇序": 67,
+    "篇名": "行鍼"
+   },
+   "note": "氣與鍼相逢；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS067-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·行鍼》：「多陽者____」",
+   "answer": "多喜",
+   "distractors": [],
+   "source": {
+    "篇序": 67,
+    "篇名": "行鍼"
+   },
+   "note": "陰陽與性情；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS067-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·行鍼》：「鍼入而氣出，____也」",
+   "answer": "疾而相逢",
+   "distractors": [],
+   "source": {
+    "篇序": 67,
+    "篇名": "行鍼"
+   },
+   "note": "相逢之候；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS067-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·行鍼》：「其____而陽氣少」",
+   "answer": "陰氣多",
+   "distractors": [],
+   "source": {
+    "篇序": 67,
+    "篇名": "行鍼"
+   },
+   "note": "氣獨行；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS068-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·上膈》：「喜怒不適，____，寒温不時」",
+   "answer": "食飲不節",
+   "distractors": [],
+   "source": {
+    "篇序": 68,
+    "篇名": "上膈"
+   },
+   "note": "下膈之因；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS068-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·上膈》：「已刺必熨，____」",
+   "answer": "令熱入中",
+   "distractors": [],
+   "source": {
+    "篇序": 68,
+    "篇名": "上膈"
+   },
+   "note": "刺後之熨；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS068-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·上膈》：「癰成則____」",
+   "answer": "下管約",
+   "distractors": [],
+   "source": {
+    "篇序": 68,
+    "篇名": "上膈"
+   },
+   "note": "癰成之變；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS068-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·上膈》：「其癰在管內者，即而____」",
+   "answer": "痛深",
+   "distractors": [],
+   "source": {
+    "篇序": 68,
+    "篇名": "上膈"
+   },
+   "note": "癰之深淺；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS070-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·寒熱》：「鼠瘻寒熱之毒氣也，____」",
+   "answer": "留於脉而不去",
+   "distractors": [],
+   "source": {
+    "篇序": 70,
+    "篇名": "寒熱"
+   },
+   "note": "寒熱之源；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS070-BP-4",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·寒熱》：「見赤脉不下貫瞳子，____也」",
+   "answer": "可治",
+   "distractors": [],
+   "source": {
+    "篇序": 70,
+    "篇名": "寒熱"
+   },
+   "note": "決生死；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS070-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·寒熱》：「其小如麥者，一刺知，____」",
+   "answer": "三刺而已",
+   "distractors": [],
+   "source": {
+    "篇序": 70,
+    "篇名": "寒熱"
+   },
+   "note": "刺之效；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS070-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·寒熱》：「請從其本____」",
+   "answer": "引其末",
+   "distractors": [],
+   "source": {
+    "篇序": 70,
+    "篇名": "寒熱"
+   },
+   "note": "本末之治；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS080-BP-3",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·大惑論》：「精之窠為眼，____」",
+   "answer": "骨之精為瞳子",
+   "distractors": [],
+   "source": {
+    "篇序": 80,
+    "篇名": "大惑論"
+   },
+   "note": "目之五精；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS080-BP-5",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·大惑論》：「神勞則魂魄散，____」",
+   "answer": "志意亂",
+   "distractors": [],
+   "source": {
+    "篇序": 80,
+    "篇名": "大惑論"
+   },
+   "note": "神勞之害；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS080-BP-6",
+   "type": "fill_blank",
+   "bloom": "understand",
+   "層級": "L0",
+   "stem": "《靈樞·大惑論》：「精散則視歧，____」",
+   "answer": "視歧見兩物",
+   "distractors": [],
+   "source": {
+    "篇序": 80,
+    "篇名": "大惑論"
+   },
+   "note": "視歧之由；薄篇補題",
+   "auto_grading": "exact",
+   "答案類型": "原文"
+  },
+  {
+   "item_id": "Q-LS024-CASE-1",
+   "type": "mcq",
+   "bloom": "apply",
+   "層級": "L0",
+   "stem": "《靈樞·厥病》：「厥心痛，腹脹胷滿，心尤痛甚」。依〈厥病〉，此屬五心痛之哪一型？當取何穴？",
+   "answer": "胃心痛；取大都、大白",
+   "distractors": [
+    "脾心痛；取然谷、大谿",
+    "肝心痛；取行間、大衝",
+    "肺心痛；取魚際、大淵"
+   ],
+   "source": {
+    "篇序": 24,
+    "篇名": "厥病"
+   },
+   "note": "案例題樣板（待專家核）；依據：厥心痛，腹脹胷滿，心尤痛甚，胃心痛也。取之大都、太白",
+   "auto_grading": "exact"
+  },
+  {
+   "item_id": "Q-LS024-CASE-2",
+   "type": "mcq",
+   "bloom": "apply",
+   "層級": "L0",
+   "stem": "《靈樞·厥病》：「厥心痛，臥若徒居，心痛間，動作痛益甚，色不變」。依〈厥病〉，此屬五心痛之哪一型？當取何穴？",
+   "answer": "肺心痛；取魚際、大淵",
+   "distractors": [
+    "胃心痛；取大都、大白",
+    "腎心痛；取京骨、崑崙",
+    "肝心痛；取行間、大衝"
+   ],
+   "source": {
+    "篇序": 24,
+    "篇名": "厥病"
+   },
+   "note": "案例題樣板（待專家核）；依據：厥心痛，臥若徒居，心痛間，動作痛益甚，色不變，肺心痛也。取之魚際、大淵",
+   "auto_grading": "exact"
+  },
+  {
+   "item_id": "Q-LS034-CASE-1",
+   "type": "mcq",
+   "bloom": "apply",
+   "層級": "L0",
+   "stem": "《靈樞·五亂》：「亂於腸胃」。依〈五亂〉，其證為何？當取何經？",
+   "answer": "霍亂；取足太陰、陽明，不下者取三里",
+   "distractors": [
+    "四厥；取陽明、少陽之滎輸",
+    "大悗；取手少陰、心主之輸",
+    "厥逆頭重；取天柱、大杼"
+   ],
+   "source": {
+    "篇序": 34,
+    "篇名": "五亂"
+   },
+   "note": "案例題樣板（待專家核）；依據：亂於腸胃，則為霍亂；氣在於腸胃者，取之足太陰、陽明，不下者，取之三里",
+   "auto_grading": "exact"
+  },
+  {
+   "item_id": "Q-LS034-CASE-2",
+   "type": "mcq",
+   "bloom": "apply",
+   "層級": "L0",
+   "stem": "《靈樞·五亂》：「亂於頭」。依〈五亂〉，其證為何？當取何穴？",
+   "answer": "厥逆，頭重眩仆；取天柱、大杼",
+   "distractors": [
+    "霍亂；取足太陰、陽明",
+    "四厥；取陽明、少陽之滎輸",
+    "煩心；取手少陰、心主之輸"
+   ],
+   "source": {
+    "篇序": 34,
+    "篇名": "五亂"
+   },
+   "note": "案例題樣板（待專家核）；依據：亂於頭，則為厥逆，頭重眩仆；氣在於頭者，取之天柱、大杼",
+   "auto_grading": "exact"
+  },
+  {
+   "item_id": "Q-LS027-CASE-1",
+   "type": "mcq",
+   "bloom": "apply",
+   "層級": "L0",
+   "stem": "《靈樞·周痹》：「痛從上下者」。依〈周痹〉，此痛當如何刺？",
+   "answer": "先刺其下以過之，後刺其上以脫之",
+   "distractors": [
+    "先刺其上以過之，後刺其下以脫之",
+    "痛雖已止，必刺其處",
+    "先淺刺其傍，稍內益深"
+   ],
+   "source": {
+    "篇序": 27,
+    "篇名": "周痹"
+   },
+   "note": "案例題樣板（待專家核）；依據：痛從上下者，先刺其下以過之，後刺其上以脫之",
+   "auto_grading": "exact"
+  },
+  {
+   "item_id": "Q-LS024-CASE-3",
+   "type": "mcq",
+   "bloom": "apply",
+   "層級": "L0",
+   "stem": "《靈樞·厥病》：「真心痛，手足凊至節，心痛甚」。依〈厥病〉，此證的預後如何？",
+   "answer": "旦發夕死，夕發旦死（預後極危）",
+   "distractors": [
+    "取然谷、大谿即愈",
+    "取京骨、崑崙即愈",
+    "屬胃心痛，取大都、太白"
+   ],
+   "source": {
+    "篇序": 24,
+    "篇名": "厥病"
+   },
+   "note": "案例題樣板（待專家核）；依據：真心痛，手足清至節，心痛甚，旦發夕死，夕發旦死",
+   "auto_grading": "exact"
   }
  ]
 }

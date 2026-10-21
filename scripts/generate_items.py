@@ -1222,6 +1222,24 @@ if os.path.exists(_BP):
                       'note': r.get('說明', '') + '；薄篇補題',
                       'auto_grading': 'exact'})
 
+# ---------- CASE 案例題樣板（data/案例題_示例.json，docs/97） ----------
+_CASE = os.path.join(ROOT, 'data', '案例題_示例.json')
+if os.path.exists(_CASE):
+    _cs = json.load(open(_CASE, encoding='utf-8'))
+    _cn = {}
+    for r in _cs['題']:
+        _seq = r['篇序']
+        _cn[_seq] = _cn.get(_seq, 0) + 1
+        _name = next((p['篇名_規範'] for p in S.values() if p['序'] == _seq), '')
+        _stem = f"《靈樞·{_name}》：「{r['情境']}」。{r['問']}"
+        items.append({'item_id': f'Q-LS{_seq:03d}-CASE-{_cn[_seq]}',
+                      'type': 'mcq', 'bloom': 'apply', '層級': 'L0',
+                      'stem': _stem, 'answer': r['答'],
+                      'distractors': r['干擾'],
+                      'source': {'篇序': _seq, '篇名': _name},
+                      'note': '案例題樣板（待專家核）；依據：' + r['依據'],
+                      'auto_grading': 'exact'})
+
 # ---------- 答案類型：原文／推算／整理語（docs/94） ----------
 from check_quotes import norm as _an
 

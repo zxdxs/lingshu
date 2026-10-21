@@ -1,0 +1,18 @@
+canonical_identifier: bkk:krp/KR3ea031/jc/v1/juan/20
+seq: 20
+front:
+  text: ''
+  hash: sha256:0000000000000000000000000000000000000000000000000000000000000000
+body:
+  text: 卷第二十佚
+  hash: sha256:d63469b559b002341b21402e6c7a5ca7e6e244e4363a75c14a0e3c5d995bb3e6
+  markers:
+  - {type: 'tls:head', offset: 0, content: '', id: KR3ea031_jc_020-d21.h1s1}
+metadata:
+  title: 黃帝內經太素
+  edition:
+    short: jc
+  source:
+    repository: tls-texts
+    path: data/tls/KR3ea031.xml
+hash: sha256:ae623b69d56f290a417b0be0c71722768c0cdebba63ddc64b812b528bb3cec4f

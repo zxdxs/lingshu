@@ -1,0 +1,18 @@
+canonical_identifier: bkk:krp/KR3ea031/jc/v1/juan/1
+seq: 1
+front:
+  text: ''
+  hash: sha256:0000000000000000000000000000000000000000000000000000000000000000
+body:
+  text: 卷第一佚
+  hash: sha256:1d16cdda94d04cb1f452e3a4dc0fa77fd083cf4edc52fd268e45c6635ec78cda
+  markers:
+  - {type: 'tls:head', offset: 0, content: '', id: KR3ea031_jc_001-d2.h1s1}
+metadata:
+  title: 黃帝內經太素
+  edition:
+    short: jc
+  source:
+    repository: tls-texts
+    path: data/tls/KR3ea031.xml
+hash: sha256:d99be9692a4c49c9d86357b0255cfc0ce7f2b29f7ac76989a6353d81e7acfe5e

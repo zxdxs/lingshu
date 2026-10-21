@@ -1,0 +1,11 @@
+# 依賴（可重裝，不進版控）
+vendor/pylib/
+
+# 工具暫存
+.dsh-vision-toolkit/
+__pycache__/
+*.pyc
+.DS_Store
+
+# 原始掃描／排版檔（體積大，且可由來源重建）
+15灵枢经.pdf

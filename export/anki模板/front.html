@@ -1,0 +1,40 @@
+<div class="q">{{題面}}</div>
+
+<div class="box">
+  <input id="ans" type="text" autocomplete="off" spellcheck="false" placeholder="輸入答案後按 Enter">
+  <button id="check" type="button">對答案</button>
+  <div id="fb" class="fb"></div>
+</div>
+
+<div id="corr" hidden>{{答案}}</div>
+<div id="alt" hidden>{{可接受}}</div>
+
+<script>
+(function () {
+  var VAR = __VAR_MAP__;
+  function normalize(s) {
+    if (!s) return "";
+    if (s.normalize) s = s.normalize("NFKC");
+    s = s.replace(/[\s，。、；：！？「」『』（）()\[\]〈〉《》·,.;:!?"'’‘\-—…]/g, "");
+    var out = "";
+    for (var i = 0; i < s.length; i++) out += (VAR[s[i]] || s[i]);
+    return out;
+  }
+  var input = document.getElementById("ans");
+  var fb = document.getElementById("fb");
+  var correct = document.getElementById("corr").textContent || "";
+  var alts = (document.getElementById("alt").textContent || "")
+              .split("、").filter(function (x) { return x.trim(); });
+  function check() {
+    var v = normalize(input.value);
+    if (!v) { fb.textContent = "先輸入再對"; fb.className = "fb"; return; }
+    var pool = [correct].concat(alts).map(normalize);
+    if (pool.indexOf(v) >= 0) { fb.textContent = "正確"; fb.className = "fb ok"; }
+    else { fb.textContent = "再想想（只比字形與標點，不多收字）"; fb.className = "fb no"; }
+  }
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); check(); }
+  });
+  document.getElementById("check").addEventListener("click", check);
+})();
+</script>

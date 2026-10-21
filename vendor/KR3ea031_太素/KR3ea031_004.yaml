@@ -1,0 +1,18 @@
+canonical_identifier: bkk:krp/KR3ea031/jc/v1/juan/4
+seq: 4
+front:
+  text: ''
+  hash: sha256:0000000000000000000000000000000000000000000000000000000000000000
+body:
+  text: 卷第四佚
+  hash: sha256:12099375f0720b7c80d7b7f39b67eb6f328fff7b39a977ef07b3f0037cdfef11
+  markers:
+  - {type: 'tls:head', offset: 0, content: '', id: KR3ea031_jc_004-d5.h1s1}
+metadata:
+  title: 黃帝內經太素
+  edition:
+    short: jc
+  source:
+    repository: tls-texts
+    path: data/tls/KR3ea031.xml
+hash: sha256:7b2050ef35dabe9c37f78699c32e9a8ca7c40078951cd71f528d5808f93a8df7

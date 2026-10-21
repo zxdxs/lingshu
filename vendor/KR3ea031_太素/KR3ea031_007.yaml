@@ -1,0 +1,18 @@
+canonical_identifier: bkk:krp/KR3ea031/jc/v1/juan/7
+seq: 7
+front:
+  text: ''
+  hash: sha256:0000000000000000000000000000000000000000000000000000000000000000
+body:
+  text: 卷第七佚
+  hash: sha256:bcb1423dd36e557fa08fcf51ff2dc8c50a275ba7c06ba84747d4811f43d80616
+  markers:
+  - {type: 'tls:head', offset: 0, content: '', id: KR3ea031_jc_007-d8.h1s1}
+metadata:
+  title: 黃帝內經太素
+  edition:
+    short: jc
+  source:
+    repository: tls-texts
+    path: data/tls/KR3ea031.xml
+hash: sha256:9680b3c7b5dbaa2c46a576b5134be83f8b09db76ea608d2c131575ed8552ddc8

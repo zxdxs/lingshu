@@ -1,0 +1,18 @@
+canonical_identifier: bkk:krp/KR3ea031/jc/v1/juan/18
+seq: 18
+front:
+  text: ''
+  hash: sha256:0000000000000000000000000000000000000000000000000000000000000000
+body:
+  text: 卷第十八佚
+  hash: sha256:0e686d635abaa77b393032812650adbfb16782ef5783d1f890aef3b5795439be
+  markers:
+  - {type: 'tls:head', offset: 0, content: '', id: KR3ea031_jc_018-d19.h1s1}
+metadata:
+  title: 黃帝內經太素
+  edition:
+    short: jc
+  source:
+    repository: tls-texts
+    path: data/tls/KR3ea031.xml
+hash: sha256:1286d64baadc8b1bf9f950732233694dcce074b20970c62420204c30903e1ad0

@@ -49,7 +49,8 @@ def main():
         src = i['source']
         deck.add_note(genanki.Note(model=model, fields=[
             i['stem'], i['answer'], '、'.join(i.get('可接受答案') or []),
-            i.get('note', ''), f"《靈樞·{src['篇名']}》" + (f"（第 {src['篇序']} 篇）" if src.get('篇序') else ''),
+            i.get('note', ''),
+            f"《靈樞·{src['篇名']}》" + (f"（第 {src['篇序']} 篇" + (f"，句 {i['句']}" if i.get('句') else '') + "）" if src.get('篇序') else ''),
         ]))
     out = os.path.join(ROOT, 'export', '靈樞_填空.apkg')
     genanki.Package(deck).write_to_file(out)

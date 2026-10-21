@@ -36,6 +36,7 @@ let fails = 0;
 const viewNode = mkEl("main");
 const doc = {
   createElement: mkEl,
+  createTextNode(t) { const n = mkEl("#text"); n._text = String(t); return n; },
   querySelector(s) { return s === "#view" ? viewNode : mkEl("div"); },
   querySelectorAll() { return []; },
   getElementById() { return mkEl("div"); },
@@ -57,7 +58,8 @@ vm.runInContext(DATA, ctx);
 vm.runInContext(APP, ctx);
 
 console.log("視圖檢查：");
-for (const v of views) {
+const routes = views.concat(["read?seq=40", "items?seq=40"]);
+for (const v of routes) {
   win.location.hash = "#/" + v;
   viewNode._html = ""; viewNode.children = [];
   (listeners.hashchange || []).forEach(f => f());

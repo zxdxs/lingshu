@@ -131,3 +131,8 @@ details.card>summary::-webkit-details-marker{display:none}
 details.card>summary::before{content:"▸ ";color:var(--brand2)}
 details.card[open]>summary::before{content:"▾ "}
 details.card>summary:hover{color:var(--brand)}
+
+/* 句級 ID（預設隱藏） */
+.sid{display:none;font-style:normal;font-size:.68rem;color:var(--brand2);margin-left:2px;
+  vertical-align:super;letter-spacing:.02em}
+body.show-sid .sid{display:inline}

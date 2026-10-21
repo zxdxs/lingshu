@@ -1240,6 +1240,43 @@ if os.path.exists(_CASE):
                       'note': '案例題樣板（待專家核）；依據：' + r['依據'],
                       'auto_grading': 'exact'})
 
+# ---------- 句級 ID：把題目掛到句（docs/108） ----------
+_SENT = json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'), encoding='utf-8'))['句']
+_SBY = {}
+for _s in _SENT:
+    _SBY.setdefault(_s['seq'], []).append(_s)
+
+
+def _find_sentence(seq, text):
+    """回傳最長命中的句 ID；找不到回空字串。"""
+    t = _norm(text)
+    if len(t) < 2:
+        return ''
+    best = None
+    for s in _SBY.get(seq, []):
+        if t in s['norm'] or (len(s['norm']) >= 6 and s['norm'] in t):
+            if best is None or abs(len(s['norm']) - len(t)) < abs(len(best['norm']) - len(t)):
+                best = s
+    return best['id'] if best else ''
+
+
+_n_sent = 0
+for _it in items:
+    _q = re.findall(r'「([^」]{2,})」', _it['stem'])
+    _hit = ''
+    for _quote in _q:
+        for _seg in [x for x in re.split(r'_+', _quote) if len(_norm(x)) >= 2]:
+            _hit = _find_sentence(_it['source']['篇序'], _seg)
+            if _hit:
+                break
+        if _hit:
+            break
+    if not _hit:
+        _hit = _find_sentence(_it['source']['篇序'], _it['answer'])
+    if _hit:
+        _it['句'] = _hit
+        _n_sent += 1
+
 # ---------- 答案類型：原文／推算／整理語（docs/94） ----------
 from check_quotes import norm as _an
 
@@ -1312,6 +1349,6 @@ with open(os.path.join(ROOT, 'docs', '10_題庫示例.md'), 'w', encoding='utf-8
         f.write(f"  - 答：**{it['answer']}**\n")
         f.write(f"  - 干擾（皆為他經原文）：{'／'.join(it['distractors'])}\n")
 
-print(f"生成 {len(items)} 題（去重 {len(_dups)}）；題面節引 {_n_mark} 題；有可接受答案 {sum(1 for i in items if i.get(chr(21487)+chr(25509)+chr(21463)+chr(31572)+chr(26696)))} 題")
+print(f"生成 {len(items)} 題（去重 {len(_dups)}·句ID {_n_sent}）；題面節引 {_n_mark} 題；有可接受答案 {sum(1 for i in items if i.get(chr(21487)+chr(25509)+chr(21463)+chr(31572)+chr(26696)))} 題")
 print("題型:", {t: sum(1 for i in items if i['type'] == t) for t in set(i['type'] for i in items)})
 print("循行起點:", starts)

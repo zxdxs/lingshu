@@ -131,10 +131,30 @@ function readOne(box, seq) {
   row.appendChild(b); row.appendChild(b2); row.appendChild(b3);
   box.appendChild(row);
   var t = h('div', 'orig');
-  p.text.split('\n').forEach(function (line) {
-    if (line.trim()) t.appendChild(h('p', esc(line)));
+  p.text.split('\n').forEach(function (line, dn) {
+    if (!line.trim()) return;
+    var para = document.createElement('p');
+    var parts = line.split(/(?<=[。！？])/);
+    parts.forEach(function (sent, jn) {
+      if (!sent) return;
+      var sp = document.createElement('span');
+      sp.className = 'sent';
+      sp.appendChild(document.createTextNode(sent));
+      var sid = document.createElement('i');
+      sid.className = 'sid';
+      sid.textContent = p.seq + '-' + (dn + 1) + '-' + (jn + 1);
+      sp.appendChild(sid);
+      para.appendChild(sp);
+    });
+    t.appendChild(para);
   });
   box.appendChild(t);
+  var tg = el('button', 'btn ghost', '顯示句號'); tg.type = 'button';
+  tg.onclick = function () {
+    document.body.classList.toggle('show-sid');
+    tg.textContent = document.body.classList.contains('show-sid') ? '隱藏句號' : '顯示句號';
+  };
+  row.appendChild(tg);
   if (p.note) {
     box.appendChild(h('h3', '校記'));
     box.appendChild(h('p', esc(p.note), 'small'));
@@ -229,7 +249,8 @@ function itemCard(it) {
     a.innerHTML = '<b>' + esc(it.answer) + '</b>' +
       (it.acc && it.acc.length ? ' <span class="small muted">（亦可：' + esc(it.acc.join('、')) + '）</span>' : '') +
       (it.kind ? ' <span class="pill">' + esc(it.kind) + '</span>' : '') +
-      (it.note ? '<div class="small">' + md(it.note) + '</div>' : '');
+      (it.note ? '<div class="small">' + md(it.note) + '</div>' : '') +
+      '<div class="small">《靈樞·' + esc(it.pian) + '》' + (it.sid ? ' · 句 ' + esc(it.sid) : '') + '</div>';
     b.onclick = function () { a.style.display = a.style.display === 'none' ? '' : 'none'; };
     r1.onclick = function () { log2(it.id, true); r1.textContent = '答對 ✓'; };
     r2.onclick = function () { log2(it.id, false); r2.textContent = '答錯 ✓'; };
@@ -396,7 +417,8 @@ VIEWS.collation = function (box) {
   var t = h('table', '');
   t.innerHTML = '<tr><th style="width:44px">#</th><th style="width:96px">篇</th><th>底本</th><th>太素</th><th>類經</th><th style="width:70px">判定</th></tr>';
   (LS.collation || []).forEach(function (r) {
-    t.innerHTML += '<tr><td>' + esc(r.id) + '</td><td class="small">' + esc(r.pian) + '<br><span class="muted">' + esc(r.anchor || '') + '</span></td>' +
+    t.innerHTML += '<tr><td>' + esc(r.id) + (r.sid ? '<br><span class="muted">' + esc(r.sid) + '</span>' : '') +
+      '</td><td class="small">' + esc(r.pian) + '<br><span class="muted">' + esc(r.anchor || '') + '</span></td>' +
       '<td class="small">' + esc(r.base || '') + '</td>' +
       '<td class="small">' + esc(r.taisu || '—') + '</td>' +
       '<td class="small">' + esc(r.leijing || '—') + '</td>' +

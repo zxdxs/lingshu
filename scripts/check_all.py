@@ -94,6 +94,8 @@ def metrics():
         '模組原文不符': mb,
         '重複題面': sum(v - 1 for v in stems.values() if v > 1),
         '篇名不一致': names,
+        '句索引': len(json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'), encoding='utf-8'))['句']),
+        '題目有句ID': sum(1 for i in its if i.get('句')),
         '文件引文待核': docs_pending(),
         '文件數': len(glob.glob(os.path.join(ROOT, 'docs', '*.md'))),
     }

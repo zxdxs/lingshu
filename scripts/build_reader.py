@@ -63,7 +63,7 @@ def main():
             'acc': i.get('可接受答案') or [],
             'note': i.get('note', ''), 'kind': i.get('答案類型', ''),
             'dis': i.get('distractors') or [],
-            'case': '-CASE-' in i['item_id'],
+            'case': '-CASE-' in i['item_id'], 'sid': i.get('句', ''),
         })
 
     data = {
@@ -90,7 +90,7 @@ def main():
         'contradictions': [{'id': r.get('編號', ''), 'type': r.get('類型', ''), 'point': r.get('爭點', ''),
                             'verdict': r.get('判定', '')} for r in con],
         'collation': [{'id': r.get('編號', ''), 'seq': r.get('篇序', ''), 'pian': r.get('篇名', ''),
-                       'anchor': r.get('錨點', ''),
+                       'anchor': r.get('錨點', ''), 'sid': r.get('句ID', ''),
                        'base': r.get('底本讀法', ''), 'taisu': r.get('太素', '') or '—',
                        'leijing': r.get('類經', '') or '—', 'verdict': r.get('判定', ''),
                        'basis': r.get('依據', ''), 'impact': r.get('影響', '')} for r in col],

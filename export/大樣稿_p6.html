@@ -1,0 +1,51 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>大樣稿 p6</title><style>
+:root { --ink:#1c1a17; --mute:#7c7367; --line:#d9d2c6; --paper:#fbf8f2; --accent:#7a5a3a; }
+* { box-sizing:border-box; }
+body { margin:0; background:#efece5; font-family:"Songti SC","Noto Serif CJK TC","Source Han Serif TC",serif;
+       color:var(--ink); -webkit-font-smoothing:antialiased; }
+.page { width:840px; min-height:1188px; background:var(--paper); margin:0 auto 24px; padding:86px 84px 72px;
+        position:relative; box-shadow:0 2px 18px rgba(0,0,0,.08); page-break-after:always; }
+.page:last-child { margin-bottom:0; }
+.kicker { font-size:12px; letter-spacing:.32em; color:var(--mute); text-transform:uppercase; }
+h1 { font-size:46px; letter-spacing:.16em; margin:26px 0 10px; font-weight:600; }
+h2 { font-size:22px; letter-spacing:.08em; margin:0 0 6px; font-weight:600; }
+h3 { font-size:15px; letter-spacing:.12em; margin:34px 0 10px; color:var(--accent); font-weight:600; }
+.sub { font-size:16px; color:var(--mute); letter-spacing:.08em; line-height:1.9; }
+.rule { height:1px; background:var(--line); margin:26px 0; }
+.foot { position:absolute; bottom:34px; left:84px; right:84px; display:flex; justify-content:space-between;
+        font-size:11px; color:var(--mute); letter-spacing:.1em; border-top:1px solid var(--line); padding-top:10px; }
+p { font-size:15.5px; line-height:2.0; margin:0 0 16px; text-align:justify; }
+.small { font-size:13px; color:var(--mute); line-height:1.9; }
+.quote { font-size:19px; line-height:2.2; letter-spacing:.04em; margin:18px 0; padding-left:18px;
+         border-left:3px solid var(--accent); }
+.label { display:inline-block; font-size:11px; letter-spacing:.16em; color:var(--accent);
+         border:1px solid var(--accent); padding:2px 7px; border-radius:2px; margin-right:8px; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+td,th { border-bottom:1px solid var(--line); padding:9px 8px; text-align:left; vertical-align:top; line-height:1.8; }
+th { color:var(--mute); font-weight:500; letter-spacing:.08em; font-size:12px; }
+.card { border:1px solid var(--line); border-radius:4px; padding:22px 24px; background:#fff; margin:14px 0; }
+.card .q { font-size:17px; line-height:2; }
+.card .a { margin-top:14px; font-size:15px; color:var(--mute); }
+.card .a b { color:var(--ink); font-size:18px; }
+.tag { font-size:11px; color:var(--mute); border:1px dashed var(--line); padding:2px 6px; margin-left:6px; }
+.box { border:1px dashed var(--accent); padding:18px 20px; background:#fffdf8; margin:16px 0; }
+.big { font-size:64px; letter-spacing:.2em; line-height:1.3; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+img { max-width:100%; border:1px solid var(--line); background:#fff; }
+</style></head><body><section class="page">
+<div class="kicker">05 · 卡片樣張</div>
+<h2 style="margin-top:18px">Anki 卡：先寫，再核對</h2>
+<div class="grid2">
+<div><div class="small" style="margin-bottom:8px">正面</div>
+<div class="card"><div class="q">《靈樞·陰陽清濁》：「受穀者____，受氣者清」</div>
+<div style="margin-top:14px;border:1px solid var(--line);padding:9px 11px;color:var(--mute);font-size:14px">輸入答案後按 Enter</div>
+<div class="small" style="margin-top:10px">[ 對答案 ]</div></div></div>
+<div><div class="small" style="margin-bottom:8px">背面</div>
+<div class="card"><div class="q">《靈樞·陰陽清濁》：「受穀者<b>濁</b>，受氣者清」</div>
+<div class="a">答案：<b>濁</b></div>
+<div class="small">說明：來源：清濁出於穀氣與天氣，不是宇宙論的天地</div>
+<div class="small" style="margin-top:8px">《靈樞·陰陽清濁》</div>
+<div class="small" style="margin-top:10px;border-top:1px dashed var(--line);padding-top:8px">本卡內容依原文整理，未經臨床驗證，不可據以施治。</div></div></div>
+</div>
+<p class="small">正面不顯示答案；背面固定附出處與免責。異體與簡體由卡片內 JS 判定，與 <code>scripts/grade.py</code> 共用同一張對照表。</p>
+<div class="foot"><span>靈樞 · 自學材料</span><span>卡片 · 6</span></div></section></body></html>

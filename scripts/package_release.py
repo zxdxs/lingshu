@@ -9,7 +9,7 @@ import hashlib, json, os, sys, zipfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VERSION = sys.argv[1] if len(sys.argv) > 1 else '1.0.0'
 OUT = os.path.join(ROOT, 'dist')
-INCLUDE = ['README.md', 'CHANGELOG.md', '底本', 'data', 'docs', 'scripts', 'export', 'vendor/README.md']
+INCLUDE = ['README.md', 'CHANGELOG.md', '底本', 'data', 'docs', 'scripts', 'export', 'reader', 'vendor/README.md']
 SKIP_DIRS = {'__pycache__', 'pylib', 'anki模板'.replace('anki模板', '__none__')}
 
 

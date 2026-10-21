@@ -12,3 +12,6 @@ __pycache__/
 
 # 發布包（可重跑 package_release.py 產生）
 dist/
+
+# 閱讀器預覽檔（可重生）
+reader/_preview_*.html

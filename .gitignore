@@ -9,3 +9,6 @@ __pycache__/
 
 # 原始掃描／排版檔（體積大，且可由來源重建）
 15灵枢经.pdf
+
+# 發布包（可重跑 package_release.py 產生）
+dist/

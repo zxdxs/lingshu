@@ -26,44 +26,59 @@ var VIEWS = {};
 VIEWS.home = function (box) {
   var hero = h('div', 'hero', '');
   hero.innerHTML =
-    '<div class="stamps">黃帝內經<br>靈樞<br>八十一篇</div>' +
+    '<div class="kicker">黃帝內經 · 靈樞 · 八十一篇</div>' +
     '<h1>靈樞</h1>' +
-    '<p class="lead">把《靈樞》八十一篇整理成可讀、可練、可查，並且知道自己哪裡不可靠的自學材料。<br>' +
-    '所有引文逐字比對底本；臨床主張未經驗證。</p>' +
-    '<div class="stats">' +
+    '<p class="lead">把《靈樞》讀成<b>可以驗收的判斷力</b>：81 篇原文、' + stat('items') + ' 道題，' +
+    '每一句都能回到底本，每一條限制都寫在站上。</p>' +
+    '<div class="row" style="margin-top:14px">' +
+      '<a class="btn" href="#/read">入口 01 · 讀原文</a>' +
+      '<a class="btn ghost" href="#/items">入口 02 · 練題</a>' +
+      '<a class="btn ghost" href="#/concept">入口 03 · 查概念</a>' +
+    '</div>' +
+    '<div class="stats" style="margin-top:18px">' +
       '<div class="stat"><b>' + stat('pian') + '</b><span>篇</span></div>' +
       '<div class="stat"><b>' + stat('chars').toLocaleString() + '</b><span>經文字</span></div>' +
       '<div class="stat"><b>' + stat('items') + '</b><span>題</span></div>' +
-      '<div class="stat"><b>' + stat('index') + '</b><span>索引條</span></div>' +
-    '</div>' +
-    '<div class="row" style="margin-top:14px">' +
-      '<a class="btn" href="#/read">開始讀</a>' +
-      '<a class="btn ghost" href="#/items">開始練</a>' +
-      '<a class="btn ghost" href="#/concept">看概念圖</a>' +
+      '<div class="stat"><b>' + stat('quote_seg') + '</b><span>逐字核過的引文段</span></div>' +
     '</div>';
   box.appendChild(hero);
 
   var g = h('div', 'grid');
-  [['讀','通讀 81 篇','原文（含句讀）＋校記；可標已讀。','#/read'],
-   ['練','題庫 ' + stat('items') + ' 題','填空 ' + stat('fill') + '／選擇 ' + stat('mcq') + '／辨誤 ' + stat('err') + '；答對答錯都記錄。','#/items'],
-   ['查','索引 ' + stat('index') + ' 條','名詞、篇名、位置；也可在題庫頁篩選。','#/index']].forEach(function (x) {
+  [['目的','讓原文可讀、可練、可查','讀得進去，也練得出來；不以「看懂了」當作學會。'],
+   ['價值','把可驗的部分公開','引文逐字比對、答案分型、模組原文、限制與矛盾——全部可查。'],
+   ['為什麼現在做','市面上的靈樞多止於導讀','練習紀錄與校勘痕跡很少公開；這份材料把兩者一起留下。']].forEach(function (x) {
     var c = h('div', 'card', '');
-    c.innerHTML = '<h3>' + x[0] + '　' + x[1] + '</h3><p class="small">' + x[2] + '</p>' +
-      '<a class="small" href="' + x[3] + '">前往 →</a>';
+    c.innerHTML = '<h3>' + x[0] + '</h3><p class="small muted">' + x[1] + '</p><p>' + x[2] + '</p>';
     g.appendChild(c);
   });
   box.appendChild(g);
 
-  var v = h('div', 'card', '');
-  v.innerHTML = '<h3>這一版你能信到什麼程度</h3>' +
-    '<div class="kv">' +
-      '<dt>引文</dt><dd>題面 ' + stat('quote_seg') + ' 段逐字比對，不符 0</dd>' +
-      '<dt>答案</dt><dd>原文 669、推算 24、整理語 15（已標明）</dd>' +
-      '<dt>模組</dt><dd>264 條原文，全部見於所標篇目</dd>' +
-      '<dt>限制</dt><dd>' + stat('limits') + ' 條，見 <a href="#/limits">限制</a></dd>' +
-      '<dt>矛盾</dt><dd>' + stat('contradictions') + ' 條，見 <a href="#/method">方法</a></dd>' +
-    '</div>';
-  box.appendChild(v);
+  box.appendChild(h('h2', '訓練怎麼進行'));
+  var t = h('table', '');
+  t.innerHTML = '<tr><th style="width:86px">入口</th><th>要做的事</th><th style="width:150px">產出物（不留下＝沒做）</th></tr>' +
+    '<tr><td>讀</td><td>通讀一篇，遇校記停下來看</td><td>標為已讀（本機記錄）</td></tr>' +
+    '<tr><td>練</td><td>作答並看解析與出處</td><td>對錯紀錄；' + stat('items') + ' 題可追</td></tr>' +
+    '<tr><td>查</td><td>用索引或概念卡回查</td><td>找到篇、句與出處</td></tr>';
+  box.appendChild(t);
+  box.appendChild(h('p', '表 首頁-1　三個入口與各自的產出物。數字取自 data/題庫_示例.json 與底本。', 'small muted'));
+
+  box.appendChild(h('h3', '驗收四層'));
+  var t2 = h('table', '');
+  t2.innerHTML = '<tr><th style="width:86px">層</th><th>標準</th><th style="width:130px">本站對應</th></tr>' +
+    '<tr><td>應知</td><td>能正確複述原文</td><td>填空題（答案類型：原文）</td></tr>' +
+    '<tr><td>應會</td><td>標準情境做得出</td><td>選擇題、辨誤題</td></tr>' +
+    '<tr><td>理解</td><td>能解釋、能分層</td><td>概念卡（12 個，逐層原文）</td></tr>' +
+    '<tr><td>遷移</td><td>新情境自動運用</td><td>案例題（6 道，待專家核）</td></tr>';
+  box.appendChild(t2);
+
+  var no = h('div', 'card', '');
+  no.innerHTML = '<h3>本站不做什麼</h3><ul class="small" style="margin:.4em 0 0 1.1em;padding:0">' +
+    '<li>不替代臨床判斷：所有臨床主張未經驗證，<b>不可據以施治</b>。</li>' +
+    '<li>不把素問納入主體：只在對照時引用。</li>' +
+    '<li>不生成原文：L0 一律取自底本，每句可回查。</li>' +
+    '<li>不掩蓋不確定：限制 ' + stat('limits') + ' 條、矛盾 ' + stat('contradictions') + ' 條公開列出。</li></ul>' +
+    '<p class="small" style="margin-top:10px"><a href="#/limits">看已知限制</a>　·　<a href="#/method">看校勘與矛盾</a>　·　<a href="#/about">看授權與出處</a></p>';
+  box.appendChild(no);
 };
 
 /* ---------------- 通讀 ---------------- */
@@ -360,6 +375,26 @@ VIEWS.mine = function (box) {
       '</td><td class="num">' + v[0] + '</td><td class="num">' + pct(v[0], v[1]) + '%</td></tr>';
   });
   box.appendChild(t);
+
+  /* 四層掌握度（依 bloom 聚合） */
+  var BLOOM = [['remember', '應知'], ['understand', '應會'], ['apply', '理解／應用'], ['evaluate', '遷移']];
+  var byB = {};
+  Object.keys(log).forEach(function (id) {
+    var it = idx[id]; if (!it) return;
+    var k = it.bloom || 'remember';
+    byB[k] = byB[k] || [0, 0];
+    byB[k][1]++; if (log[id] === 'ok') byB[k][0]++;
+  });
+  box.appendChild(h('h3', '四層掌握度'));
+  var tb = h('table', '');
+  tb.innerHTML = '<tr><th style="width:110px">層</th><th style="width:90px">作答</th><th style="width:90px">答對</th><th style="width:80px">正確率</th></tr>';
+  BLOOM.forEach(function (b) {
+    var v = byB[b[0]] || [0, 0];
+    tb.innerHTML += '<tr><td>' + b[1] + '</td><td class="num">' + v[1] + '</td><td class="num">' + v[0] +
+      '</td><td class="num">' + (v[1] ? pct(v[0], v[1]) + '%' : '—') + '</td></tr>';
+  });
+  box.appendChild(tb);
+  box.appendChild(h('p', '對應關係見首頁「驗收四層」；未作答的層顯示 —。', 'small muted'));
   var b = el('button', 'btn ghost', '清除本機進度'); b.type = 'button';
   b.onclick = function () { if (!confirm('清除已讀與作答紀錄？')) return; STATE.read = {}; STATE.log = {}; save(); route(); };
   box.appendChild(b);
@@ -394,6 +429,13 @@ function parseHash() {
   });
   return { name: name, q: q };
 }
+function updateMastery() {
+  var m = $('#mastery'); if (!m) return;
+  var read = Object.keys(STATE.read || {}).length;
+  var log = Object.keys(STATE.log || {}).length;
+  var v = Math.round((pct(read, (LS.pian || []).length) + pct(log, stat('items'))) / 2);
+  m.textContent = '掌握度 ' + v + '%';
+}
 function route() {
   var r = parseHash();
   var v = VIEWS[r.name] || VIEWS.home;
@@ -403,6 +445,7 @@ function route() {
   Array.prototype.forEach.call(document.querySelectorAll('#nav a'), function (a) {
     a.className = a.getAttribute('data-k') === r.name ? 'on' : '';
   });
+  updateMastery();
   window.scrollTo(0, 0);
 }
 function boot() {

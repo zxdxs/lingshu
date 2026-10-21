@@ -26,6 +26,8 @@ code{background:#efe7d8;padding:1px 5px;border-radius:4px;font-size:.88em}
 .brand:hover{text-decoration:none}
 .brand strong{display:block;font-size:1.02rem;letter-spacing:.06em}
 .brand em{display:block;font-style:normal;font-size:.76rem;color:var(--ink2)}
+.mastery{margin-left:14px;font-size:.72rem;letter-spacing:.08em;color:var(--brand2);
+  border:1px solid var(--line);border-radius:999px;padding:3px 9px;background:var(--card)}
 .seal{flex:none;width:52px;height:52px;border-radius:9px;background:var(--brand);color:#fff;
   display:grid;place-items:center;font-size:.95rem;letter-spacing:.08em;font-weight:700;
   box-shadow:inset 0 0 0 2px rgba(255,255,255,.18)}
@@ -66,6 +68,7 @@ mark,.hl{background:var(--hl);padding:0 2px;border-radius:3px}
   padding:30px 28px;margin:6px 0 18px;position:relative;overflow:hidden}
 .hero h1{font-size:2.1rem;letter-spacing:.18em;margin:0 0 6px}
 .hero .lead{color:var(--ink2);font-size:.98rem;max-width:620px}
+.hero .kicker{font-size:.72rem;letter-spacing:.32em;color:var(--brand2);margin-bottom:6px}
 .hero .stamps{position:absolute;right:24px;top:22px;text-align:right;color:var(--brand2);font-size:.72rem;
   letter-spacing:.2em;line-height:1.9;opacity:.8}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 4px}
@@ -115,9 +118,11 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .gate{max-width:640px;margin:8vh auto;background:var(--card);border:1px solid var(--line);
   border-radius:14px;padding:30px 32px}
 @media (max-width:640px){
+  .mastery{display:none}
   .stats{grid-template-columns:repeat(2,1fr)}
   .hero{padding:22px 18px}.hero h1{font-size:1.7rem}
-  .hero .stamps{display:none}
+  .hero .kicker{font-size:.72rem;letter-spacing:.32em;color:var(--brand2);margin-bottom:6px}
+.hero .stamps{display:none}
 }
 
 /* 概念卡（可折疊） */

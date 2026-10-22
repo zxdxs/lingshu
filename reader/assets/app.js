@@ -1206,6 +1206,27 @@ VIEWS.limits = function (box) {
   sg.innerHTML = '<b>' + esc(LS.meta.safety) + '</b>';
   box.appendChild(sg);
   box.appendChild(h('p', '先說不能做什麼。完整清單見 data/能力邊界.csv。', 'small muted'));
+
+  var B = LS.bounds || {};
+  if ((B['級'] || []).length) {
+    var bc = h('div', '', 'card');
+    bc.appendChild(el('h2', '', '靈樞自己怎麼分界限'));
+    bc.appendChild(h('p', '本站的「能力邊界」是自己的；靈樞也有它的——分別在五種說法上。' +
+      '下面只按字面收，不替它引申。', 'small'));
+    var bt = '<tr><th style="width:32px">級</th><th style="width:120px">說法</th><th style="width:56px">句數</th>' +
+      '<th>說明</th><th style="width:34%">例</th></tr>';
+    (B['級'] || []).forEach(function (g) {
+      var ex = (g['例'] || []).slice(0, 2).map(function (x) {
+        return '<span class="small">' + esc(x['文'].slice(0, 40)) + '… <span class="src">' + esc(x['id']) + '</span></span>';
+      }).join('<br/>');
+      bt += '<tr><td><b>' + esc(g['級']) + '</b></td><td>' + esc(g['名']) + '</td>' +
+        '<td class="num">' + g['數'] + '</td><td class="small">' + esc(g['說明']) + '</td><td>' + ex + '</td></tr>';
+    });
+    bc.innerHTML += '<table>' + bt + '</table>';
+    bc.appendChild(h('p', '合 ' + ((B['說明'] || {})['條數'] || '') + ' 句；一句只歸一級（A→B→D→C→E），' +
+      '所以數字互斥、可相加。', 'small muted'));
+    box.appendChild(bc);
+  }
   var t = h('table', '');
   t.innerHTML = '<tr><th style="width:52px">#</th><th>問題</th><th style="width:70px">範疇</th><th style="width:44px">級</th></tr>';
   (LS.limits || []).forEach(function (r) {

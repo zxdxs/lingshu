@@ -95,6 +95,7 @@ def main():
     yw = load('data/營衛.json')
     wuci = load('data/五刺.json')
     wuxie = load('data/五邪.json')
+    bounds = load('data/界限分級.json')
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
     suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json'),
@@ -143,6 +144,7 @@ def main():
         'jingbie': jb, 'jingjin': jj, 'luomai': luo, 'jingshui': js, 'wushu': ws, 'binghou': bh,
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
+        'bounds': bounds,
         'defs': defs,
         'suwen': suwen,
     }

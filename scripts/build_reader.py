@@ -84,6 +84,8 @@ def main():
 
     contact = load('data/聯絡.json')
     law = load('data/通則.json')
+    dfn = load('data/定義句.json')
+    defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
     suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json'),
              'quant': load('data/異同_量化.json')}
 
@@ -126,6 +128,7 @@ def main():
         'concepts': cpts,
         'contact': contact,
         'law': law,
+        'defs': defs,
         'suwen': suwen,
     }
     os.makedirs(OUT, exist_ok=True)

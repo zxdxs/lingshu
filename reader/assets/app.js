@@ -595,9 +595,29 @@ VIEWS.law = function (box, q) {
     '<li>本頁只講「怎麼讀」，不講「怎麼做」。操作、劑量、手法不在這裡，也不該從網頁學。</li></ul>';
   box.appendChild(intro);
 
+  // 學習路徑
+  if ((L['路徑'] || []).length) {
+    var rt = h('div', '', 'card');
+    rt.appendChild(el('h2', '', '從哪讀起：六站'));
+    rt.appendChild(h('p', '通則不是用來從第一條背到最後一條的。照這個次序讀，每一站讀完，對應的通則才有依托。', 'small'));
+    var tr = '<tr><th style="width:44px">站</th><th>讀這幾篇</th><th>為什麼</th><th style="width:76px">對應通則</th></tr>';
+    (L['路徑'] || []).forEach(function (x) {
+      var links = (x['篇'] || []).map(function (p) {
+        return '<a href="#/read?seq=' + p['序'] + '">' + esc(p['名']) + '</a>';
+      }).join('、');
+      tr += '<tr><td>' + esc(x['階段']) + '</td><td class="small">' + esc(x['題']) + '<br/>' + links + '</td>' +
+        '<td class="small">' + esc(x['為什麼']) + '</td>' +
+        '<td class="small">' + (x['通則'] || []).map(function (n) { return '<a href="#/law?n=' + n + '">' + n + '</a>'; }).join(' ') + '</td></tr>';
+    });
+    var wrap = h('div', '', 'table-wrap');
+    wrap.innerHTML = '<table>' + tr + '</table>';
+    rt.appendChild(wrap);
+    box.appendChild(rt);
+  }
+
   // 目錄
   var toc = h('div', '', 'card');
-  toc.appendChild(el('h3', '', '十六條，六組'));
+  toc.appendChild(el('h3', '', (L['條數'] || '') + ' 條，' + (L['組數'] || '') + ' 組'));
   (L['組'] || []).forEach(function (g) {
     var p = h('p', '<b>' + esc(g['組']) + '</b>　', 'small');
     g['條'].forEach(function (x) {
@@ -629,19 +649,38 @@ VIEWS.law = function (box, q) {
       art.appendChild(h('p', '<b>推演</b>（歸）：' + md(x['推演']), 'small'));
       art.appendChild(h('p', '<b>用</b>（歸）：' + md(x['用']), 'small'));
       art.appendChild(h('p', '<b>界</b>（空／歸）：' + md(x['界']), 'small muted'));
+      var seen = {}, seqs = [];
+      (x['引'] || []).forEach(function (q) { if (!seen[q['seq']]) { seen[q['seq']] = 1; seqs.push([q['seq'], q['篇']]); } });
+      if (seqs.length) {
+        art.appendChild(h('p', '回原文：' + seqs.map(function (p) {
+          return '<a href="#/read?seq=' + p[0] + '">〈' + esc(p[1]) + '〉</a>';
+        }).join('　'), 'small'));
+      }
       sec.appendChild(art);
     });
     box.appendChild(sec);
   });
 
+  var _chuan = '「傳承」一組';
+  (L['組'] || []).forEach(function (g) {
+    if (g['組'].indexOf('傳承') < 0) return;
+    var ns = (g['條'] || []).map(function (x) { return x['n']; });
+    if (ns.length) _chuan = '第 ' + ns[0] + '–' + ns[ns.length - 1] + ' 條';
+  });
   var tail = h('div', '', 'card');
   tail.innerHTML = '<h3>為什麼要抽成通則</h3>' +
     '<p class="small">單篇讀，容易記住故事；通則讀，才看得出同一個判斷在不同篇裡換了什麼說法。' +
     '本站的「概念」頁處理一個詞的幾層意思，這一頁處理一條規矩的幾種說法——兩者都是為了讓八十一篇彼此對得上。</p>' +
     '<p class="small muted">抽通則的代價是簡化：原文的條件往往比一條原則複雜。所以每條都留「界」，' +
     '把不能推的地方寫出來。</p>' +
+    ((LS.defs && LS.defs.pian && LS.defs.pian.length) ?
+      '<h3>抽通則時掃過的底：定義句 ' + LS.defs.n + ' 條</h3>' +
+      '<p class="small">用三種句式（『…者，…也』『所謂…者』『何謂…』）全書掃過，得 ' + LS.defs.n + ' 條候選。' +
+      '密度最高的五篇是 ' + LS.defs.pian.map(function (x) { return '〈' + esc(x[0]) + '〉' + x[1]; }).join('、') +
+      '——〈小鍼解〉逐句解釋〈九鍼十二原〉，〈官鍼〉講十二節，〈刺節真邪〉講刺法與邪氣，都是技術篇。' +
+      '通則就是從這批候選裡挑出來的，沒挑上的仍在 <code>data/定義句.json</code>。</p>' : '') +
     '<h3 style="margin-top:18px">本站怎麼對待「傳承」</h3>' +
-    '<p class="small">靈樞自己立了傳授的規矩（上頁第 14–16 條）。本站照著做，方式是：</p>' +
+    '<p class="small">靈樞自己立了傳授的規矩（見上列' + _chuan + '）。本站照著做，方式是：</p>' +
     '<ul class="small">' +
     '<li><b>給理解，不給操作</b>：不提供劑量、療程、進針深度或手法步驟——那些需要師授與臨床責任。</li>' +
     '<li><b>每句可回原文</b>：所有引文掛句ID；抽出來的原則標『歸』，不冒充原文。</li>' +

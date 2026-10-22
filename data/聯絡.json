@@ -27,8 +27,8 @@
   {
    "k": "郵箱",
    "d": "附件、截圖、長文、整份校勘表都收。來信請註明篇序（如 40）與句ID（若已有）。",
-   "mail": "",
-   "mailText": "待補"
+   "mail": "hello@solve-lab.cn",
+   "mailText": "hello@solve-lab.cn"
   }
  ],
  "sites": [
@@ -45,5 +45,5 @@
  ],
  "close": "指正會反映到站上。原文異文一律兩處並存，不擅自改定；句中位置有爭議時，我保留兩種算法並註明，不挑一個假裝確定。",
  "seal": "僅供在有帶教資格的執業中醫師指導下使用｜不可據以施治",
- "contact_ready": false
+ "contact_ready": true
 }

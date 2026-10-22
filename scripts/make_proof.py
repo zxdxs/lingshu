@@ -169,15 +169,19 @@ pages.append(page(f'''
 ''', '靈樞 · 自學材料', '限制', 7))
 
 # 8 待決與封底
+_left = sum(1 for k in REL.get('必要', []) if REL.get(k) in ('', None, '待定', '待補', '未測'))
+_contact_cell = (f'<b>{CONTACT}</b>（已可公開聯絡；來信請註明篇序與句ID，並說明依據版本）'
+                 if REL['聯絡'] not in ('', '待補') else
+                 f'目前 {CONTACT}；需一個可公開的去識別化信箱或表單網址')
 _lic = (REL['授權'] if REL['授權'] not in ('', '待定', None)
         else '；'.join(REL['選項'].get('授權', [])) + '（未定）')
 _anki = '已測' if REL.get('Anki實機') not in ('', None, '未測') else '<span style="color:#b3261e">未測</span>'
 pages.append(page(f'''
 <div class="kicker">07 · 待決事項</div>
-<h2 style="margin-top:18px">發布前還剩兩件</h2>
+<h2 style="margin-top:18px">發布前還剩 {_left} 件</h2>
 <table>
 <tr><th style="width:130px">項目</th><th>現況</th></tr>
-<tr><td><b>聯絡</b></td><td>目前 {CONTACT}；需一個可公開的去識別化信箱或表單網址</td></tr>
+<tr><td><b>聯絡</b></td><td>{_contact_cell}</td></tr>
 <tr><td><b>Anki 實機</b></td><td>{_anki}；708 張填空卡尚未在真實 Anki 匯入按過一遍</td></tr>
 </table>
 <div class="alert"><b>{REL["安全提醒"]}</b><br/>使用本站與本樣稿之前，請先確認這一點；它比版式與篇目都重要。</div>

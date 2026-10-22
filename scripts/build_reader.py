@@ -85,7 +85,7 @@ def main():
 
     data = {
         'meta': {
-            'title': '靈樞自學材料',
+            'title': '中醫典籍導讀﹣靈樞經',
             'bendi': '四部叢刊景明嘉靖趙府居敬堂本（Kanripo KR3e0002）',
             'stats': {'pian': len(ch), 'chars': sum(len(p['經文']) for p in ch),
                       'quote_seg': sum(len(__import__('re').findall(r'「([^」]{2,})」', i['stem'])) for i in items['題']),

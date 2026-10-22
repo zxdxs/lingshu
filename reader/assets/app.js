@@ -27,8 +27,8 @@ var VIEWS = {};
 VIEWS.home = function (box) {
   var hero = h('div', 'hero', '');
   hero.innerHTML =
-    '<div class="kicker">黃帝內經 · 靈樞 · 八十一篇</div>' +
-    '<h1>靈樞</h1>' +
+    '<div class="kicker">中醫典籍導讀 · 黃帝內經</div>' +
+    '<h1>靈樞經</h1>' +
     '<p class="lead">把《靈樞》讀成<b>可以驗收的判斷力</b>：81 篇原文、' + stat('items') + ' 道題，' +
     '每一句都能回到底本，每一條限制都寫在站上。</p>' +
     '<div class="row" style="margin-top:14px">' +
@@ -554,6 +554,7 @@ VIEWS.mine = function (box) {
 /* ---------------- 關於 ---------------- */
 VIEWS.about = function (box) {
   box.appendChild(h('h1', '關於'));
+  box.appendChild(h('p', '中醫典籍導讀﹣靈樞經', 'small muted'));
   var t = h('table', '');
   t.innerHTML = '<tr><th style="width:110px">項目</th><th>內容</th></tr>' +
     '<tr><td>底本</td><td>' + esc(LS.meta.bendi) + '</td></tr>' +

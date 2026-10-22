@@ -63,9 +63,9 @@ pages = []
 
 # 1 封面
 pages.append(page(f'''
-<div class="kicker">A proof for review · 未定稿</div>
-<h1 class="big">靈樞</h1>
-<div class="sub">黃帝內經靈樞 · 自學材料<br/>原文 · 註 · 圖 · 題 · 卡</div>
+<div class="kicker">中醫典籍導讀 · A proof for review</div>
+<h1 class="big">靈樞經</h1>
+<div class="sub">中醫典籍導讀<br/>原文 · 註 · 圖 · 題 · 卡</div>
 <div class="rule" style="margin-top:60px"></div>
 <table style="font-size:13px">
 <tr><th style="width:110px">版本</th><td>v1.0.0 大樣（未發布）</td></tr>

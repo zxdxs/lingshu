@@ -20,7 +20,7 @@ except ImportError:
 TPL = os.path.join(ROOT, 'export', 'anki模板')
 MODEL_ID = 1729000001          # 固定，重跑不新增牌組類型
 DECK_ID = 1729000002
-DECK_NAME = '靈樞·自學'
+DECK_NAME = '靈樞經 · 自學'
 
 
 def var_js():

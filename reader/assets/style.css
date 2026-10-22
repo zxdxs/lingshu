@@ -205,3 +205,5 @@ body.show-sid .sid{display:inline}
 .next a{font-size:.9rem}
 .map-list{margin:.4em 0 0 1.1em;padding:0;font-size:.9rem;line-height:1.9}
 .map-list li{margin:0}
+kbd{font-family:inherit;font-size:.82em;border:1px solid var(--line);border-bottom-width:2px;
+  border-radius:4px;padding:0 4px;background:var(--card)}

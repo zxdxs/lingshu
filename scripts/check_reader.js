@@ -51,6 +51,7 @@ function boot(agree) {
     querySelectorAll() { return []; },
     getElementById() { return mkEl("div"); },
     body: mkEl("body"),
+    addEventListener() {},
   };
   const win = {
     document: doc, LS: null, addEventListener(k, f) { (listeners[k] = listeners[k] || []).push(f); },

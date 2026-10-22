@@ -615,8 +615,8 @@ VIEWS.suwen = function (box) {
 /* ---------------- 搜尋 ---------------- */
 VIEWS.search = function (box, q) {
   box.appendChild(h('h1', '搜尋'));
-  box.appendChild(h('p', '全站一次查：篇名與經文、題目、通則、十二經、病候、限制。' +
-    '輸入一個字就開始篩，結果分組列出。', 'small muted'));
+  box.appendChild(h('p', '全站一次查：篇、題、通則、十二經、病候、概念、校勘、九鍼、異同、十二原、五輸、經水、營氣、界限、癰疽、限制。' +
+    '輸入即篩；按 <kbd>/</kbd> 任何一頁都能跳來這裡。', 'small muted'));
 
   var S = LS.search || [];
   var row = h('div', '', 'row');
@@ -1490,6 +1490,21 @@ function route() {
   updateMastery();
   window.scrollTo(0, 0);
 }
+function focusSearch() {
+  if (location.hash.indexOf('#/search') !== 0) location.hash = '#/search';
+  setTimeout(function () {
+    var i = document.querySelector('input[type=search]');
+    if (i) i.focus();
+  }, 30);
+}
+document.addEventListener('keydown', function (e) {
+  var t = e.target || {};
+  if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT') return;
+  if (e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) {
+    e.preventDefault(); focusSearch();
+  }
+});
+
 function boot() {
   var nav = $('#nav');
   NAV.forEach(function (x) {

@@ -135,6 +135,39 @@ def main():
     for x in lim:
         search.append({'k': '限制', 't': x.get('問題', '')[:30], 'd': x.get('範疇', ''),
                        'h': '#/limits'})
+    # 其餘頁面的條目（概念、九鍼、校勘、異同、十二原、五輸、經水、營衛、界限、癰疽）
+    for c in cpts:
+        search.append({'k': '概念', 't': c['w'] or c['t'], 'd': c['s'][:36],
+                       'n': _n((c['w'] or c['t']) + c['s'][:36]), 'h': '#/concept'})
+    for n in nd:
+        search.append({'k': '九鍼', 't': n.get('鍼', ''), 'd': n.get('功能', '')[:34],
+                       'n': _n(n.get('鍼', '') + n.get('功能', '')[:34]), 'h': '#/prep'})
+    for r in col:
+        search.append({'k': '校勘', 't': (r.get('錨點') or r.get('篇名', ''))[:34],
+                       'd': (r.get('判定', '') or '')[:30],
+                       'n': _n((r.get('錨點') or '') + (r.get('判定') or '')[:30]), 'h': '#/collation'})
+    for x in suwen.get('narr', {}).get('差別', []):
+        search.append({'k': '異同', 't': x['題'], 'd': x['主張'][:36],
+                       'n': _n(x['題'] + x['主張'][:36]), 'h': '#/suwen'})
+    for x in yuan.get('原', []):
+        search.append({'k': '十二原', 't': x['藏'] + '之原：' + x['原'], 'd': x.get('屬性', ''),
+                       'n': _n(x['藏'] + x['原']), 'h': '#/meridian?tab=yuan'})
+    for x in ws.get('輸', []):
+        names = '、'.join(v['穴'] for v in x['五輸'].values())
+        search.append({'k': '五輸', 't': x['經'], 'd': names[:36],
+                       'n': _n(x['經'] + names), 'h': '#/meridian?tab=shu'})
+    for x in js.get('水', []):
+        search.append({'k': '經水', 't': x['經'] + '—' + x['水'], 'd': x['內屬'][:20],
+                       'n': _n(x['經'] + x['水'] + x['內屬']), 'h': '#/meridian?tab=shui'})
+    for x in yw.get('營氣', {}).get('次序', []):
+        search.append({'k': '營氣次序', 't': x['步'] + '. ' + x['經'], 'd': x['據'][:34],
+                       'n': _n(x['經'] + x['據'][:34]), 'h': '#/meridian?tab=yw'})
+    for x in bounds.get('級', []):
+        search.append({'k': '界限', 't': x['級'] + ' ' + x['名'], 'd': x['說明'][:34],
+                       'n': _n(x['名'] + x['說明'][:34]), 'h': '#/limits'})
+    for x in abscess.get('癰疽', []):
+        search.append({'k': '癰疽', 't': x['名'], 'd': x['部位'] + ('，' + x['死期'] if x['死期'] else ''),
+                       'n': _n(x['名'] + x['部位'] + (x['死期'] or '')), 'h': '#/binghou'})
 
 
     data = {

@@ -79,6 +79,23 @@ setTimeout(function () {
 </script>
 '''
 
+SHORTCUT = '''<div id="smoke" style="display:none"></div>
+<script>
+window.__err = [];
+window.addEventListener('error', function (e) { window.__err.push(String(e.message)); });
+try { localStorage.setItem('lingshu.reader.v1', JSON.stringify({ agree: 1 })); } catch (e) {}
+setTimeout(function () {
+  var ev = new KeyboardEvent('keydown', { key: '/', bubbles: true });
+  document.body.dispatchEvent(ev);
+  setTimeout(function () {
+    var rep = { hash: location.hash, errors: window.__err,
+                input: !!document.querySelector('input[type=search]') };
+    document.getElementById('smoke').textContent = 'SMOKE=' + JSON.stringify(rep);
+  }, 300);
+}, 700);
+</script>
+'''
+
 INTERACT = '''<div id="smoke" style="display:none"></div>
 <script>
 window.__err = [];
@@ -143,13 +160,14 @@ def dump(chrome, url, profile, budget=5000):
         return ''
 
 
-def page(seed=True, interact=False):
+def page(seed=True, interact=False, shortcut=False):
     src = open(os.path.join(READER, 'index.html'), encoding='utf-8').read()
-    inject = INTERACT if interact else (HARNESS if seed else '')
+    inject = SHORTCUT if shortcut else (INTERACT if interact else (HARNESS if seed else ''))
     if inject:
         src = src.replace('<script src="assets/data.js"></script>',
                           inject + '<script src="assets/data.js"></script>')
-    name = '_smoke_interact.html' if interact else '_smoke_route.html'
+    name = ('_smoke_shortcut.html' if shortcut else
+            '_smoke_interact.html' if interact else '_smoke_route.html')
     p = os.path.join(READER, name)
     open(p, 'w', encoding='utf-8').write(src)
     return os.path.basename(p)
@@ -164,10 +182,13 @@ def main():
     route_page = page(seed=True)
     fails = []
 
-    print(f'瀏覽器：{chrome.split("/")[-1]}　（{len(ROUTES)} 條路由 + 2 個情境）')
+    print(f'瀏覽器：{chrome.split("/")[-1]}　（{len(ROUTES)} 條路由 + 3 個情境）')
     seen, routes_known = {}, []
     for route, need in ROUTES.items():
         rep = dump(chrome, base + route_page + '#/' + route, os.path.join(tmp, 'p' + str(abs(hash(route)) % 99999)))
+        if not rep:   # Chrome 偶爾起不來；給一次較長的機會，不讓偶發失敗冒充真錯
+            rep = dump(chrome, base + route_page + '#/' + route,
+                       os.path.join(tmp, 'r' + str(abs(hash(route)) % 99999)), 9000)
         if not rep:
             fails.append(f'{route}: 沒拿到 SMOKE 回報（頁面可能沒載入）'); continue
         for href in (rep.get('links') or []):
@@ -201,6 +222,13 @@ def main():
     else:
         print(f'  ✓ links          {len(seen)} 個站內連結，全部指向存在的視圖')
 
+    # 情境三：按 / 應跳到搜尋頁並聚焦輸入框
+    sc = dump(chrome, base + page(shortcut=True) + '#/home', os.path.join(tmp, 'sc'), 4000)
+    if sc and sc.get('hash', '').startswith('#/search') and sc.get('input'):
+        print('  ✓ shortcut       按 / 跳到搜尋並聚焦輸入框')
+    else:
+        fails.append('shortcut: ' + json.dumps(sc, ensure_ascii=False)[:200])
+
     # 情境一：未同意 → 必須停在確認頁
     gate = dump(chrome, base + 'index.html#/home', os.path.join(tmp, 'gate'))
     gate_src = subprocess.run([chrome, '--headless=new', '--no-sandbox', '--disable-gpu',
@@ -229,7 +257,7 @@ def main():
             fails.append('interact: ' + json.dumps(inter, ensure_ascii=False)[:400])
 
     if '--keep' not in sys.argv:
-        for n in (route_page, '_smoke_interact.html'):
+        for n in (route_page, '_smoke_interact.html', '_smoke_shortcut.html'):
             try: os.remove(os.path.join(READER, n))
             except OSError: pass
         shutil.rmtree(tmp, ignore_errors=True)
@@ -240,7 +268,7 @@ def main():
             print('  ✗ ' + f)
         print(f'結論：{len(fails)} 項失敗')
         return 1
-    print(f'結論：{len(ROUTES)} 條路由與 2 個情境全部通過')
+    print(f'結論：{len(ROUTES)} 條路由與 3 個情境全部通過')
     return 0
 
 

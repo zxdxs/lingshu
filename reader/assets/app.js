@@ -30,7 +30,7 @@ function nextLinks(box, links) {
 
 var NAV = [
   ['home','首頁',1], ['themes','主題'], ['law','通則'],
-  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'],
+  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['jiugong','九宫'],
   ['items','題庫',1], ['concept','概念'],
   ['suwen','異同',1], ['prep','九鍼'],
   ['search','搜尋',1], ['method','方法'], ['collation','校勘'], ['limits','限制'],
@@ -663,7 +663,88 @@ VIEWS.search = function (box, q) {
   nextLinks(box, [['通則', '#/law'], ['十二經', '#/meridian'], ['題庫', '#/items']]);
 };
 
-/* ---------------- 病候 ---------------- */
+
+/* ---------------- 九宫八風（背景） ---------------- */
+VIEWS.jiugong = function (box) {
+  var D = LS.jiugong || {};
+  box.appendChild(h('h1', '九宫八風：一層背景知識'));
+  box.appendChild(h('p', '〈九宫八風〉不是孤立的占書，是秦漢式法與曆法的一頁。' +
+    '當時的學者熟悉這一套：太一移日、九宫值日、八風從哪個方向來、傷哪一藏。' +
+    '靈樞用它，就像後世醫書用陰陽五行——<b>不是拿它當命題證明，是把它當共同的語言</b>。', 'lead'));
+
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>怎麼讀這一頁</h3><ul class="small">' +
+    '<li><b>背景知識不等於可驗證的命題</b>：陰陽、五行、九宫都屬這一類。要求它「用靈樞內部證據驗證」是錯的標準——' +
+    '背景的定義就是「不自證、只共用」。</li>' +
+    '<li>但背景也分兩層：<b>格式</b>（宫名、日數、方位）與<b>推斷</b>（占君相、預測吉凶）。' +
+    '前者要知道，後者可以存疑。</li>' +
+    '<li>本頁把格式整理出來；占驗部分只照錄，不代為推演。</li></ul>';
+  box.appendChild(intro);
+
+  // 九宫
+  var c1 = h('div', '', 'card');
+  c1.appendChild(el('h2', '', '九宫與太一移日'));
+  c1.appendChild(h('p', '太一以冬至起於叶蟄，每宫居若干日，再移下一宫。八宫日數：六宫四十六日、二宫四十五日。' +
+    '方位依九宫通例補（標『注』），原文只給宫名與日數。', 'small'));
+  var t1 = '<tr><th style="width:44px">#</th><th style="width:80px">宫</th><th style="width:70px">日數</th><th>方位（注）</th></tr>';
+  (D['九宫'] || []).forEach(function (g) {
+    t1 += '<tr><td>' + g['序'] + '</td><td><b>' + esc(g['宫']) + '</b></td>' +
+      '<td class="num">' + g['日數'] + '</td><td class="small muted">' + esc(g['方位']) + '</td></tr>';
+  });
+  var w1 = h('div', '', 'table-wrap'); w1.innerHTML = '<table>' + t1 + '</table>';
+  c1.appendChild(w1);
+  if (D['太一']) {
+    c1.appendChild(h('p', '原文（句 ' + esc(D['太一']['id']) + '）：' + esc(D['太一']['文'].slice(0, 150)) + '…', 'small muted'));
+  }
+  box.appendChild(c1);
+
+  // 八風
+  var c2 = h('div', '', 'card');
+  c2.appendChild(el('h2', '', '八風：方位 → 風名 → 內舍 → 外在 → 氣主'));
+  c2.appendChild(h('p', '這張表是全篇最可用的部分：每一風都寫明傷哪一藏、外在哪一部、其氣主何。' +
+    '結構與〈五邪〉〈邪氣藏府病形〉同構。', 'small'));
+  var t2 = '<tr><th style="width:52px">方位</th><th style="width:86px">風</th><th style="width:64px">內舍</th>' +
+    '<th style="width:170px">外在</th><th style="width:72px">氣主</th><th>原文</th></tr>';
+  (D['八風'] || []).forEach(function (f) {
+    t2 += '<tr><td>' + esc(f['方位']) + '</td><td><b>' + esc(f['風']) + '</b></td>' +
+      '<td>' + esc(f['內舍']) + '</td><td class="small">' + esc(f['外在']) + '</td>' +
+      '<td>' + esc(f['氣主']) + '</td><td class="small">' + esc(f['文']) +
+      ' <span class="src">' + esc(f['id']) + '</span></td></tr>';
+  });
+  var w2 = h('div', '', 'table-wrap'); w2.innerHTML = '<table>' + t2 + '</table>';
+  c2.appendChild(w2);
+  box.appendChild(c2);
+
+  // 移日、三虛、避風
+  var c3 = h('div', '', 'card');
+  c3.appendChild(el('h2', '', '三句關鍵'));
+  [['移日', '太一移日'], ['三虛', '三虛相摶'], ['避風', '避虛風']].forEach(function (k) {
+    var q = D[k[0]];
+    if (!q) return;
+    var p = h('p', '', 'quote');
+    p.innerHTML = esc(q['文']) + '<div class="src">句 ' + esc(q['id']) +
+      '　<a href="#/read?seq=77">回原文</a></div>';
+    c3.appendChild(p);
+    if (k[0] === '三虛') c3.appendChild(h('p', '三虛的定義在〈歲露〉：「乘年之衰，逢月之空，失時之和，因為賊風所傷」。', 'small muted'));
+  });
+  box.appendChild(c3);
+
+  var tail = h('div', '', 'card');
+  tail.innerHTML = '<h3>為什麼不把它踢出去</h3>' +
+    '<p class="small">如果因為『無法用靈樞內部證據驗證』就整篇排除，那陰陽、五行、藏象、營衛的循環也都不該收——' +
+    '它們同樣是背景，不是推論出來的定理。<b>拒絕背景知識，讀者就讀不懂作者在引什麼。</b></p>' +
+    '<p class="small">真正該做的是分層：格式要知道（宫名、日數、八風病位），' +
+    '推斷可以存疑（占君相、預測吉凶）。本頁照這個原則處理。</p>' +
+    '<p class="small muted">界：這是秦漢式法與曆法的背景，不是現代氣象學或流行病學；' +
+    '靈樞用它，不代表它已被驗證，也不代表不能用來理解文本。</p>' +
+    '<p class="small"><a href="#/law">看通則（32–34 條即出自本篇）</a>　·　' +
+    '<a href="#/read?seq=77">讀〈九宫八風〉全文</a>　·　<a href="#/read?seq=79">讀〈歲露論〉</a></p>';
+  box.appendChild(tail);
+
+  nextLinks(box, [['通則：虛風與三虛', '#/law'], ['歲露論：月滿月空', '#/read?seq=79'], ['方法：收錄狀況', '#/method']]);
+};
+
+/* ---------------- 字根 ---------------- */
 VIEWS.binghou = function (box) {
   var D = LS.binghou || {}, groups = D['組'] || [];
   box.appendChild(h('h1', '病候：四組模板'));
@@ -1264,12 +1345,12 @@ VIEWS.method = function (box) {
       cc.appendChild(ul);
     }
     cc.appendChild(h('p', '「只有題目」不等於沒價值：題庫已可練；缺的是把該篇的原則抽成通則、或把病候收進病候頁。', 'small muted'));
-    var hold = (CM['未採部分'] || []);
+    var hold = (CM['背景層'] || []);
     if (hold.length) {
-      cc.appendChild(h('h3', '一篇之中有分層：未採的部分', 'small'));
+      cc.appendChild(h('h3', '背景層：不抽通則，但有專頁', 'small'));
       hold.forEach(function (x) {
         cc.appendChild(h('p', '<a href="#/read?seq=' + x['序'] + '">〈' + esc(x['篇']) + '〉</a>　' +
-          '未採：' + esc(x['範圍']), 'small'));
+          esc(x['處理']), 'small'));
         cc.appendChild(h('p', esc(x['理由']), 'small muted'));
       });
     }

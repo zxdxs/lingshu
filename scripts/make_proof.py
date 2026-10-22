@@ -164,27 +164,26 @@ pages.append(page(f'''
 ''', '靈樞 · 自學材料', '限制', 7))
 
 # 8 待決與封底
-_opts = ' ／ '.join(REL['選項'].get('授權', []))
-_opts += ('（本稿目前留白）' if REL['授權'] in ('', '待定', None)
-          else f'（已定為 {REL["授權"]}）')
+_lic = (REL['授權'] if REL['授權'] not in ('', '待定', None)
+        else '；'.join(REL['選項'].get('授權', [])) + '（未定）')
+_anki = '已測' if REL.get('Anki實機') not in ('', None, '未測') else '<span style="color:#b3261e">未測</span>'
 pages.append(page(f'''
 <div class="kicker">07 · 待決事項</div>
-<h2 style="margin-top:18px">發布前要你決定的三件事</h2>
+<h2 style="margin-top:18px">發布前還剩兩件</h2>
 <table>
-<tr><th style="width:130px">項目</th><th>選項</th></tr>
-<tr><td><b>授權</b></td><td>{_opts}</td></tr>
+<tr><th style="width:130px">項目</th><th>現況</th></tr>
 <tr><td><b>聯絡</b></td><td>目前 {CONTACT}；需一個可公開的去識別化信箱或表單網址</td></tr>
-<tr><td><b>案例題比例</b></td><td>維持 6 道樣板 ／ 找人寫到 20–30 道再發布</td></tr>
+<tr><td><b>Anki 實機</b></td><td>{_anki}；708 張填空卡尚未在真實 Anki 匯入按過一遍</td></tr>
 </table>
 <div class="box"><span class="label">已定案</span>
-站名「{REL["站名"]}」，版本 v{REL["版本"]}；樣張篇目用第 40 篇〈陰陽清濁〉（短、有校記）。<br/>
-其餘數字與引文皆由 <code>data/發布資訊.json</code> 與現有資料自動帶入。</div>
+授權 <b>{_lic}</b>（原文屬公共領域，本計畫之標點、校記、題目、圖表依此釋出；見 <code>LICENSE.txt</code>）。<br/>
+站名「{REL["站名"]}」，版本 v{REL["版本"]}；案例題維持 6 道樣板；樣張篇目用第 40 篇〈陰陽清濁〉（短、有校記）。</div>
 <div class="box"><span class="label">審閱重點</span>
 1. 版式與字級是否適合列印；<br/>
 2. 從「主題」進站是否比從「篇目」進站更貼近你想教的東西；<br/>
 3. 「練習／閱讀／查詢」三分法是否清楚；<br/>
 4. 限制頁是否說得夠坦白、又不嚇跑讀者。</div>
-<div class="small" style="margin-top:70px">大樣稿由 <code>scripts/make_proof.py</code> 產生；數字與引文皆取自現有資料。</div>
+<div class="small" style="margin-top:70px">大樣稿由 <code>scripts/make_proof.py</code> 產生；數字、授權與待決項目皆由 <code>data/發布資訊.json</code> 帶入。</div>
 ''', REL['站名'], '封底', 8))
 
 html = f'''<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">

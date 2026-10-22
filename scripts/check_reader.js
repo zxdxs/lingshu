@@ -84,7 +84,9 @@ const aboutFails = [];
 if (drift.length) aboutFails.push("data.js 與 data/發布資訊.json 不同步：" + drift.join("、"));
 if (!aboutHtml.includes(REL["站名"])) aboutFails.push("關於頁沒有站名");
 if (REL["授權"] === "待定" && !aboutHtml.includes("待定")) aboutFails.push("授權未定卻未顯示「待定」");
+if (REL["授權"] !== "待定" && !aboutHtml.includes(REL["授權"])) aboutFails.push("關於頁沒有顯示已定的授權");
 if (REL["聯絡"] === "待補" && !aboutHtml.includes("待補")) aboutFails.push("聯絡未填卻未顯示「待補」");
+if (REL["Anki實機"] === "未測" && !aboutHtml.includes("Anki 實機")) aboutFails.push("Anki 未測卻未列為待決");
 if (aboutFails.length) { fails++; console.log("  ✗ release " + aboutFails.join("；")); }
 else console.log(`  ✓ release  站名=${REL["站名"]} 授權=${REL["授權"]} 聯絡=${REL["聯絡"]}`);
 

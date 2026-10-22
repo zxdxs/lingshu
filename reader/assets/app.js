@@ -556,7 +556,10 @@ VIEWS.about = function (box) {
   var R = (LS.meta.release || {});
   box.appendChild(h('h1', '關於'));
   box.appendChild(h('p', (R.站名 || '中醫典籍導讀﹣靈樞經') + (R.英文名 ? '　·　' + R.英文名 : ''), 'small muted'));
-  var pend = (R.必要 || []).filter(function (k) { return !R[k] || R[k] === '待定' || R[k] === '待補'; });
+  var LABEL = { '聯絡': '聯絡方式', 'Anki實機': 'Anki 實機匯入測試', '授權': '授權' };
+  var pend = (R.必要 || []).filter(function (k) {
+    return !R[k] || R[k] === '待定' || R[k] === '待補' || R[k] === '未測';
+  }).map(function (k) { return LABEL[k] || k; });
   var t = h('table', '');
   t.innerHTML = '<tr><th style="width:110px">項目</th><th>內容</th></tr>' +
     '<tr><td>底本</td><td>' + esc(LS.meta.bendi) + '</td></tr>' +
@@ -566,7 +569,8 @@ VIEWS.about = function (box) {
       (LS.meta.stats.ans_tuisuan || 24) + '／整理語 ' + (LS.meta.stats.ans_zhengli || 15) + '（已標明）</td></tr>' +
     '<tr><td>註家</td><td>《類經》張介賓注為主；19 條配對待專家核</td></tr>' +
     '<tr><td>授權</td><td>' + (R.授權 && R.授權 !== '待定'
-      ? esc(R.授權) : '<b>待定</b>（目前僅供審閱，不得轉載）') + '</td></tr>' +
+      ? esc(R.授權) + '（原文屬公共領域；本計畫之標點、校記、題目、圖表依此釋出，見 <code>LICENSE.txt</code>）'
+      : '<b>待定</b>（目前僅供審閱，不得轉載）') + '</td></tr>' +
     '<tr><td>聯絡</td><td>' + (R.聯絡 && R.聯絡 !== '待補'
       ? esc(R.聯絡) : '待補（發布前填入）') + '</td></tr>' +
     '<tr><td>引用</td><td>' + esc(R.引用格式 || '《中醫典籍導讀﹣靈樞經》v1.0，篇序＋篇名，例：40〈陰陽清濁〉') + '</td></tr>';

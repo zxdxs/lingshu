@@ -81,7 +81,8 @@ def release_pending():
         rel = json.load(open(os.path.join(ROOT, 'data', '發布資訊.json'), encoding='utf-8'))
     except FileNotFoundError:
         return -1
-    return sum(1 for k in rel.get('必要', []) if rel.get(k) in ('', None, '待定', '待補'))
+    PEND = ('', None, '待定', '待補', '未測')
+    return sum(1 for k in rel.get('必要', []) if rel.get(k) in PEND)
 
 
 def metrics():

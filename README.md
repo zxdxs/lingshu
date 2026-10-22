@@ -119,7 +119,7 @@
 | 主題連題與路線 | `docs/110_主題連題與病變路線.md`（主題→題庫；病從外入七站 66-5-1～7） |
 | 編者歸納的標記 | `docs/111_編者歸納的標記.md`（主題與概念分層標『編者歸納』；不冒充原文分類） |
 | 站名 | `docs/112_站名.md`（中醫典籍導讀﹣靈樞經；落在哪六處、還沒定的四項） |
-| 發布待決 | `docs/113_發布待決.md`＋`data/發布資訊.json`（授權與聯絡單一來源；未定時打包不寫 LICENSE） |
+| 發布待決 | `docs/113_發布待決.md`＋`data/發布資訊.json`（授權已定 CC BY-NC-SA 4.0；聯絡與 Anki 實測仍待決） |
 | 有什麼禁忌 | `docs/38_禁忌清單.md` |
 | 做過什麼、錯過什麼 | `docs/22_回頭評估.md`、`docs/34_價值點遺漏稽核.md` |
 
@@ -164,11 +164,12 @@ build_base_text.py        底本解析（含音釋剝離、補頁）
 
 - 目前版本：**v1.0.0（未發布）**；變更紀錄見 [`CHANGELOG.md`](CHANGELOG.md)。
 - 打包：`python3 scripts/package_release.py 1.0.0` → `dist/lingshu-v1.0.0.zip` ＋ `manifest-v1.0.0.json`（含計數與 sha256）。
-- **發布資訊單一來源**：`data/發布資訊.json`（站名、版本、授權、聯絡、引用格式）。改完要重跑 `build_reader.py`，否則 `check_reader` 會以「不同步」擋下。授權／聯絡未定時，打包不寫 `LICENSE.txt`，manifest 會列出`發布待決`。見 `docs/113_發布待決.md`。
-- **發布前必做**：① 在真實 Anki 匯入 `export/靈樞_填空.apkg`、按過一次（目前未測）；② 決定授權並放 `LICENSE.txt`；③ 填聯絡。見 `docs/100_發布前檢查.md`。
+- **發布資訊單一來源**：`data/發布資訊.json`（站名、版本、授權、聯絡、案例題、Anki 實測、引用格式）。改完要重跑 `build_reader.py`，否則 `check_reader` 會以「不同步」擋下。見 `docs/113_發布待決.md`。
+- **授權**：CC BY-NC-SA 4.0（原文屬公共領域，授權及於新增之標點、校記、題目、圖表）；通知文件見 [`LICENSE.txt`](LICENSE.txt)，法律文本以 creativecommons.org 為準。
+- **發布前必做**：① 在真實 Anki 匯入 `export/靈樞_填空.apkg`（708 卡）並按過一次（目前未測）；② 填聯絡。`check_all` 的`發布待決`須為 0。見 `docs/100_發布前檢查.md`。
 
 ## 授權與來源
 
 底本據 Kanripo `KR3e0002`（四部叢刊本）數位轉錄；《類經》據四庫全書本 `KR3e0085`；《太素》據 tls `KR3ea031`。來源著錄見 `vendor/README.md`。
 
-古籍原文屬公有領域；本專案的整理、標注、題目與分析部分，使用前請自行判斷其可靠性（見 `docs/42`）。
+古籍原文屬公有領域；本專案的整理、標注、題目、圖表以 **CC BY-NC-SA 4.0** 釋出（見 [`LICENSE.txt`](LICENSE.txt)）。內容未經臨床驗證，使用前請自行判斷可靠性（見 `docs/42`）。

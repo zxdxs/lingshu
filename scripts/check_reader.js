@@ -133,6 +133,7 @@ const NEED = {
   "/suwen": ["card", "quote"],
   "/law": ["card", "quote", "law-item"],
   "/binghou": ["card", "quote", "bh-item"],
+  "/prep": ["card"],
   "/meridian": ["card", "mer-card", "mer-row"],
   "/meridian?tab=bie": ["card", "mer-card", "mer-row"],
   "/meridian?tab=jin": ["card", "mer-card", "mer-row"],

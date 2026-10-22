@@ -1120,7 +1120,25 @@ VIEWS.prep = function (box) {
     '<a href="#/read?seq=7">〈官鍼〉</a></p>';
   box.appendChild(c);
 
-  nextLinks(box, [['十二經：鍼刺的對象', '#/meridian'], ['校勘：毫鍼長度的差異', '#/collation'], ['方法：本站可不可信', '#/method']]);};
+  nextLinks(box, [['十二經：鍼刺的對象', '#/meridian'], ['校勘：毫鍼長度的差異', '#/collation'], ['方法：本站可不可信', '#/method']]);
+
+  var W = LS.wuci || {};
+  if ((W['刺'] || []).length) {
+    var c2 = h('div', '', 'card');
+    c2.appendChild(el('h2', '', '五刺：以應五藏'));
+    c2.appendChild(h('p', '〈官鍼〉先說『凡刺有五，以應五藏』，再逐條給名字與取法。' +
+      '五刺的對應很乾淨：皮—肺、脉—心、筋—肝、肌—脾、骨—腎。', 'small'));
+    var t2 = h('table', '');
+    t2.innerHTML = '<tr><th style="width:44px">#</th><th style="width:84px">刺</th><th style="width:52px">應</th><th>原文</th></tr>';
+    (W['刺'] || []).forEach(function (x) {
+      t2.innerHTML += '<tr><td>' + x['序'] + '</td><td><b>' + esc(x['名']) + '</b></td>' +
+        '<td>' + esc(x['應']) + '</td><td class="small">' + esc(x['文'].replace(/^[一二三四五]曰/, '')) +
+        ' <span class="src">句 ' + esc(x['id']) + '</span></td></tr>';
+    });
+    c2.appendChild(t2);
+    c2.appendChild(h('p', '五刺是「按病位選刺法」的清單，與九鍼（按工具）不同層次；本頁照原文，不示範操作。', 'small muted'));
+    box.appendChild(c2);
+  }};
 
 /* ---------------- 方法 ---------------- */
 VIEWS.method = function (box) {

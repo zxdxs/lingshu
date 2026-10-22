@@ -47,7 +47,7 @@ ROUTES = {
     'meridian?tab=shu': {'card': 12},
     'meridian?tab=yuan': {'card': 2, 'quote': 4},
     'meridian?tab=yw': {'card': 4, 'quote': 5},
-    'prep': {'card': 1},
+    'prep': {'card': 2},
     'method': {},
     'collation': {},
     'limits': {'alert': 1},

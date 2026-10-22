@@ -553,19 +553,27 @@ VIEWS.mine = function (box) {
 
 /* ---------------- 關於 ---------------- */
 VIEWS.about = function (box) {
+  var R = (LS.meta.release || {});
   box.appendChild(h('h1', '關於'));
-  box.appendChild(h('p', '中醫典籍導讀﹣靈樞經', 'small muted'));
+  box.appendChild(h('p', (R.站名 || '中醫典籍導讀﹣靈樞經') + (R.英文名 ? '　·　' + R.英文名 : ''), 'small muted'));
+  var pend = (R.必要 || []).filter(function (k) { return !R[k] || R[k] === '待定' || R[k] === '待補'; });
   var t = h('table', '');
   t.innerHTML = '<tr><th style="width:110px">項目</th><th>內容</th></tr>' +
     '<tr><td>底本</td><td>' + esc(LS.meta.bendi) + '</td></tr>' +
     '<tr><td>規模</td><td>81 篇、經文 ' + stat('chars').toLocaleString() + ' 字、題庫 ' + stat('items') + ' 題</td></tr>' +
     '<tr><td>引文</td><td>題面逐字比對，不符 0</td></tr>' +
-    '<tr><td>答案</td><td>原文 669／推算 24／整理語 15（已標明）</td></tr>' +
+    '<tr><td>答案</td><td>原文 ' + (LS.meta.stats.ans_yuanwen || 669) + '／推算 ' +
+      (LS.meta.stats.ans_tuisuan || 24) + '／整理語 ' + (LS.meta.stats.ans_zhengli || 15) + '（已標明）</td></tr>' +
     '<tr><td>註家</td><td>《類經》張介賓注為主；19 條配對待專家核</td></tr>' +
-    '<tr><td>授權</td><td><b>待定</b>（目前僅供審閱）</td></tr>' +
-    '<tr><td>聯絡</td><td>待補（發布前填入）</td></tr>' +
-    '<tr><td>引用</td><td>建議格式：《靈樞自學材料》v1.0，篇序＋篇名，例：40〈陰陽清濁〉</td></tr>';
+    '<tr><td>授權</td><td>' + (R.授權 && R.授權 !== '待定'
+      ? esc(R.授權) : '<b>待定</b>（目前僅供審閱，不得轉載）') + '</td></tr>' +
+    '<tr><td>聯絡</td><td>' + (R.聯絡 && R.聯絡 !== '待補'
+      ? esc(R.聯絡) : '待補（發布前填入）') + '</td></tr>' +
+    '<tr><td>引用</td><td>' + esc(R.引用格式 || '《中醫典籍導讀﹣靈樞經》v1.0，篇序＋篇名，例：40〈陰陽清濁〉') + '</td></tr>';
   box.appendChild(t);
+  if (pend.length) {
+    box.appendChild(h('p', '待決：' + pend.join('、') + '（其餘皆已定稿；填入後重建即生效）', 'small'));
+  }
   box.appendChild(h('p', LS.meta.warn, 'small'));
 };
 

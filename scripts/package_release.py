@@ -38,16 +38,27 @@ def files():
 def main():
     os.makedirs(OUT, exist_ok=True)
     items = json.load(open(os.path.join(ROOT, 'data', '題庫_示例.json'), encoding='utf-8'))
+    rel = json.load(open(os.path.join(ROOT, 'data', '發布資訊.json'), encoding='utf-8'))
+    undecided = [k for k in rel.get('必要', []) if rel.get(k) in ('', None, '待定', '待補')]
     entries, total = [], 0
     zp = os.path.join(OUT, f'lingshu-v{VERSION}.zip')
+    lic = os.path.join(ROOT, 'LICENSE.txt')
     with zipfile.ZipFile(zp, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for p in files():
-            rel = os.path.relpath(p, ROOT)
-            z.write(p, rel)
-            entries.append({'path': rel, 'sha256': sha(p), 'bytes': os.path.getsize(p)})
+            rel_p = os.path.relpath(p, ROOT)
+            z.write(p, rel_p)
+            entries.append({'path': rel_p, 'sha256': sha(p), 'bytes': os.path.getsize(p)})
             total += os.path.getsize(p)
+        if os.path.exists(lic) and not undecided:
+            z.write(lic, 'LICENSE.txt')
+            entries.append({'path': 'LICENSE.txt', 'sha256': sha(lic), 'bytes': os.path.getsize(lic)})
+            total += os.path.getsize(lic)
     manifest = {
         '版本': VERSION,
+        '站名': rel['站名'],
+        '授權': rel['授權'],
+        '聯絡': rel['聯絡'],
+        '發布待決': undecided,
         '題數': items['題數'],
         '題型分布': items['題型分布'],
         '檔案數': len(entries),
@@ -59,6 +70,8 @@ def main():
     json.dump(manifest, open(os.path.join(OUT, f'manifest-v{VERSION}.json'), 'w', encoding='utf-8'),
               ensure_ascii=False, indent=1)
     print(f'打包 {zp}：{len(entries)} 檔、{total/1e6:.1f} MB → {manifest["打包大小"]/1e6:.1f} MB')
+    if undecided:
+        print(f'⚠ 尚未定案：{"、".join(undecided)}　（未寫入 LICENSE.txt；僅可作審閱稿）')
     return 0
 
 

@@ -83,16 +83,22 @@ def main():
             'case': '-CASE-' in i['item_id'], 'sid': i.get('句', ''),
         })
 
+    rel = load('data/發布資訊.json')
+
     data = {
         'meta': {
-            'title': '中醫典籍導讀﹣靈樞經',
+            'title': rel['站名'],
+            'release': rel,
             'bendi': '四部叢刊景明嘉靖趙府居敬堂本（Kanripo KR3e0002）',
             'stats': {'pian': len(ch), 'chars': sum(len(p['經文']) for p in ch),
                       'quote_seg': sum(len(__import__('re').findall(r'「([^」]{2,})」', i['stem'])) for i in items['題']),
                       'items': items['題數'], 'fill': items['題型分布'].get('fill_blank', 0),
                       'mcq': items['題型分布'].get('mcq', 0),
                       'err': items['題型分布'].get('error_identification', 0),
-                      'index': len(idx), 'limits': len(lim), 'contradictions': len(con)},
+                      'index': len(idx), 'limits': len(lim), 'contradictions': len(con),
+                      'ans_yuanwen': sum(1 for i in items['題'] if i.get('答案類型') == '原文'),
+                      'ans_tuisuan': sum(1 for i in items['題'] if i.get('答案類型') == '推算'),
+                      'ans_zhengli': sum(1 for i in items['題'] if i.get('答案類型') == '整理語')},
             'warn': '原文與題目皆經逐字比對；臨床主張未經驗證，不可據以施治。',
         },
         'juan': [{'no': k, 'label': ('卷' + str(k)) if k != '' else '卷首', 'n': len(v),

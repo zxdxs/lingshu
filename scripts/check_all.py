@@ -75,6 +75,15 @@ def docs_pending():
     return pend
 
 
+def release_pending():
+    """發布前必要欄位仍未決的數量（資料來源：data/發布資訊.json）。"""
+    try:
+        rel = json.load(open(os.path.join(ROOT, 'data', '發布資訊.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return -1
+    return sum(1 for k in rel.get('必要', []) if rel.get(k) in ('', None, '待定', '待補'))
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -98,6 +107,7 @@ def metrics():
         '題目有句ID': sum(1 for i in its if i.get('句')),
         '文件引文待核': docs_pending(),
         '文件數': len(glob.glob(os.path.join(ROOT, 'docs', '*.md'))),
+        '發布待決': release_pending(),
     }
 
 

@@ -19,6 +19,9 @@ MCQ = next(i for i in ITEMS['題'] if i['type'] == 'mcq' and i['source']['篇序
 CASE = next(i for i in ITEMS['題'] if '-CASE-' in i['item_id'])
 GLOSS = next((g['音釋'] for g in GI if g['卷'].lstrip('0') == '6'), '')
 GLOSS = re.sub(r'\([^)]*\)', '', GLOSS)[:70]
+REL = json.load(open(os.path.join(ROOT, 'data', '發布資訊.json'), encoding='utf-8'))
+LIC = REL['授權'] if REL['授權'] not in ('', '待定') else '<span style="color:#b3261e">待定</span>（本樣稿末頁列出待決事項）'
+CONTACT = REL['聯絡'] if REL['聯絡'] not in ('', '待補') else '待補'
 
 CSS = '''
 :root { --ink:#1c1a17; --mute:#7c7367; --line:#d9d2c6; --paper:#fbf8f2; --accent:#7a5a3a; }
@@ -62,16 +65,17 @@ def page(inner, foot_l, foot_r, n):
 pages = []
 
 # 1 封面
+_pdf_n = len(__import__('glob').glob(os.path.join(ROOT, 'docs', '*.md')))
 pages.append(page(f'''
 <div class="kicker">中醫典籍導讀 · A proof for review</div>
 <h1 class="big">靈樞經</h1>
-<div class="sub">中醫典籍導讀<br/>原文 · 註 · 圖 · 題 · 卡</div>
+<div class="sub">{REL["站名"]}<br/>{REL["副標"]}</div>
 <div class="rule" style="margin-top:60px"></div>
 <table style="font-size:13px">
-<tr><th style="width:110px">版本</th><td>v1.0.0 大樣（未發布）</td></tr>
-<tr><th>規模</th><td>81 篇 · 題庫 {ITEMS["題數"]} 題 · 文件 100 份</td></tr>
+<tr><th style="width:110px">版本</th><td>v{REL["版本"]} 大樣（未發布）</td></tr>
+<tr><th>規模</th><td>81 篇 · 題庫 {ITEMS["題數"]} 題 · 文件 {_pdf_n} 份</td></tr>
 <tr><th>底本</th><td>四部叢刊景明嘉靖趙府居敬堂本（Kanripo KR3e0002）</td></tr>
-<tr><th>授權</th><td><span style="color:#b3261e">待定</span>（本樣稿末頁列出待決事項）</td></tr>
+<tr><th>授權</th><td>{LIC}</td></tr>
 </table>
 <div class="small" style="margin-top:80px">本稿僅供審閱排版與內容取捨；數字與引文皆由現有資料自動帶入。<br/>內容未經臨床驗證，不可據以施治。</div>
 ''', '靈樞 · 自學材料', '封面', 1))
@@ -160,26 +164,31 @@ pages.append(page(f'''
 ''', '靈樞 · 自學材料', '限制', 7))
 
 # 8 待決與封底
+_opts = ' ／ '.join(REL['選項'].get('授權', []))
+_opts += ('（本稿目前留白）' if REL['授權'] in ('', '待定', None)
+          else f'（已定為 {REL["授權"]}）')
 pages.append(page(f'''
 <div class="kicker">07 · 待決事項</div>
-<h2 style="margin-top:18px">發布前要你決定的四件事</h2>
+<h2 style="margin-top:18px">發布前要你決定的三件事</h2>
 <table>
 <tr><th style="width:130px">項目</th><th>選項</th></tr>
-<tr><td><b>授權</b></td><td>CC BY-NC-SA 4.0 ／ CC BY-SA 4.0 ／ 保留所有權利（本稿目前留白）</td></tr>
-<tr><td><b>書名</b></td><td>《靈樞自學材料》／《靈樞：可練的讀本》／其他</td></tr>
-<tr><td><b>樣張篇目</b></td><td>現用第 40 篇〈陰陽清濁〉（短、有校記）；可換〈本輸〉或〈經脈〉</td></tr>
+<tr><td><b>授權</b></td><td>{_opts}</td></tr>
+<tr><td><b>聯絡</b></td><td>目前 {CONTACT}；需一個可公開的去識別化信箱或表單網址</td></tr>
 <tr><td><b>案例題比例</b></td><td>維持 6 道樣板 ／ 找人寫到 20–30 道再發布</td></tr>
 </table>
+<div class="box"><span class="label">已定案</span>
+站名「{REL["站名"]}」，版本 v{REL["版本"]}；樣張篇目用第 40 篇〈陰陽清濁〉（短、有校記）。<br/>
+其餘數字與引文皆由 <code>data/發布資訊.json</code> 與現有資料自動帶入。</div>
 <div class="box"><span class="label">審閱重點</span>
 1. 版式與字級是否適合列印；<br/>
-2. 樣張篇目是否代表性足夠；<br/>
+2. 從「主題」進站是否比從「篇目」進站更貼近你想教的東西；<br/>
 3. 「練習／閱讀／查詢」三分法是否清楚；<br/>
 4. 限制頁是否說得夠坦白、又不嚇跑讀者。</div>
 <div class="small" style="margin-top:70px">大樣稿由 <code>scripts/make_proof.py</code> 產生；數字與引文皆取自現有資料。</div>
-''', '靈樞 · 自學材料', '封底', 8))
+''', REL['站名'], '封底', 8))
 
 html = f'''<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
-<title>靈樞自學材料 · 大樣稿 v1.0.0</title><style>{CSS}</style></head><body>
+<title>{REL["站名"]} · 大樣稿 v{REL["版本"]}</title><style>{CSS}</style></head><body>
 {''.join(pages)}
 </body></html>'''
 out = os.path.join(ROOT, 'export', '大樣稿.html')

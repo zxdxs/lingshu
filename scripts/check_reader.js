@@ -70,4 +70,22 @@ for (const v of routes) {
   if (bad.length || empty) { fails++; console.log(`  ✗ ${v}  nodes=${nodes} bad=${JSON.stringify(bad)} empty=${empty}`); }
   else console.log(`  ✓ ${v}  nodes=${nodes} html=${html.length}`);
 }
+/* 發布資訊單一來源：data/發布資訊.json 與 data.js 的 meta.release 必須一致，
+   且「關於」頁要如實顯示授權／聯絡（未定時必須看得到「待定／待補」）。 */
+const REL = JSON.parse(fs.readFileSync(path.join(ROOT, "data/發布資訊.json"), "utf8"));
+const got = ctx.window.LS.meta.release || {};
+const drift = Object.keys(REL).filter(k => k !== "選項" && k !== "待決說明" && k !== "待決"
+  && JSON.stringify(REL[k]) !== JSON.stringify(got[k]));
+win.location.hash = "#/about";
+viewNode._html = ""; viewNode.children = [];
+(listeners.hashchange || []).forEach(f => f());
+const aboutHtml = walk(viewNode, []).map(n => (n._html || "") + (n._text || "")).join(" ");
+const aboutFails = [];
+if (drift.length) aboutFails.push("data.js 與 data/發布資訊.json 不同步：" + drift.join("、"));
+if (!aboutHtml.includes(REL["站名"])) aboutFails.push("關於頁沒有站名");
+if (REL["授權"] === "待定" && !aboutHtml.includes("待定")) aboutFails.push("授權未定卻未顯示「待定」");
+if (REL["聯絡"] === "待補" && !aboutHtml.includes("待補")) aboutFails.push("聯絡未填卻未顯示「待補」");
+if (aboutFails.length) { fails++; console.log("  ✗ release " + aboutFails.join("；")); }
+else console.log(`  ✓ release  站名=${REL["站名"]} 授權=${REL["授權"]} 聯絡=${REL["聯絡"]}`);
+
 process.exit(fails ? 1 : 0);

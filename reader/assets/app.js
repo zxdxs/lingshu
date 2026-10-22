@@ -665,7 +665,8 @@ VIEWS.binghou = function (box) {
 VIEWS.meridian = function (box, q) {
   var tab = (q && q.tab) || 'jing';
   var TABS = [['jing', '十二經脉'], ['bie', '十二經别'], ['jin', '十二經筋'],
-              ['luo', '十五絡'], ['shui', '十二經水'], ['shu', '五輸']];
+              ['luo', '十五絡'], ['shui', '十二經水'], ['shu', '五輸'],
+              ['yuan', '十二原'], ['yw', '營衛']];
   box.appendChild(h('h1', '經脉諸層：六套寫法，同一個身體'));
   box.appendChild(h('p', '靈樞講「身體是通道」，用的不是一套圖：經脉是幹道，經别是內部接頭，' +
     '經筋是結聚，絡脉是浮而可見的別出，經水是把十二經比作十二條水道，五輸是每經的井滎腧經合。' +
@@ -681,6 +682,8 @@ VIEWS.meridian = function (box, q) {
 
   if (tab === 'bie') return renderBie(box);
   if (tab === 'shui') return renderShui(box);
+  if (tab === 'yuan') return renderYuan(box);
+  if (tab === 'yw') return renderYingwei(box);
   if (tab === 'shu') return renderShu(box);
   if (tab === 'jin') return renderJin(box);
   if (tab === 'luo') return renderLuo(box);
@@ -891,6 +894,92 @@ function renderShu(box) {
     box.appendChild(c);
   });
   box.appendChild(h('p', '<a href="#/read?seq=2">讀〈本輸〉全文</a>', 'small'));
+}
+
+
+function renderYuan(box) {
+  var D = LS.shier_yuan || {}, rows = D['原'] || [];
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>十二原：五藏之氣的十二個出口</h3>' +
+    '<p class="small">〈九鍼十二原〉先立原則：『五藏有六府，六府有十二原，十二原出於四闗，四闗主治五藏』' +
+    '『五藏有疾，當取之十二原』。然後才列穴。</p>' +
+    '<p class="small muted">五藏之原各二（左右），加膏之原、肓之原各一，合 ' +
+    (D['說明'] ? D['說明']['合計'] : 12) + ' 原。這是算術，不是修辭——原文自己給的「二」「一」。</p>';
+  box.appendChild(intro);
+
+  var t = h('table', '');
+  t.innerHTML = '<tr><th style="width:56px">藏</th><th style="width:96px">屬性</th><th style="width:90px">原</th><th style="width:56px">數</th><th>原文</th></tr>';
+  rows.forEach(function (x) {
+    t.innerHTML += '<tr><td>' + esc(x['藏']) + '</td><td class="small">' + esc(x['屬性']) + '</td>' +
+      '<td><b>' + esc(x['原']) + '</b></td><td class="num">' + x['數'] + '</td>' +
+      '<td class="small">' + esc(x['文']) + ' <a href="#/read?seq=1">回原文</a></td></tr>';
+  });
+  box.appendChild(t);
+
+  if ((D['原則'] || []).length) {
+    var c = h('div', '', 'card');
+    c.appendChild(el('h3', '', '原文的四句理由'));
+    (D['原則'] || []).forEach(function (q) {
+      var p = h('p', '', 'quote');
+      p.innerHTML = esc(q['文']) + '<div class="src">句 ' + esc(q['id']) + '</div>';
+      c.appendChild(p);
+    });
+    box.appendChild(c);
+  }
+  box.appendChild(h('p', '原穴用於五藏之疾的診與治，具體操作需師授；本頁只列關係。', 'small muted'));
+}
+
+function renderYingwei(box) {
+  var D = LS.yingwei || {};
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>營衛：一晝夜的兩張表</h3>' +
+    '<p class="small">營在脉中，衛在脉外；衛氣一日一夜五十周於身，晝行陽二十五、夜行陰二十五。' +
+    '營氣則按十二經的次序周流。兩張表共用一個前提：<b>五十而復大會</b>。</p>';
+  box.appendChild(intro);
+
+  var c1 = h('div', '', 'card');
+  c1.appendChild(el('h2', '', '定義'));
+  (D['定義'] || []).forEach(function (q) {
+    var p = h('p', '', 'quote');
+    p.innerHTML = esc(q['文']) + '<div class="src">句 ' + esc(q['id']) + '　<a href="#/read?seq=18">回原文</a></div>';
+    c1.appendChild(p);
+  });
+  box.appendChild(c1);
+
+  var c2 = h('div', '', 'card');
+  c2.appendChild(el('h2', '', '衛氣：晝二十五、夜二十五'));
+  ((D['衛氣'] || {})['總數'] || []).forEach(function (q) {
+    var p = h('p', '', 'quote');
+    p.innerHTML = esc(q['文']) + '<div class="src">句 ' + esc(q['id']) + '　<a href="#/read?seq=76">回原文</a></div>';
+    c2.appendChild(p);
+  });
+  c2.appendChild(el('h3', '', '平旦出於目：一日的路線'));
+  ((D['衛氣'] || {})['平旦'] || []).forEach(function (q, i) {
+    var p = h('p', '', 'small');
+    p.innerHTML = '<b>' + (i + 1) + '</b>　' + esc(q['文'].replace(/^是故/, '')) +
+      ' <span class="src">句 ' + esc(q['id']) + '</span>';
+    c2.appendChild(p);
+  });
+  box.appendChild(c2);
+
+  var c3 = h('div', '', 'card');
+  c3.appendChild(el('h2', '', '營氣：十二經次序'));
+  c3.appendChild(h('p', '〈營氣〉的原文是一段連續敘述；下表是編者依原文提煉的步驟（標『歸』），' +
+    '每一列都附出處句，可回原文核。', 'small muted'));
+  var t = h('table', '');
+  t.innerHTML = '<tr><th style="width:40px">步</th><th style="width:130px">經</th><th>原文依據</th></tr>';
+  ((D['營氣'] || {})['次序'] || []).forEach(function (x) {
+    t.innerHTML += '<tr><td>' + esc(x['步']) + '</td><td>' + esc(x['經']) + '</td>' +
+      '<td class="small">' + esc(x['據']) + ' <span class="src">' + esc(x['id']) + '</span></td></tr>';
+  });
+  box.appendChild(t);
+  ((D['營氣'] || {})['原文'] || []).forEach(function (q) {
+    var p = h('p', '', 'small muted');
+    p.innerHTML = '原文（句 ' + esc(q['id']) + '）：' + esc(q['文'].length > 120 ? q['文'].slice(0, 120) + '…' : q['文']);
+    c3.appendChild(p);
+  });
+  box.appendChild(c3);
+  box.appendChild(h('p', '營衛的時刻表是原文的推演，不是現代生理時鐘；本頁不做臨床推論。', 'small muted'));
 }
 
 /* ---------------- 通則 ---------------- *//* ---------------- 通則 ---------------- */

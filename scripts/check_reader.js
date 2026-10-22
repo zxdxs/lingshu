@@ -74,7 +74,8 @@ const ctx = env.ctx, win = env.win, viewNode = env.viewNode, listeners = env.lis
 
 console.log("視圖檢查：");
 const routes = views.concat(["read?seq=40", "items?seq=40", "items?theme=entry",
-  "meridian?tab=bie", "meridian?tab=jin", "meridian?tab=luo", "meridian?tab=shui", "meridian?tab=shu"]);
+  "meridian?tab=bie", "meridian?tab=jin", "meridian?tab=luo", "meridian?tab=shui", "meridian?tab=shu",
+  "meridian?tab=yuan", "meridian?tab=yw"]);
 for (const v of routes) {
   const html = env.go("/" + v);
   const nodes = walk(viewNode, []).length;
@@ -138,6 +139,8 @@ const NEED = {
   "/meridian?tab=luo": ["card"],
   "/meridian?tab=shui": ["card"],
   "/meridian?tab=shu": ["card", "mer-card"],
+  "/meridian?tab=yuan": ["card", "quote"],
+  "/meridian?tab=yw": ["card", "quote"],
   "/limits": ["alert"],
   "/contact": ["card", "want-k", "site", "contact-row"],
 };

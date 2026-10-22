@@ -598,7 +598,7 @@ VIEWS.law = function (box, q) {
   // 學習路徑
   if ((L['路徑'] || []).length) {
     var rt = h('div', '', 'card');
-    rt.appendChild(el('h2', '', '從哪讀起：六站'));
+    rt.appendChild(el('h2', '', '從哪讀起：' + (L['路徑'] || []).length + ' 站'));
     rt.appendChild(h('p', '通則不是用來從第一條背到最後一條的。照這個次序讀，每一站讀完，對應的通則才有依托。', 'small'));
     var tr = '<tr><th style="width:44px">站</th><th>讀這幾篇</th><th>為什麼</th><th style="width:76px">對應通則</th></tr>';
     (L['路徑'] || []).forEach(function (x) {

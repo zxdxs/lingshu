@@ -20,7 +20,7 @@ function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%
 function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String(p.seq) === String(seq); })[0]; }
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
-var NAV = [['home','首頁'],['themes','主題'],['law','通則'],['meridian','十二經'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],
+var NAV = [['home','首頁'],['themes','主題'],['law','通則'],['meridian','十二經'],['binghou','病候'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],
            ['prep','九鍼'],['method','方法'],['collation','校勘'],['limits','限制'],
            ['mine','我的'],['about','關於']];
 var VIEWS = {};
@@ -580,6 +580,57 @@ VIEWS.suwen = function (box) {
 };
 
 
+
+
+/* ---------------- 病候 ---------------- */
+VIEWS.binghou = function (box) {
+  var D = LS.binghou || {}, groups = D['組'] || [];
+  box.appendChild(h('h1', '病候：四組模板'));
+  box.appendChild(h('p', '靈樞的病候篇章共用一個寫法：<b>病名 → 其候 → 治法或死生</b>。' +
+    '這一頁把四組並排，不是要你記病名，是要你看見這個寫法本身在示範什麼。', 'lead'));
+
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>怎麼看這些條目</h3><ul class="small">' +
+    '<li><b>其候</b>是原文對證候的描述，不是定義；同一病名在別篇的寫法可能不同。</li>' +
+    '<li><b>治法</b>只照抄原文的取經與手法名稱，本站不提供操作。</li>' +
+    '<li>凡標「死不治」「旦發夕死」的，是靈樞把界限寫進病候裡的地方——那比治法更值得注意。</li></ul>' +
+    '<p class="small muted">共 ' + groups.length + ' 組、' + (D['說明'] ? D['說明']['條數'] : '') + ' 條；' +
+    '取捨只收了厥頭痛、厥心痛、衆痹周痹、五種脹。其餘病候未收，不假裝收齊。</p>';
+  box.appendChild(intro);
+
+  groups.forEach(function (g) {
+    var c = h('div', '', 'card');
+    c.appendChild(el('h2', '', g['組'] + '（〈' + g['篇'] + '〉）'));
+    (g['條'] || []).forEach(function (x) {
+      var item = h('div', '', 'bh-item');
+      item.appendChild(el('h3', '', x['病']));
+      (x['證'] || []).forEach(function (q) {
+        var p = h('p', '', 'quote');
+        p.innerHTML = esc(q['文']) + '<div class="src">句 ' + esc(q['id']) + '　' +
+          '<a href="#/read?seq=' + esc(q['id'].split('-')[0]) + '">回原文</a></div>';
+        item.appendChild(p);
+      });
+      (x['治'] || []).forEach(function (q) {
+        var p = h('p', '', 'small');
+        p.innerHTML = '<b>治</b>：' + esc(q['文']) + ' <span class="src">句 ' + esc(q['id']) + '</span>';
+        item.appendChild(p);
+      });
+      if (x['註']) item.appendChild(h('p', '要點：' + esc(x['註']), 'small muted'));
+      c.appendChild(item);
+    });
+    box.appendChild(c);
+  });
+
+  var tail = h('div', '', 'card');
+  tail.innerHTML = '<h3>這個模板告訴你什麼</h3>' +
+    '<p class="small">① 病名先於證候，但證候才是判斷依據；② 治法幾乎都落在「取某經某穴」，' +
+    '不講劑量與手法；③ 有幾條直接寫死生（真頭痛、真心痛），靈樞不迴避。</p>' +
+    '<p class="small">同一組內並排看，會發現厥頭痛六條各配不同經——這是「辨位」的示範；' +
+    '厥心痛五條以五藏命名——這是「辨藏」的示範。</p>' +
+    '<p class="small"><a href="#/law">回通則</a>　·　<a href="#/meridian">看十二經</a>　·　' +
+    '<a href="#/limits">看能力邊界</a></p>';
+  box.appendChild(tail);
+};
 
 /* ---------------- 十二經（四套通道） ---------------- */
 VIEWS.meridian = function (box, q) {

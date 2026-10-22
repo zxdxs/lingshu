@@ -32,7 +32,7 @@ function walk(n, acc) {
   return acc;
 }
 
-const views = ["home", "themes", "read", "items", "concept", "law", "meridian", "suwen", "prep", "method", "collation", "limits", "mine", "about", "contact"];
+const views = ["home", "themes", "binghou", "read", "items", "concept", "law", "meridian", "suwen", "prep", "method", "collation", "limits", "mine", "about", "contact"];
 let fails = 0;
 
 function Option(text, value) { const o = mkEl("option"); o.textContent = text; o.value = value; return o; }
@@ -131,6 +131,7 @@ const NEED = {
   "/items?seq=40": ["card"],
   "/suwen": ["card", "quote"],
   "/law": ["card", "quote", "law-item"],
+  "/binghou": ["card", "quote", "bh-item"],
   "/meridian": ["card", "mer-card", "mer-row"],
   "/meridian?tab=bie": ["card", "mer-card", "mer-row"],
   "/meridian?tab=jin": ["card", "mer-card", "mer-row"],

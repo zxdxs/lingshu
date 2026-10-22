@@ -86,6 +86,7 @@ def main():
     rel = load('data/發布資訊.json')
 
     contact = load('data/聯絡.json')
+    suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json')}
 
     data = {
         'meta': {
@@ -100,7 +101,8 @@ def main():
                       'index': len(idx), 'limits': len(lim), 'contradictions': len(con),
                       'ans_yuanwen': sum(1 for i in items['題'] if i.get('答案類型') == '原文'),
                       'ans_tuisuan': sum(1 for i in items['題'] if i.get('答案類型') == '推算'),
-                      'ans_zhengli': sum(1 for i in items['題'] if i.get('答案類型') == '整理語')},
+                      'ans_zhengli': sum(1 for i in items['題'] if i.get('答案類型') == '整理語'),
+                      'ju': len(sidx)},
             'warn': rel['安全提醒短'],
             'safety': rel['安全提醒'],
             'safety_note': '原文與題目皆經逐字比對；校記與限制公開列出。臨床主張未經驗證。',
@@ -131,6 +133,7 @@ def main():
         'yinshi': [{'juan': r.get('卷', ''), 'text': r.get('音釋', '')[:220]} for r in yin],
         'concepts': cpts,
         'contact': contact,
+        'suwen': suwen,
     }
     os.makedirs(OUT, exist_ok=True)
     js = '/* 由 scripts/build_reader.py 生成，請勿手改。 */\nwindow.LS = ' + \

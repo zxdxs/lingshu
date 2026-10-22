@@ -91,6 +91,17 @@ SAFETY_FILES = ['reader/assets/data.js', 'reader/index.html', 'export/大樣稿.
                 'README.md', 'LICENSE.txt']
 
 
+def cross_quotes_bad():
+    """跨書引文（靈樞／素問／類經）逐字比對，回傳不符條數。"""
+    import subprocess as _sp
+    try:
+        r = _sp.run([sys.executable, os.path.join(ROOT, 'scripts', 'audit_cross_quotes.py'), '--json'],
+                    capture_output=True, text=True, timeout=300)
+        return json.loads(r.stdout)['不符']
+    except Exception:
+        return -1
+
+
 def safety_gaps():
     """安全提醒必須出現在每一個出口；少一處就算缺漏（改措辭不會誤報，刪掉才會）。"""
     gaps = 0
@@ -125,6 +136,7 @@ def metrics():
         '文件引文待核': docs_pending(),
         '文件數': len(glob.glob(os.path.join(ROOT, 'docs', '*.md'))),
         '發布待決': release_pending(),
+        '跨書引文不符': cross_quotes_bad(),
         '安全提醒缺漏': safety_gaps(),
     }
 

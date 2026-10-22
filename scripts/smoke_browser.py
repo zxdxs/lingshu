@@ -36,6 +36,7 @@ ROUTES = {
     'items': {'card': 5},
     'items?seq=40': {'card': 3},
     'concept': {'card': 3},
+    'suwen': {'card': 5, 'quote': 1},
     'index': {'card': 0},
     'coverage': {},
     'prep': {},
@@ -58,7 +59,7 @@ setTimeout(function () {
   var rep = { hash: location.hash, errors: window.__err,
     h1: (document.querySelector('#view h1') || {}).textContent || '',
     hero: q('.hero'), card: q('.card'), grid: q('.grid'), alert: q('.alert'),
-    row: q('.row'), tiao: q('.tiao'), orig: q('.orig'), list: q('.list'),
+    row: q('.row'), tiao: q('.tiao'), orig: q('.orig'), list: q('.list'), quote: q('.quote'),
     stripe: (document.querySelector('#stripe') || {}).textContent || '',
     nav: q('#nav a'), foot: q('#footLinks a') };
   document.getElementById('smoke').textContent = 'SMOKE=' + JSON.stringify(rep);
@@ -163,7 +164,7 @@ def main():
             bad.append('沒有 h1')
         if rep['stripe'] != STRIPE:
             bad.append(f'頂欄不是安全提醒（{rep["stripe"][:20]}）')
-        if rep['nav'] != 13 or rep['foot'] != 5:
+        if rep['nav'] != 14 or rep['foot'] != 5:
             bad.append(f'導覽 {rep["nav"]}／頁腳 {rep["foot"]}（應 13／5）')
         for k, v in need.items():
             if rep.get(k, 0) < v:

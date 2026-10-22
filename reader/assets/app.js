@@ -20,7 +20,7 @@ function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%
 function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String(p.seq) === String(seq); })[0]; }
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
-var NAV = [['home','首頁'],['themes','主題'],['read','通讀'],['items','題庫'],['concept','概念'],['index','索引'],
+var NAV = [['home','首頁'],['themes','主題'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],['index','索引'],
            ['coverage','覆蓋'],['prep','準備'],['method','方法'],['collation','校勘'],['limits','限制'],
            ['mine','我的'],['about','關於']];
 var VIEWS = {};
@@ -72,6 +72,13 @@ VIEWS.home = function (box) {
     g.appendChild(c);
   });
   box.appendChild(g);
+
+  var sw = h('div', '', 'card');
+  sw.innerHTML = '<h3>靈樞與素問，差在哪</h3>' +
+    '<p class="small">兩書同屬《內經》，但不是同一種書。用字密度算給你看：靈樞的「鍼」是素問的三倍，' +
+    '補寫的語言幾乎只在靈樞；素問的「天」「五運」則是靈樞的兩倍以上。</p>' +
+    '<p class="small"><a href="#/suwen">看對照：規模、用字、重出句、平行篇 →</a></p>';
+  box.appendChild(sw);
 
   box.appendChild(h('h2', '訓練怎麼進行'));
   var t = h('table', '');
@@ -346,6 +353,129 @@ VIEWS.concept = function (box) {
     g.appendChild(card);
   });
   box.appendChild(g);
+};
+
+
+/* ---------------- 異同：靈樞與素問 ---------------- */
+VIEWS.suwen = function (box) {
+  var S = LS.suwen || {}, N = S.narr || {}, C = S.calc || {};
+  box.appendChild(h('h1', '靈樞與素問的異同'));
+  box.appendChild(h('p', esc(N['引言'] || ''), 'lead'));
+
+  var warn = h('div', '', 'card');
+  warn.innerHTML = '<h3>先說立場</h3><p>本站主體只有《靈樞》八十一篇。素問不進題庫、不進通讀、不佔任何一篇的位置；' +
+    '它出現在這一頁，只為了回答一個問題：<b>靈樞在《內經》裡負責什麼</b>。</p>' +
+    '<p class="small muted">本頁數字全部由 <code>scripts/compare_suwen.py</code> 從兩份經文算出；' +
+    '引文由 <code>scripts/audit_cross_quotes.py</code> 逐字比對所標來源。</p>';
+  box.appendChild(warn);
+
+  // 名實
+  if ((N['名實'] || []).length) {
+    var c1 = h('div', '', 'card');
+    c1.appendChild(el('h2', '', '名實：兩書是一組'));
+    N['名實'].forEach(function (x) {
+      c1.appendChild(h('p', '「' + esc(x['引']) + '」', 'quote'));
+      c1.appendChild(h('p', '——' + esc(x['來源']), 'small muted'));
+      c1.appendChild(h('p', esc(x['說']), 'small'));
+    });
+    box.appendChild(c1);
+  }
+
+  // 規模
+  var L = C['統計'] ? C['統計']['靈樞'] : null, Q = C['統計'] ? C['統計']['素問'] : null;
+  if (L && Q) {
+    var c2 = h('div', '', 'card');
+    c2.appendChild(el('h2', '', '規模'));
+    c2.innerHTML += '<table><tr><th style="width:96px"></th><th>靈樞</th><th>素問</th></tr>' +
+      '<tr><td>卷</td><td>' + L['卷'] + '</td><td>' + Q['卷'] + '</td></tr>' +
+      '<tr><td>篇</td><td>' + L['篇'] + '</td><td>' + Q['篇'] + '（今本 81；' + esc(Q['亡篇']) + '亡，另 3 篇篇名行缺）</td></tr>' +
+      '<tr><td>經文</td><td>' + L['字'].toLocaleString() + ' 字</td><td>' + Q['字'].toLocaleString() + ' 字</td></tr>' +
+      '<tr><td>篇名以「論」結尾</td><td>' + L['篇名以論結尾'] + '／' + L['篇'] + '</td><td>' + Q['篇名以論結尾'] + '／' + Q['篇'] + '</td></tr>' +
+      '</table>';
+    c2.appendChild(h('p', '素問幾乎每篇都叫「某某論」；靈樞的篇名多為具體名目（九鍼十二原、本輸、骨度、脈度、五十營）——' +
+      '篇名本身就是兩種寫法的證據。', 'small'));
+    box.appendChild(c2);
+  }
+
+  // 用字
+  if ((C['用字'] || []).length) {
+    var c3 = h('div', '', 'card');
+    c3.appendChild(el('h2', '', '用字：每萬字出現次數'));
+    var rows = (C['用字'] || []).slice().sort(function (a, b) {
+      return Math.abs(b['靈樞萬字'] - b['素問萬字']) - Math.abs(a['靈樞萬字'] - a['素問萬字']);
+    });
+    var t = '<tr><th style="width:64px">詞</th><th style="width:74px">靈樞</th><th style="width:74px">素問</th><th>差距</th></tr>';
+    rows.forEach(function (x) {
+      var d = Math.round((x['靈樞萬字'] - x['素問萬字']) * 10) / 10;
+      t += '<tr><td>' + esc(x['詞']) + '</td><td>' + x['靈樞萬字'] + '</td><td>' + x['素問萬字'] + '</td>' +
+        '<td class="small ' + (Math.abs(d) < 6 ? 'muted' : '') + '">' + (d > 0 ? '靈樞多 ' : (d < 0 ? '素問多 ' : '持平 ')) +
+        Math.abs(d) + '</td></tr>';
+    });
+    c3.innerHTML += '<table>' + t + '</table>';
+    c3.appendChild(h('p', '異體已合併計數（鍼／針、剌／刺、脉／脈、隂／陰），否則差異會假性放大。', 'small muted'));
+    var notes = N['用字解讀'] || {};
+    var keys = Object.keys(notes).filter(function (k) { return notes[k]; });
+    if (keys.length) {
+      c3.appendChild(el('h3', '', '怎麼讀這張表'));
+      var ul = el('ul', 'small', '');
+      keys.forEach(function (k) {
+        var li = el('li', '', ''); li.innerHTML = '<b>' + esc(k) + '</b>：' + esc(notes[k]);
+        ul.appendChild(li);
+      });
+      c3.appendChild(ul);
+    }
+    box.appendChild(c3);
+  }
+
+  // 重出句
+  var sh = C['重出句'] || [];
+  var c4 = h('div', '', 'card');
+  c4.appendChild(el('h2', '', '重出：兩書都有的句子'));
+  c4.appendChild(h('p', '把靈樞 ' + stat('ju') + ' 句逐句拿去素問經文裡找，正規化後完全相同（≥8 字）的有 ' + sh.length + ' 句。' +
+    '其餘大量段落是「同一個題目、兩套寫法」，不是逐字重出。', 'small'));
+  if (sh.length) {
+    var t2 = '<tr><th style="width:104px">靈樞</th><th>文</th><th style="width:132px">素問</th></tr>';
+    sh.forEach(function (x) {
+      t2 += '<tr><td class="small">' + esc(x['pian']) + '</td><td>' + esc(x['文']) + '</td>' +
+        '<td class="small">' + (x['素問篇'] ? '卷' + x['素問卷'] + '〈' + esc(x['素問篇'].replace(/篇$/, '')) + '〉' : '卷' + (x['素問卷'] || '?')) + '</td></tr>';
+    });
+    c4.innerHTML += '<table>' + t2 + '</table>';
+  }
+  box.appendChild(c4);
+
+  // 平行篇
+  var pp = C['平行篇'] || [];
+  if (pp.length) {
+    var c5 = h('div', '', 'card');
+    c5.appendChild(el('h2', '', '平行篇：同一個題目，兩套寫法'));
+    c5.appendChild(h('p', '以四字串覆蓋率配對（雙向），不靠印象。覆蓋率高，表示兩篇在講同一件事、用語接近。', 'small'));
+    var t3 = '<tr><th style="width:88px">靈樞</th><th style="width:150px">素問</th><th style="width:70px">覆蓋靈樞</th><th style="width:70px">覆蓋素問</th><th>共用四字串</th></tr>';
+    pp.forEach(function (x) {
+      t3 += '<tr><td>' + esc(x['靈樞']) + '</td><td class="small">卷' + x['卷'] + '〈' + esc(x['素問'].replace(/篇$/, '')) + '〉</td>' +
+        '<td>' + x['覆蓋靈樞'] + '%</td><td>' + x['覆蓋素問'] + '%</td><td class="small">' + x['四字串'] + '</td></tr>';
+    });
+    c5.innerHTML += '<table>' + t3 + '</table>';
+    c5.appendChild(h('p', '靈樞〈病本〉與素問〈標本病傳論〉是同一段文字：靈樞那一篇的四分之三都能在素問裡找到。' +
+      '反過來，素問〈血氣形志〉有近三成見於靈樞〈九鍼論〉——誰抄誰，本站不判斷。', 'small'));
+    box.appendChild(c5);
+  }
+
+  // 怎麼用 / 未做
+  var c6 = h('div', '', 'card');
+  c6.appendChild(el('h2', '', '本站怎麼用這兩個資料'));
+  var ul2 = el('ul', 'small', '');
+  (N['怎麼用'] || []).forEach(function (t) { ul2.appendChild(el('li', '', t)); });
+  c6.appendChild(ul2);
+  box.appendChild(c6);
+
+  var c7 = h('div', '', 'card');
+  c7.appendChild(el('h2', '', '〔空〕沒做的事'));
+  var ul3 = el('ul', 'small', '');
+  (N['未做'] || []).forEach(function (t) { ul3.appendChild(el('li', '', t)); });
+  c7.appendChild(ul3);
+  box.appendChild(c7);
+
+  box.appendChild(h('p', '引文規矩：「」只給靈樞原文（逐字機器驗證）；『』給素問、類經與我自撰的詞。', 'small muted'));
 };
 
 /* ---------------- 索引 ---------------- */

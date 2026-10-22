@@ -1351,6 +1351,28 @@ VIEWS.method = function (box) {
       cc.appendChild(ul);
     }
     cc.appendChild(h('p', '「只有題目」不等於沒價值：題庫已可練；缺的是把該篇的原則抽成通則、或把病候收進病候頁。', 'small muted'));
+    var ZJ = LS.zhujia || {};
+    if ((ZJ['注家'] || []).length) {
+      var zc = h('div', '', 'card');
+      zc.appendChild(el('h2', '', '注家見證本：用了誰、還缺誰'));
+      zc.appendChild(h('p', '本站的規矩：未入庫者不得引用其文；入庫者須能逐字回查。所以下面把「已入庫」與「未入庫」分開寫。', 'small'));
+      var zt = '<tr><th style="width:150px">注家</th><th style="width:50px">時代</th><th style="width:130px">狀態</th>' +
+        '<th>用途與缺口</th></tr>';
+      (ZJ['注家'] || []).forEach(function (x) {
+        var ok = x['狀態'].indexOf('已入庫') === 0;
+        zt += '<tr><td><b>' + esc(x['名']) + '</b></td><td class="small">' + esc(x['時代']) + '</td>' +
+          '<td class="small">' + (ok ? '<span class="pill g">已入庫</span>' : '<span class="pill y">未入庫</span>') +
+          '<br/>' + esc(x['狀態'].replace(/^[^（]*（?|）/g, '')) + '</td>' +
+          '<td class="small">' + esc(x['用途']) + '<br/><span class="muted">缺：' + esc(x['缺口']) + '</span>' +
+          (x['注意'] ? '<br/><span class="muted">注意：' + esc(x['注意']) + '</span>' : '') + '</td></tr>';
+      });
+      var zw = h('div', '', 'table-wrap'); zw.innerHTML = '<table>' + zt + '</table>';
+      zc.appendChild(zw);
+      zc.appendChild(h('p', '清·張志聰《靈樞集註》已確認有公版全文（維基文庫、殆知閣）與影印本，' +
+        '但本輪只登記、不急著收——沒有去注分經與逐字校對就引用，等於假引用。', 'small muted'));
+      box.appendChild(zc);
+    }
+
     var hold = (CM['背景層'] || []);
     if (hold.length) {
       cc.appendChild(h('h3', '背景層：不抽通則，但有專頁', 'small'));

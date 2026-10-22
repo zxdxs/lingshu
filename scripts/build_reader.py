@@ -99,6 +99,7 @@ def main():
     abscess = load('data/癰疽死期.json')
     covmap = load('data/篇_收錄.json')
     jiugong = load('data/九宫八風.json')
+    zhujia = load('data/注家.json')
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
     suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json'),
@@ -217,7 +218,7 @@ def main():
         'jingbie': jb, 'jingjin': jj, 'luomai': luo, 'jingshui': js, 'wushu': ws, 'binghou': bh,
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
-        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong,
+        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia,
         'defs': defs,
         'suwen': suwen,
     }

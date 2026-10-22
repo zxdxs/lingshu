@@ -1264,12 +1264,13 @@ VIEWS.method = function (box) {
       cc.appendChild(ul);
     }
     cc.appendChild(h('p', '「只有題目」不等於沒價值：題庫已可練；缺的是把該篇的原則抽成通則、或把病候收進病候頁。', 'small muted'));
-    var hold = (CM['存而不論'] || []);
+    var hold = (CM['未採部分'] || []);
     if (hold.length) {
-      cc.appendChild(h('h3', '存而不論', 'small'));
+      cc.appendChild(h('h3', '一篇之中有分層：未採的部分', 'small'));
       hold.forEach(function (x) {
-        cc.appendChild(h('p', '<a href="#/read?seq=' + x['序'] + '">〈' + esc(x['篇']) + '〉</a>：' +
-          esc(x['理由']), 'small'));
+        cc.appendChild(h('p', '<a href="#/read?seq=' + x['序'] + '">〈' + esc(x['篇']) + '〉</a>　' +
+          '未採：' + esc(x['範圍']), 'small'));
+        cc.appendChild(h('p', esc(x['理由']), 'small muted'));
       });
     }
     box.appendChild(cc);

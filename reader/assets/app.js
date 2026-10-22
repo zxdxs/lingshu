@@ -33,7 +33,7 @@ var NAV = [
   ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'],
   ['items','題庫',1], ['concept','概念'],
   ['suwen','異同',1], ['prep','九鍼'],
-  ['method','方法',1], ['collation','校勘'], ['limits','限制'],
+  ['search','搜尋',1], ['method','方法'], ['collation','校勘'], ['limits','限制'],
   ['mine','我的',1], ['about','關於']
 ];
 var VIEWS = {};
@@ -82,7 +82,7 @@ VIEWS.home = function (box) {
     ['讀原文', [['通讀', '#/read', '81 篇'], ['十二經', '#/meridian', '六套通道'], ['病候', '#/binghou', '四組模板']]],
     ['練與查', [['題庫', '#/items', '1031 題'], ['概念', '#/concept', '12 張'], ['九鍼', '#/prep', '九種鍼']]],
     ['對照', [['異同', '#/suwen', '靈樞 vs 素問']]],
-    ['查核', [['方法', '#/method', '可不可信'], ['校勘', '#/collation', '19 點'], ['限制', '#/limits', '34 條']]],
+    ['查核', [['搜尋', '#/search', '全站一次查'], ['方法', '#/method', '可不可信'], ['校勘', '#/collation', '19 點'], ['限制', '#/limits', '34 條']]],
     ['自己', [['我的', '#/mine', '進度'], ['關於', '#/about', '授權與出處'], ['聯絡', '#/contact', '指正']]]
   ];
   box.appendChild(h('h2', '全站地圖'));
@@ -610,6 +610,58 @@ VIEWS.suwen = function (box) {
 
 
 
+
+
+/* ---------------- 搜尋 ---------------- */
+VIEWS.search = function (box, q) {
+  box.appendChild(h('h1', '搜尋'));
+  box.appendChild(h('p', '全站一次查：篇名與經文、題目、通則、十二經、病候、限制。' +
+    '輸入一個字就開始篩，結果分組列出。', 'small muted'));
+
+  var S = LS.search || [];
+  var row = h('div', '', 'row');
+  var inp = document.createElement('input');
+  inp.type = 'search'; inp.placeholder = '例：厥、營衛、五十營、死不治…';
+  inp.style.minWidth = '280px';
+  inp.value = (q && q.q) || '';
+  var cnt = el('span', 'small muted', '');
+  row.appendChild(inp); row.appendChild(cnt);
+  box.appendChild(row);
+  var out = h('div', ''); box.appendChild(out);
+
+  var VM = LS.varmap || {};
+  function nz(x) { var o = ''; for (var i = 0; i < x.length; i++) o += (VM[x[i]] || x[i]); return o; }
+  function render() {
+    var kw = inp.value.trim();
+    out.innerHTML = '';
+    if (!kw) { cnt.textContent = '共 ' + S.length + ' 條索引（已含異體與繁簡對照）；輸入即篩選'; return; }
+    var nk = nz(kw);
+    var hits = S.filter(function (x) {
+      return x.t.indexOf(kw) >= 0 || (x.d || '').indexOf(kw) >= 0 || (x.n && x.n.indexOf(nk) >= 0);
+    });
+    cnt.textContent = '命中 ' + hits.length + ' 條' + (hits.length >= 60 ? '（顯示前 60）' : '');
+    var by = {};
+    hits.slice(0, 60).forEach(function (x) { (by[x.k] = by[x.k] || []).push(x); });
+    Object.keys(by).forEach(function (k) {
+      var c = h('div', '', 'card');
+      c.appendChild(el('h3', '', k + '（' + by[k].length + '）'));
+      var ul = el('ul', 'map-list', '');
+      by[k].forEach(function (x) {
+        var li = el('li', '', '');
+        li.innerHTML = '<a href="' + x.h + '">' + esc(x.t) + '</a>' +
+          (x.d ? ' <span class="small muted">' + esc(x.d) + '</span>' : '');
+        ul.appendChild(li);
+      });
+      c.appendChild(ul);
+      out.appendChild(c);
+    });
+    if (!hits.length) out.appendChild(h('p', '沒有命中。試試單一個字，或換用原文的寫法（例如「脉」不是「脈」）。', 'small'));
+  }
+  inp.oninput = render;
+  render();
+
+  nextLinks(box, [['通則', '#/law'], ['十二經', '#/meridian'], ['題庫', '#/items']]);
+};
 
 /* ---------------- 病候 ---------------- */
 VIEWS.binghou = function (box) {

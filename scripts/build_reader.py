@@ -102,6 +102,41 @@ def main():
     suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json'),
              'quant': load('data/異同_量化.json')}
 
+    # 全站搜尋索引：只放標題與短摘要，避免 data.js 暴增
+    VMAP = {}
+    for canon, forms in load('export/異體映射.json')['映射'].items():
+        for f in forms:
+            VMAP[f] = canon
+
+    def _n(x):
+        return ''.join(VMAP.get(c, c) for c in x)
+
+    search = []
+    for p in ch:
+        search.append({'k': '篇', 't': p['篇名_規範'], 'd': p['經文'][:40],
+                       'n': _n(p['篇名_規範'] + p['經文'][:40]),
+                       'h': '#/read?seq=' + str(p['序'])})
+    for i in items['題']:
+        search.append({'k': '題', 't': i['stem'][:44], 'd': i['source']['篇名'],
+                       'n': _n(i['stem'][:44] + i['source']['篇名']),
+                       'h': '#/items?seq=' + str(i['source']['篇序'])})
+    for t in themes:
+        search.append({'k': '主題', 't': t['題'], 'd': t['一句'][:40], 'h': '#/themes'})
+    for q in law['組']:
+        for x in q['條']:
+            search.append({'k': '通則', 't': x['名'], 'd': x['原則'][:40],
+                           'n': _n(x['名'] + x['原則'][:40]), 'h': '#/law?n=' + str(x['n'])})
+    for x in mer['經']:
+        search.append({'k': '十二經', 't': x['經'], 'd': (x['是動']['文'][:40] if x['是動'] else ''),
+                       'h': '#/meridian?tab=jing&n=' + str(x['序'])})
+    for q in bh['組']:
+        for x in q['條']:
+            search.append({'k': '病候', 't': x['病'], 'd': q['組'], 'h': '#/binghou'})
+    for x in lim:
+        search.append({'k': '限制', 't': x.get('問題', '')[:30], 'd': x.get('範疇', ''),
+                       'h': '#/limits'})
+
+
     data = {
         'meta': {
             'title': rel['站名'],
@@ -140,6 +175,8 @@ def main():
                      'use': r.get('功能', ''), 'src': r.get('原文', '')} for r in nd],
         'concepts': cpts,
         'contact': contact,
+        'search': search,
+        'varmap': VMAP,
         'law': law,
         'mer': mer,
         'jingbie': jb, 'jingjin': jj, 'luomai': luo, 'jingshui': js, 'wushu': ws, 'binghou': bh,

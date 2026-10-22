@@ -54,6 +54,9 @@ th { color:var(--mute); font-weight:500; letter-spacing:.08em; font-size:12px; }
 .card .a b { color:var(--ink); font-size:18px; }
 .tag { font-size:11px; color:var(--mute); border:1px dashed var(--line); padding:2px 6px; margin-left:6px; }
 .box { border:1px dashed var(--accent); padding:18px 20px; background:#fffdf8; margin:16px 0; }
+.alert { border:1px solid #e2bdb5; border-left:5px solid #9c3427; border-radius:4px; background:#fbe9e6;
+         color:#7a2a1f; padding:16px 18px; margin:18px 0; font-size:15px; line-height:1.95; }
+.alert b { color:#8c2f22; }
 .big { font-size:64px; letter-spacing:.2em; line-height:1.3; }
 .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
 img { max-width:100%; border:1px solid var(--line); background:#fff; }
@@ -70,6 +73,7 @@ pages.append(page(f'''
 <div class="kicker">中醫典籍導讀 · A proof for review</div>
 <h1 class="big">靈樞經</h1>
 <div class="sub">{REL["站名"]}<br/>{REL["副標"]}</div>
+<div class="alert"><b>{REL["安全提醒"]}</b></div>
 <div class="rule" style="margin-top:60px"></div>
 <table style="font-size:13px">
 <tr><th style="width:110px">版本</th><td>v{REL["版本"]} 大樣（未發布）</td></tr>
@@ -154,6 +158,7 @@ pages.append(page(f'''
 rows = ''.join(f'<tr><td style="width:70px">{r["編號"]}</td><td>{r["問題"][:46]}</td><td style="width:60px">{r["嚴重度"]}</td></tr>' for r in BOUND[:6])
 pages.append(page(f'''
 <div class="kicker">06 · 已知限制</div>
+<div class="alert"><b>{REL["安全提醒"]}</b></div>
 <h2 style="margin-top:18px">先說不能做什麼</h2>
 <table><tr><th>#</th><th>問題</th><th>級</th></tr>{rows}</table>
 <p class="small">完整 34 條見 <code>data/能力邊界.csv</code>。</p>
@@ -175,6 +180,7 @@ pages.append(page(f'''
 <tr><td><b>聯絡</b></td><td>目前 {CONTACT}；需一個可公開的去識別化信箱或表單網址</td></tr>
 <tr><td><b>Anki 實機</b></td><td>{_anki}；708 張填空卡尚未在真實 Anki 匯入按過一遍</td></tr>
 </table>
+<div class="alert"><b>{REL["安全提醒"]}</b><br/>使用本站與本樣稿之前，請先確認這一點；它比版式與篇目都重要。</div>
 <div class="box"><span class="label">已定案</span>
 授權 <b>{_lic}</b>（原文屬公共領域，本計畫之標點、校記、題目、圖表依此釋出；見 <code>LICENSE.txt</code>）。<br/>
 站名「{REL["站名"]}」，版本 v{REL["版本"]}；案例題維持 6 道樣板；樣張篇目用第 40 篇〈陰陽清濁〉（短、有校記）。</div>

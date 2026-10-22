@@ -99,7 +99,9 @@ def main():
                       'ans_yuanwen': sum(1 for i in items['題'] if i.get('答案類型') == '原文'),
                       'ans_tuisuan': sum(1 for i in items['題'] if i.get('答案類型') == '推算'),
                       'ans_zhengli': sum(1 for i in items['題'] if i.get('答案類型') == '整理語')},
-            'warn': '原文與題目皆經逐字比對；臨床主張未經驗證，不可據以施治。',
+            'warn': rel['安全提醒短'],
+            'safety': rel['安全提醒'],
+            'safety_note': '原文與題目皆經逐字比對；校記與限制公開列出。臨床主張未經驗證。',
         },
         'juan': [{'no': k, 'label': ('卷' + str(k)) if k != '' else '卷首', 'n': len(v),
                   'chaps': [{'seq': p['序'], 'name': p['篇名_規範']} for p in v]}

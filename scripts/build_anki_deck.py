@@ -44,7 +44,12 @@ def main():
                           fields=[{'name': n} for n in ('題面', '答案', '可接受', '說明', '出處')],
                           templates=[{'name': '填空', 'qfmt': front, 'afmt': back}],
                           css=css)
-    deck = genanki.Deck(DECK_ID, DECK_NAME)
+    # 牌組說明隨 data/發布資訊.json 同步，避免「卡片本身沒有警語」這種漏
+    rel = json.load(open(os.path.join(ROOT, 'data', '發布資訊.json'), encoding='utf-8'))
+    desc = open(os.path.join(TPL, 'deck_description.txt'), encoding='utf-8').read()
+    if rel['安全提醒'] not in desc:
+        raise SystemExit('deck_description.txt 與 data/發布資訊.json 的安全提醒不一致，先同步再打包')
+    deck = genanki.Deck(DECK_ID, DECK_NAME, description=desc)
     for i in fill:
         src = i['source']
         deck.add_note(genanki.Note(model=model, fields=[

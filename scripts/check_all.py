@@ -85,6 +85,22 @@ def release_pending():
     return sum(1 for k in rel.get('必要', []) if rel.get(k) in PEND)
 
 
+SAFETY_CORE = '在有帶教資格的執業中醫師指導下使用'
+SAFETY_FILES = ['reader/assets/data.js', 'reader/index.html', 'export/大樣稿.html',
+                'export/anki模板/back.html', 'export/anki模板/deck_description.txt',
+                'README.md', 'LICENSE.txt']
+
+
+def safety_gaps():
+    """安全提醒必須出現在每一個出口；少一處就算缺漏（改措辭不會誤報，刪掉才會）。"""
+    gaps = 0
+    for rel in SAFETY_FILES:
+        p = os.path.join(ROOT, rel)
+        if not os.path.exists(p) or SAFETY_CORE not in open(p, encoding='utf-8').read():
+            gaps += 1
+    return gaps
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -109,6 +125,7 @@ def metrics():
         '文件引文待核': docs_pending(),
         '文件數': len(glob.glob(os.path.join(ROOT, 'docs', '*.md'))),
         '發布待決': release_pending(),
+        '安全提醒缺漏': safety_gaps(),
     }
 
 

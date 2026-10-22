@@ -44,6 +44,12 @@ VIEWS.home = function (box) {
     '</div>';
   box.appendChild(hero);
 
+  var safe = h('div', 'alert');
+  safe.innerHTML = '<b>' + esc(LS.meta.safety) + '</b>' +
+    '<span class="small" style="display:block;margin-top:6px">本站的題目、模組與案例只用原文證候作情境，' +
+    '不提供劑量、療程或操作步驟；任何臨床處置請由指導醫師決定。</span>';
+  box.appendChild(safe);
+
   box.appendChild(h('h2', '五個主題'));
   box.appendChild(h('p', '主題的劃分與命名為編者所加，非原文原有分類。', 'small muted'));
   var tg = h('div', 'grid');
@@ -488,6 +494,9 @@ VIEWS.collation = function (box) {
 /* ---------------- 限制 ---------------- */
 VIEWS.limits = function (box) {
   box.appendChild(h('h1', '已知限制'));
+  var sg = h('div', 'alert');
+  sg.innerHTML = '<b>' + esc(LS.meta.safety) + '</b>';
+  box.appendChild(sg);
   box.appendChild(h('p', '先說不能做什麼。完整清單見 data/能力邊界.csv。', 'small muted'));
   var t = h('table', '');
   t.innerHTML = '<tr><th style="width:52px">#</th><th>問題</th><th style="width:70px">範疇</th><th style="width:44px">級</th></tr>';
@@ -573,12 +582,13 @@ VIEWS.about = function (box) {
       : '<b>待定</b>（目前僅供審閱，不得轉載）') + '</td></tr>' +
     '<tr><td>聯絡</td><td>' + (R.聯絡 && R.聯絡 !== '待補'
       ? esc(R.聯絡) : '待補（發布前填入）') + '</td></tr>' +
+    '<tr><td>安全</td><td><b>' + esc(LS.meta.safety || '') + '</b></td></tr>' +
     '<tr><td>引用</td><td>' + esc(R.引用格式 || '《中醫典籍導讀﹣靈樞經》v1.0，篇序＋篇名，例：40〈陰陽清濁〉') + '</td></tr>';
   box.appendChild(t);
   if (pend.length) {
     box.appendChild(h('p', '待決：' + pend.join('、') + '（其餘皆已定稿；填入後重建即生效）', 'small'));
   }
-  box.appendChild(h('p', LS.meta.warn, 'small'));
+  box.appendChild(h('p', LS.meta.safety_note, 'small'));
 };
 
 /* ---------------- 路由 ---------------- */
@@ -627,9 +637,13 @@ function gate() {
   var view = $('#view');
   view.innerHTML = '';
   var g = h('div', 'gate');
-  g.innerHTML = '<h2>使用前確認</h2><p>本材料是讀書與練習工具，不是診療工具。所有臨床主張未經驗證，<b>不可據以施治</b>。' +
-    '<br>原文與題目皆經機器逐字比對；標「待專家核」者，臨床判斷僅供參考。</p>';
-  var ok = el('button', 'btn', '我了解，開始'); ok.type = 'button';
+  g.innerHTML = '<h2>使用前確認</h2>' +
+    '<div class="alert"><b>' + esc(LS.meta.safety) + '</b></div>' +
+    '<p>本材料是讀書與練習工具，不是診療工具，也不是教材的替代品。' +
+    '書中證候、治法、鍼刺之文，只宜作為隨師學習時的對讀材料；' +
+    '自行照書判斷或施治，可能造成傷害。</p>' +
+    '<p class="small">原文與題目皆經機器逐字比對；標『待專家核』者，臨床判斷尚待專家審閱。</p>';
+  var ok = el('button', 'btn', '我已了解，且在有帶教資格的執業中醫師指導下使用'); ok.type = 'button';
   ok.onclick = function () { STATE.agree = 1; save(); route(); };
   g.appendChild(ok); view.appendChild(g);
 }

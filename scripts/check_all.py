@@ -166,6 +166,22 @@ def jizhu_stats():
     return len(zh), leak, low
 
 
+def leizhu_stats():
+    """類經注：引句 id 必須在三源通則裡，卷號必須在 1–32；注不得為空。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '類經注.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    law = json.load(open(os.path.join(ROOT, 'data', '通則.json'), encoding='utf-8'))
+    ids = {q['id'] for g in law['組'] for t in g['條'] for q in t['引']}
+    bad = 0
+    for t in d['條']:
+        for q in t['引']:
+            if q['id'] not in ids or not (1 <= q['卷'] <= 32) or len(q['注']) < 12:
+                bad += 1
+    return d['統計']['段'], bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -197,6 +213,8 @@ def metrics():
         '集註有注句': jizhu_stats()[0],
         '集註疑漏經文': jizhu_stats()[1],
         '集註低比對篇': jizhu_stats()[2],
+        '類經注段': leizhu_stats()[0],
+        '類經注引不符': leizhu_stats()[1],
     }
 
 

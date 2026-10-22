@@ -30,7 +30,7 @@ function nextLinks(box, links) {
 
 var NAV = [
   ['home','首頁',1], ['themes','主題'], ['law','通則'],
-  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['variant','變體'], ['jizhu','集註'], ['jiugong','九宫'],
+  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['variant','變體'], ['jizhu','注家'], ['jiugong','九宫'],
   ['items','題庫',1], ['concept','概念'],
   ['suwen','異同',1], ['prep','九鍼'],
   ['search','搜尋',1], ['method','方法'], ['collation','校勘'], ['limits','限制'],
@@ -709,15 +709,16 @@ VIEWS.variant = function (box) {
   nextLinks(box, [['通則：共同點', '#/law'], ['病候：證候怎麼寫', '#/binghou'], ['方法：收錄狀況', '#/method']]);
 };
 
-/* ---------------- 集註：張志聰注（節錄） ---------------- */
+/* ---------------- 注家：張志聰集註、張介賓類經注（節錄） ---------------- */
 VIEWS.jizhu = function (box) {
   var J = LS.jizhu || {}, st = J['統計'] || {}, laws = J['通則'] || [], cases = J['例'] || [];
-  box.appendChild(h('h1', '集註：張志聰怎麼讀這一句'));
-  box.appendChild(h('p', '清·張志聰《黃帝內經靈樞集註》（康熙壬子 1672 序）逐篇作注，與張介賓《類經》' +
-    '同為靈樞兩大注本。這一頁把注文去注分經、繫到經文句，只取節錄：<b>先看原文，再看注</b>。' +
+  box.appendChild(h('h1', '注家怎麼讀這一句'));
+  box.appendChild(h('p', '同一句經文，清人張志聰逐篇作注，明人張介賓按類作注。這一頁把兩家的注' +
+    '從各自的書裡分離出來、繫到經文句，只取節錄：<b>先看原文，再看注</b>。' +
     '注文是〔注〕層——不是原文，也不是本站的歸納。', 'lead'));
 
   var intro = h('div', '', 'card');
+  box.appendChild(h('h2', '一、張志聰《靈樞集註》（清）'));
   intro.innerHTML = '<h3>這批注是怎麼來的</h3><ul class="small">' +
     '<li><b>來源</b>：' + esc(J['來源'] || '') + '</li>' +
     '<li><b>方法</b>：' + esc(J['方法'] || '') + '</li>' +
@@ -728,7 +729,7 @@ VIEWS.jizhu = function (box) {
     '<li><b>局限</b>：' + esc(J['局限'] || '') + '</li></ul>';
   box.appendChild(intro);
 
-  box.appendChild(h('h2', '通則引文與張注'));
+  box.appendChild(h('h3', '通則引文與張注'));
   box.appendChild(h('p', '只列「有張注可對」的條；其餘通則的引文，張志聰沒有留下可直接繫上的注。', 'small muted'));
   if (!laws.length) box.appendChild(h('p', '目前沒有可對讀的條。', 'small'));
   laws.forEach(function (t) {
@@ -743,7 +744,7 @@ VIEWS.jizhu = function (box) {
     box.appendChild(c);
   });
 
-  box.appendChild(h('h2', '八十一篇各取一條'));
+  box.appendChild(h('h3', '八十一篇各取一條'));
   box.appendChild(h('p', '每篇取字數最多的一條注，看張志聰在這篇最用力講什麼。', 'small muted'));
   var cc = h('div', '', 'card');
   cases.forEach(function (x) {
@@ -771,9 +772,33 @@ VIEWS.jizhu = function (box) {
   tbl.appendChild(w);
   box.appendChild(tbl);
 
+  var L = LS.leizhu || {}, lst = L['統計'] || {};
+  box.appendChild(h('h2', '二、張介賓《類經》注（明）'));
+  var b1 = h('div', '', 'card');
+  b1.innerHTML = '<h3>這批注是怎麼來的</h3><ul class="small">' +
+    '<li><b>來源</b>：' + esc(L['來源'] || '') + '</li>' +
+    '<li><b>方法</b>：' + esc(L['方法'] || '') + '</li>' +
+    '<li><b>結果</b>：' + (lst['卷數'] || 0) + ' 卷、注 ' + (lst['注段總數'] || 0).toLocaleString() +
+    ' 段；通則引文可對注 <b>' + (lst['段'] || 0) + '</b> 段、<b>' + (lst['條'] || 0) + '</b> 條。</li>' +
+    '<li><b>局限</b>：類經為四庫全書錄文，注文照錄無標點；只取引文句末 −8～+12 字內的注，' +
+    '寧可少收，也不把隔壁句的注拉過來；注中「…」表示前後兩段注之間有跳接。</li></ul>';
+  box.appendChild(b1);
+  box.appendChild(h('h3', '通則引文與類經注'));
+  box.appendChild(h('p', '與上一節同一批通則，換一家注。卷號是類經卷次——類經按類編排，沒有靈樞篇序。', 'small muted'));
+  (L['條'] || []).forEach(function (t) {
+    var c = h('div', '', 'card');
+    c.appendChild(h('h3', '', t['n'] + '. ' + t['名'] + '　<span class="pill">' + esc(t['組'] || '') + '</span>'));
+    (t['引'] || []).forEach(function (q) {
+      c.appendChild(h('p', '<span class="src">類經卷 ' + q['卷'] + '　' + esc(q['id']) + '</span>', 'small muted'));
+      c.appendChild(h('div', '「' + esc(q['文']) + '」', 'quote'));
+      c.appendChild(h('div', '<b>類經注</b>' + esc(q['注']), 'zj-note'));
+    });
+    box.appendChild(c);
+  });
+
   var tail = h('div', '', 'alert');
   tail.innerHTML = '<b>怎麼用這一頁</b><span class="small" style="display:block;margin-top:6px">' +
-    '注不是標準答案：張志聰讀的是同一部經，他的話可以幫你「看懂原文在說什麼」，' +
+    '注不是標準答案：兩家讀的是同一部經，他們的話可以幫你「看懂原文在說什麼」，' +
     '但不能拿來當原文的證據。要判斷一條通則站不站得住，仍回原文逐字核。</span>';
   box.appendChild(tail);
 

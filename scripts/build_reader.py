@@ -106,6 +106,7 @@ def main():
              '方法': zz['方法'], '局限': zz.get('局限', ''), '統計': zz['統計'],
              '篇': [{k: v for k, v in x.items() if k != '注'} for x in zz['篇']],
              '例': zz['例'], '通則': zz['通則']}
+    leizhu = load('data/類經注.json')
     bianti = load('data/變體.json')
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
@@ -226,7 +227,7 @@ def main():
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
         'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti,
-        'jizhu': jizhu,
+        'jizhu': jizhu, 'leizhu': leizhu,
         'defs': defs,
         'suwen': suwen,
     }

@@ -1223,8 +1223,14 @@ VIEWS.limits = function (box) {
         '<td class="num">' + g['數'] + '</td><td class="small">' + esc(g['說明']) + '</td><td>' + ex + '</td></tr>';
     });
     bc.innerHTML += '<table>' + bt + '</table>';
-    bc.appendChild(h('p', '合 ' + ((B['說明'] || {})['條數'] || '') + ' 句；一句只歸一級（A→B→D→C→E），' +
+    bc.appendChild(h('p', '合 ' + ((B['說明'] || {})['條數'] || '') + ' 句；一句只歸一級（A→F→B→D→C→E），' +
       '所以數字互斥、可相加。', 'small muted'));
+    if (B['時限單位']) {
+      var u = B['時限單位'];
+      bc.appendChild(h('p', 'F 級的時限單位：日 ' + (u['日'] || 0) + '、年 ' + (u['年'] || 0) +
+        '、歲 ' + (u['歲'] || 0) + '、旦夕 ' + (u['旦夕'] || 0) +
+        '——幾乎全部以「日」計，年與歲只各一句。靈樞的預後是短尺度的。', 'small'));
+    }
     box.appendChild(bc);
   }
   var t = h('table', '');

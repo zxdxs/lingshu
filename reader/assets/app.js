@@ -650,6 +650,26 @@ VIEWS.binghou = function (box) {
     box.appendChild(c);
   });
 
+  var AB = LS.abscess || {};
+  if ((AB['癰疽'] || []).length) {
+    var ac = h('div', '', 'card');
+    ac.appendChild(el('h2', '', '癰疽：部位與死期'));
+    ac.appendChild(h('p', '〈癰疽〉十五個病名，九個有明確死期。這裡只列部位、病名、死期——治法與形狀留在原文段裡。', 'small'));
+    var at = '<tr><th style="width:36px">#</th><th style="width:96px">名</th><th style="width:120px">部位</th>' +
+      '<th style="width:90px">死期</th><th>原文</th></tr>';
+    (AB['癰疽'] || []).forEach(function (x) {
+      var d = x['死期句'] ? esc(x['死期句']['文'].slice(0, 46)) + '… <span class="src">' + esc(x['死期句']['id']) + '</span>' : '<span class="small muted">原文未給死期</span>';
+      at += '<tr><td>' + x['序'] + '</td><td><b>' + esc(x['名']) + '</b></td><td class="small">' + esc(x['部位']) + '</td>' +
+        '<td>' + (x['死期'] ? '<b>' + esc(x['死期']) + '</b>' : '—') + '</td><td class="small">' + d + '</td></tr>';
+    });
+    ac.innerHTML += '<table>' + at + '</table>';
+    if (AB['通則']) {
+      ac.appendChild(h('p', '通則：' + esc(AB['通則']['文']) + ' <span class="src">句 ' + esc(AB['通則']['id']) + '</span>', 'small'));
+    }
+    ac.appendChild(h('p', '九個死期裡，最短半日、最長十歲；其餘六個原文沒給。不補。', 'small muted'));
+    box.appendChild(ac);
+  }
+
   var tail = h('div', '', 'card');
   tail.innerHTML = '<h3>這個模板告訴你什麼</h3>' +
     '<p class="small">① 病名先於證候，但證候才是判斷依據；② 治法幾乎都落在「取某經某穴」，' +

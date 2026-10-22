@@ -1265,6 +1265,24 @@ VIEWS.method = function (box) {
     }
     cc.appendChild(h('p', '「只有題目」不等於沒價值：題庫已可練；缺的是把該篇的原則抽成通則、或把病候收進病候頁。', 'small muted'));
     box.appendChild(cc);
+
+    var lines = CM['任務線'] || [];
+    if (lines.length) {
+      var lc = h('div', '', 'card');
+      lc.appendChild(el('h2', '', '七條任務線：一條一條挖'));
+      lc.appendChild(h('p', '八十一篇不是同時挖的。分成七條線，逐線處理；每條線的進度由「篇是否已有解讀層」算出，不是手填。', 'small'));
+      var lt = '<tr><th style="width:120px">線</th><th style="width:150px">說明</th><th style="width:64px">進度</th><th>篇（✓＝已有解讀層）</th></tr>';
+      lines.forEach(function (l) {
+        var ps = (l['篇'] || []).map(function (x) {
+          return '<a href="#/read?seq=' + x['序'] + '">' + esc(x['篇']) + '</a>' + (x['狀態'] === '有' ? '✓' : '');
+        }).join('、');
+        lt += '<tr><td><b>' + esc(l['線']) + '</b></td><td class="small">' + esc(l['說明']) + '</td>' +
+          '<td class="num">' + l['已'] + '／' + l['共'] + '</td><td class="small">' + ps + '</td></tr>';
+      });
+      var lw = h('div', '', 'table-wrap'); lw.innerHTML = '<table>' + lt + '</table>';
+      lc.appendChild(lw);
+      box.appendChild(lc);
+    }
   }
 
   box.appendChild(h('h2', '矛盾（' + (LS.contradictions || []).length + '）'));

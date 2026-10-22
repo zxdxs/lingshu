@@ -38,6 +38,7 @@ ROUTES = {
     'concept': {'card': 3},
     'suwen': {'card': 5, 'quote': 1},
     'law': {'card': 3, 'quote': 3},
+    'meridian': {'card': 5, 'mercard': 12},
     'prep': {'card': 1},
     'method': {},
     'collation': {},
@@ -59,6 +60,7 @@ setTimeout(function () {
     h1: (document.querySelector('#view h1') || {}).textContent || '',
     hero: q('.hero'), card: q('.card'), grid: q('.grid'), alert: q('.alert'),
     row: q('.row'), tiao: q('.tiao'), orig: q('.orig'), list: q('.list'), quote: q('.quote'),
+    mercard: q('.mer-card'),
     stripe: (document.querySelector('#stripe') || {}).textContent || '',
     nav: q('#nav a'), foot: q('#footLinks a'),
     routes: window.__ROUTES || [],
@@ -169,7 +171,7 @@ def main():
             bad.append('沒有 h1')
         if rep['stripe'] != STRIPE:
             bad.append(f'頂欄不是安全提醒（{rep["stripe"][:20]}）')
-        if rep['nav'] != 13 or rep['foot'] != 5:
+        if rep['nav'] != 14 or rep['foot'] != 5:
             bad.append(f'導覽 {rep["nav"]}／頁腳 {rep["foot"]}（應 13／5）')
         for k, v in need.items():
             if rep.get(k, 0) < v:

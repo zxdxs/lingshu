@@ -20,7 +20,7 @@ function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%
 function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String(p.seq) === String(seq); })[0]; }
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
-var NAV = [['home','首頁'],['themes','主題'],['law','通則'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],
+var NAV = [['home','首頁'],['themes','主題'],['law','通則'],['meridian','十二經'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],
            ['prep','九鍼'],['method','方法'],['collation','校勘'],['limits','限制'],
            ['mine','我的'],['about','關於']];
 var VIEWS = {};
@@ -580,6 +580,70 @@ VIEWS.suwen = function (box) {
 };
 
 
+
+/* ---------------- 十二經 ---------------- */
+VIEWS.meridian = function (box, q) {
+  var M = LS.mer || {};
+  box.appendChild(h('h1', '十二經：一經六句的模板'));
+  box.appendChild(h('p', '〈經脉〉把每一經都寫成同一個模板：起止 → 是動則病 → 是主所生病 → 虛實 → 治法 → 脉口人迎。' +
+    '這個模板本身就是知識：它告訴你「一條經該交代哪些事」。', 'lead'));
+
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>怎麼用這一頁</h3><ul class="small">' +
+    '<li><b>是動則病</b>：經氣異常時的第一組反應，多為沿經的症狀。</li>' +
+    '<li><b>是主…所生病</b>：這一經「所主」的病，範圍比是動寬，常涉及所屬藏府。</li>' +
+    '<li>兩者是靈樞的原話，不是後世分類；本頁只照抄與計數，不代為解釋。</li>' +
+    '<li>本頁不含取穴與操作。要動手，需師授。</li></ul>' +
+    '<p class="small muted">共 ' + (M['經'] || []).length + ' 經；「是動」句內證候 ' +
+    (M['經'] || []).reduce(function (a, x) { return a + (x['動數'] || 0); }, 0) + ' 項，' +
+    '「所生病」句內證候 ' + (M['經'] || []).reduce(function (a, x) { return a + (x['生數'] || 0); }, 0) + ' 項（以逗號斷句計）。</p>';
+  box.appendChild(intro);
+
+  // 總表
+  var t = h('table', '');
+  t.innerHTML = '<tr><th style="width:40px">#</th><th>經</th><th style="width:64px">動</th><th style="width:64px">所生</th><th>是動則病（前段）</th></tr>';
+  (M['經'] || []).forEach(function (x) {
+    var d = (x['是動'] ? x['是動']['文'] : '').split('是動則病')[1] || '';
+    t.innerHTML += '<tr><td>' + x['序'] + '</td><td><a href="#/meridian?n=' + x['序'] + '">' + esc(x['經']) + '</a></td>' +
+      '<td class="num">' + (x['動數'] || 0) + '</td><td class="num">' + (x['生數'] || 0) + '</td>' +
+      '<td class="small">' + esc(d.slice(0, 42)) + (d.length > 42 ? '…' : '') + '</td></tr>';
+  });
+  box.appendChild(h('p', '表 十二經-1　證候數以逗號斷句計，與後世條文數不同。', 'small muted'));
+  box.appendChild(t);
+
+  // 逐經卡
+  (M['經'] || []).forEach(function (x) {
+    var c = h('div', '', 'card mer-card');
+    c.setAttribute('id', 'mer' + x['序']);
+    c.appendChild(el('h2', '', x['序'] + '、' + x['經']));
+    [['起止', '起止（原文）'], ['是動', '是動則病'], ['所生病', '是主所生病'], ['虛實', '氣盛／氣虛'],
+     ['治法', '治法'], ['脉口', '脉口與人迎']].forEach(function (pair) {
+      var k = pair[0];
+      if (!x[k]) return;
+      var d = h('div', '', 'mer-row');
+      d.innerHTML = '<span class="mer-k">' + pair[1] + '</span>' +
+        '<span class="mer-v">' + esc(x[k]['文']) + '</span>' +
+        '<span class="src">句 ' + esc(x[k]['id']) + '　<a href="#/read?seq=' + (x[k]['id'].split('-')[0]) + '">回原文</a></span>';
+      c.appendChild(d);
+    });
+    box.appendChild(c);
+  });
+
+  var tail = h('div', '', 'card');
+  tail.innerHTML = '<h3>為什麼值得整頁讀完</h3>' +
+    '<p class="small">單看一條經，像症狀清單；十二條並排，就看得出三件事：' +
+    '①「是動」多在體表與沿經，②「所生病」常帶藏府，③每條經的末句都在講「盛則寫之，虛則補之」。' +
+    '同一個模板重複十二次，本身就是靈樞的教學法。</p>' +
+    '<p class="small"><a href="#/law">回通則</a>　·　<a href="#/concept">看概念卡</a>　·　' +
+    '<a href="#/read?seq=10">讀〈經脉〉全文</a></p>';
+  box.appendChild(tail);
+
+  if (q && q.n) {
+    var target = document.getElementById('mer' + q.n);
+    if (target && target.scrollIntoView) target.scrollIntoView({ block: 'start' });
+  }
+};
+
 /* ---------------- 通則 ---------------- */
 VIEWS.law = function (box, q) {
   var L = LS.law || {};
@@ -688,7 +752,7 @@ VIEWS.law = function (box, q) {
     '<li><b>可傳但不可私佔</b>：內容以 CC BY-NC-SA 4.0 釋出——可以教、可以改，但要同樣開放、不得商業使用。</li>' +
     '<li><b>先說誰能用</b>：僅供在有帶教資格的執業中醫師指導下使用。</li></ul>' +
     '<p class="small"><a href="#/themes">回主題</a>　·　<a href="#/suwen">看靈樞與素問的差別</a>　·　' +
-    '<a href="#/limits">看本站的能力邊界</a></p>';
+    '<a href="#/meridian">看十二經病候</a>　·　<a href="#/limits">看本站的能力邊界</a></p>';
   box.appendChild(tail);
 
   if (q && q.n) {

@@ -32,7 +32,7 @@ function walk(n, acc) {
   return acc;
 }
 
-const views = ["home", "themes", "read", "items", "concept", "law", "suwen", "prep", "method", "collation", "limits", "mine", "about", "contact"];
+const views = ["home", "themes", "read", "items", "concept", "law", "meridian", "suwen", "prep", "method", "collation", "limits", "mine", "about", "contact"];
 let fails = 0;
 
 function Option(text, value) { const o = mkEl("option"); o.textContent = text; o.value = value; return o; }
@@ -130,6 +130,7 @@ const NEED = {
   "/items?seq=40": ["card"],
   "/suwen": ["card", "quote"],
   "/law": ["card", "quote", "law-item"],
+  "/meridian": ["card", "mer-card", "mer-row"],
   "/limits": ["alert"],
   "/contact": ["card", "want-k", "site", "contact-row"],
 };
@@ -141,7 +142,7 @@ Object.keys(NEED).forEach(r => {
   if (miss.length) clsFails.push(`${r} 缺 .${miss.join(" .")}`);
 });
 if (clsFails.length) { fails++; console.log("  ✗ classes " + clsFails.join("；")); }
-else console.log("  ✓ classes 9 個視圖的必要樣式類別都在");
+else console.log("  ✓ classes 10 個視圖的必要樣式類別都在");
 
 /* 聯絡頁：五項求助與相關站點必須由 data/聯絡.json 來，且郵箱狀態要與發布資訊一致
    （未填就必須看得到「待補」，不能靜靜留白）。 */

@@ -58,7 +58,7 @@ vm.runInContext(DATA, ctx);
 vm.runInContext(APP, ctx);
 
 console.log("視圖檢查：");
-const routes = views.concat(["read?seq=40", "items?seq=40"]);
+const routes = views.concat(["read?seq=40", "items?seq=40", "items?theme=entry"]);
 for (const v of routes) {
   win.location.hash = "#/" + v;
   viewNode._html = ""; viewNode.children = [];

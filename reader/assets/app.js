@@ -105,12 +105,24 @@ VIEWS.themes = function (box) {
     var ps = (t.篇名 || []).map(function (n, j) {
       return '<a class="pill" href="#/read?seq=' + t.篇[j] + '">' + esc(n) + '</a>';
     }).join('');
+    var route = '';
+    if (t.路線 && t.路線.length) {
+      route = '<h3 style="margin:14px 0 4px">病從外入的路線</h3><div class="route">' +
+        t.路線.map(function (st) {
+          return '<div class="st"><div><b>' + esc(st.站) + '</b></div>' +
+            '<div>' + esc(st.證) + '</div>' +
+            '<div><a class="pill b" href="#/read?seq=66">' + esc(st.id || '') + '</a></div></div>';
+        }).join('') + '</div>' +
+        '<p class="small muted">七站都在〈百病始生〉同一段（66-5-1 至 66-5-7），原文用「留而不去」串起來。</p>';
+    }
+    var cnt = (LS.items || []).filter(function (it) { return (t.篇 || []).indexOf(it.seq) >= 0; }).length;
     c.innerHTML = '<div class="small muted">主題 ' + (i + 1) + '</div>' +
       '<h3 style="margin:.2em 0">' + esc(t.題) + '</h3>' +
       '<p style="font-size:1.05rem"><b>' + esc(t.一句) + '</b></p>' +
-      '<p>' + esc(t.主張) + '</p>' + qs +
+      '<p>' + esc(t.主張) + '</p>' + qs + route +
       '<div class="row" style="margin-top:8px">' + ps + '</div>' +
-      (t.圖 ? '<p class="small"><a href="../export/' + esc(t.圖) + '" target="_blank">看圖 →</a></p>' : '') +
+      '<p class="small"><a href="#/items?theme=' + esc(t.id) + '">這個主題有 ' + cnt + ' 題 →</a>' +
+      (t.圖 ? '　<a href="../export/' + esc(t.圖) + '" target="_blank">看圖 →</a>' : '') + '</p>' +
       '<p class="small muted">邊界：' + esc(t.邊界 || '') + '</p>';
     box.appendChild(c);
   });
@@ -225,12 +237,20 @@ VIEWS.items = function (box, q) {
   var cnt = el('span', 'small muted', '');
   row.appendChild(f1); row.appendChild(f2); row.appendChild(f3); row.appendChild(cnt);
   box.appendChild(row);
+  var theme = q.theme ? (LS.themes || []).filter(function (t) { return t.id === q.theme; })[0] : null;
+  var tSeqs = theme ? (theme.篇 || []).map(String) : null;
+  if (theme) {
+    var tp = h('p', 'small', '');
+    tp.innerHTML = '主題：<b>' + esc(theme.題) + '</b>　<span class="muted">' + esc(theme.一句) + '</span>　<a href="#/items">清除</a>';
+    box.appendChild(tp);
+  }
   var list = h('div', ''); box.appendChild(list);
 
   function render() {
     list.innerHTML = '';
     var shown = 0;
     (LS.items || []).forEach(function (it) {
+      if (tSeqs && tSeqs.indexOf(String(it.seq)) < 0) return;
       if (f1.value && it.type !== f1.value) return;
       if (f2.value && String(it.seq) !== f2.value) return;
       if (f3.value === 'case' && !it.case) return;

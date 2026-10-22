@@ -136,3 +136,14 @@ details.card>summary:hover{color:var(--brand)}
 .sid{display:none;font-style:normal;font-size:.68rem;color:var(--brand2);margin-left:2px;
   vertical-align:super;letter-spacing:.02em}
 body.show-sid .sid{display:inline}
+
+/* 病從外入的路線 */
+.route{margin:8px 0 4px}
+.route .st{display:grid;grid-template-columns:96px 1fr 104px;gap:10px;padding:9px 0 9px 26px;
+  border-bottom:1px dashed var(--line);position:relative;align-items:start}
+.route .st:last-child{border-bottom:0}
+.route .st::before{content:"";position:absolute;left:7px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
+.route .st::after{content:"";position:absolute;left:11px;top:25px;bottom:-4px;width:1px;background:var(--line)}
+.route .st:last-child::after{display:none}
+.route .st b{color:var(--brand)}
+@media (max-width:640px){.route .st{grid-template-columns:84px 1fr;}.route .st>div:last-child{grid-column:2}}

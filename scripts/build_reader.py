@@ -40,6 +40,9 @@ def main():
                     hit = x['id']; break
             qq['id'] = hit
         t['篇名'] = [next((p['篇名_規範'] for p in ch if p['序'] == s), '') for s in t.get('篇', [])]
+        for st in t.get('路線', []):
+            n = __import__('check_quotes').norm(st['證'])
+            st['id'] = next((x['id'] for x in byseq.get(66, []) if n and (n in x['norm'] or (len(x['norm']) >= 6 and x['norm'] in n))), '')
     import glob as _g
     cpts = []
     for f in sorted(_g.glob(os.path.join(ROOT, 'data', '多層_*.json'))):

@@ -1145,8 +1145,10 @@ VIEWS.law = function (box, q) {
       if (seqs.length) {
         var prac = '';
         if (x['相關題'] && x['相關題']['數']) {
+          var ov = x['相關題']['重疊'] || 0;
           prac = '　·　相關練習 <a href="#/items?seq=' + x['相關題']['篇'][0] + '">' +
-            x['相關題']['數'] + ' 題</a>';
+            x['相關題']['數'] + ' 題</a>' +
+            (ov ? '（引文重疊 ' + ov + ' 題）' : '（無引文重疊）');
         }
         art.appendChild(h('p', '回原文：' + seqs.map(function (p) {
           return '<a href="#/read?seq=' + p[0] + '">〈' + esc(p[1]) + '〉</a>';

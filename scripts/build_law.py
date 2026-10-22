@@ -354,13 +354,23 @@ def main():
     if missing:
         raise SystemExit(f'句ID 不存在：{missing}')
 
-    # 相關練習：依引文所屬篇章，反查題庫（只算，不挑）
+    # 相關練習：① 同篇反查（粗）② 引文四字串重疊（較準，仍是字面）
+    from check_quotes import norm as _norm
+    def _grams(t, n=4):
+        t = _norm(t)
+        return {t[i:i + n] for i in range(len(t) - n + 1)}
+    item_norm = [(_i['item_id'], _i['source']['篇序'], _norm(_i['stem'])) for _i in ITEMS]
     for x in out:
         seqs = sorted({JU[q['id']]['seq'] for q in x['引']})
         ids = []
         for sq in seqs:
             ids.extend(ITEM_BY_SEQ.get(sq, []))
-        x['相關題'] = {'數': len(ids), '篇': seqs}
+        gs = set()
+        for q in x['引']:
+            gs |= _grams(q['文'])
+        over = [iid for iid, _sq, ns in item_norm if any(g in ns for g in gs)]
+        x['相關題'] = {'數': len(ids), '篇': seqs,
+                       '重疊': len(over), '例': over[:3]}
 
     groups = []
     for x in out:

@@ -1245,6 +1245,28 @@ VIEWS.method = function (box) {
     '<p class="small">三源並排（底本／太素／類經）另成一頁；覆蓋率的原始數字在 data/三源覆蓋率.json。</p>' +
     '<a class="btn ghost" href="#/collation">看三源並排 →</a>';
   box.appendChild(c);
+  var CM = LS.covmap || {};
+  if (CM['統計']) {
+    var cc = h('div', '', 'card');
+    cc.appendChild(el('h2', '', '八十一篇的收錄狀況'));
+    cc.appendChild(h('p', '這一頁回答「這本書可不可信」；也該回答「這本書做到哪」。' +
+      '統計：' + CM['統計']['篇'] + ' 篇中，有解讀層（通則／病候／經脉諸層／概念／模組）的 ' +
+      CM['統計']['有解讀層'] + ' 篇，只有題目、還沒有解讀層的 <b>' + CM['統計']['只有題'] + '</b> 篇。', 'small'));
+    var only = (CM['只有題的篇'] || []);
+    if (only.length) {
+      cc.appendChild(h('p', '只有題目的篇（下一批挖掘清單）：', 'small muted'));
+      var ul = el('ul', 'map-list', '');
+      only.forEach(function (x) {
+        var li = el('li', '', '');
+        li.innerHTML = '<a href="#/read?seq=' + x['序'] + '">' + esc(x['篇']) + '</a>';
+        ul.appendChild(li);
+      });
+      cc.appendChild(ul);
+    }
+    cc.appendChild(h('p', '「只有題目」不等於沒價值：題庫已可練；缺的是把該篇的原則抽成通則、或把病候收進病候頁。', 'small muted'));
+    box.appendChild(cc);
+  }
+
   box.appendChild(h('h2', '矛盾（' + (LS.contradictions || []).length + '）'));
   var t2 = h('table', '');
   t2.innerHTML = '<tr><th style="width:48px">#</th><th>爭點</th><th style="width:80px">判定</th></tr>';

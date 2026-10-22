@@ -30,7 +30,7 @@ function nextLinks(box, links) {
 
 var NAV = [
   ['home','首頁',1], ['themes','主題'], ['law','通則'],
-  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['variant','變體'], ['jiugong','九宫'],
+  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['variant','變體'], ['jizhu','集註'], ['jiugong','九宫'],
   ['items','題庫',1], ['concept','概念'],
   ['suwen','異同',1], ['prep','九鍼'],
   ['search','搜尋',1], ['method','方法'], ['collation','校勘'], ['limits','限制'],
@@ -707,6 +707,77 @@ VIEWS.variant = function (box) {
   box.appendChild(tail);
 
   nextLinks(box, [['通則：共同點', '#/law'], ['病候：證候怎麼寫', '#/binghou'], ['方法：收錄狀況', '#/method']]);
+};
+
+/* ---------------- 集註：張志聰注（節錄） ---------------- */
+VIEWS.jizhu = function (box) {
+  var J = LS.jizhu || {}, st = J['統計'] || {}, laws = J['通則'] || [], cases = J['例'] || [];
+  box.appendChild(h('h1', '集註：張志聰怎麼讀這一句'));
+  box.appendChild(h('p', '清·張志聰《黃帝內經靈樞集註》（康熙壬子 1672 序）逐篇作注，與張介賓《類經》' +
+    '同為靈樞兩大注本。這一頁把注文去注分經、繫到經文句，只取節錄：<b>先看原文，再看注</b>。' +
+    '注文是〔注〕層——不是原文，也不是本站的歸納。', 'lead'));
+
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>這批注是怎麼來的</h3><ul class="small">' +
+    '<li><b>來源</b>：' + esc(J['來源'] || '') + '</li>' +
+    '<li><b>方法</b>：' + esc(J['方法'] || '') + '</li>' +
+    '<li><b>結果</b>：81 篇逐篇比對，最低比對率 ' + (st['最低比對率'] || 0) + '%；' +
+    '繫上經文句的注 <b>' + (st['有注句數'] || 0) + '</b> 條、注文 ' +
+    (st['注文總字'] || 0).toLocaleString() + ' 字；其中 <b>' + (st['通則條有注'] || 0) +
+    '</b> 條通則的引文有張注可對。</li>' +
+    '<li><b>局限</b>：' + esc(J['局限'] || '') + '</li></ul>';
+  box.appendChild(intro);
+
+  box.appendChild(h('h2', '通則引文與張注'));
+  box.appendChild(h('p', '只列「有張注可對」的條；其餘通則的引文，張志聰沒有留下可直接繫上的注。', 'small muted'));
+  if (!laws.length) box.appendChild(h('p', '目前沒有可對讀的條。', 'small'));
+  laws.forEach(function (t) {
+    var c = h('div', '', 'card');
+    c.appendChild(h('h3', '', t['n'] + '. ' + t['名'] + '　'));
+    c.appendChild(h('p', '<span class="pill">' + esc(t['組'] || '') + '</span>', 'small'));
+    (t['引'] || []).forEach(function (q) {
+      c.appendChild(h('p', '<span class="src">' + esc(q['篇']) + '　' + esc(q['id']) + '</span>', 'small muted'));
+      c.appendChild(h('div', '「' + esc(q['文']) + '」', 'quote'));
+      c.appendChild(h('div', '<b>張注</b>' + esc(q['注']), 'zj-note'));
+    });
+    box.appendChild(c);
+  });
+
+  box.appendChild(h('h2', '八十一篇各取一條'));
+  box.appendChild(h('p', '每篇取字數最多的一條注，看張志聰在這篇最用力講什麼。', 'small muted'));
+  var cc = h('div', '', 'card');
+  cases.forEach(function (x) {
+    var d = h('div', '', 'zj-case');
+    d.innerHTML = '<h3><a href="#/read?seq=' + x['序'] + '">〈' + esc(x['篇']) + '〉</a>' +
+      '　<span class="src">' + esc(x['id']) + '</span></h3>' +
+      '<div class="quote">「' + esc(x['文']) + '」</div>' +
+      '<div class="zj-note"><b>張注</b>' + esc(x['注']) + '</div>';
+    cc.appendChild(d);
+  });
+  box.appendChild(cc);
+
+  var tbl = h('div', '', 'card');
+  tbl.appendChild(h('h3', '逐篇注文分布'));
+  tbl.appendChild(h('p', '「比對率」＝該篇集註文字中能與底本經文逐字對上的比例；比例低，代表該篇注多、或文字差異大。', 'small muted'));
+  var t = '<tr><th style="width:56px">序</th><th>篇</th><th style="width:70px">注句</th>' +
+    '<th style="width:80px">注字</th><th style="width:70px">比對率</th></tr>';
+  (J['篇'] || []).forEach(function (x) {
+    if (!x['比對率']) return;
+    t += '<tr><td class="num">' + x['序'] + '</td><td><a href="#/read?seq=' + x['序'] + '">' +
+      esc(x['篇']) + '</a></td><td class="num">' + Object.keys(x['注'] || {}).length +
+      '</td><td class="num">' + (x['注字'] || 0) + '</td><td class="num">' + x['比對率'] + '%</td></tr>';
+  });
+  var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + t + '</table>';
+  tbl.appendChild(w);
+  box.appendChild(tbl);
+
+  var tail = h('div', '', 'alert');
+  tail.innerHTML = '<b>怎麼用這一頁</b><span class="small" style="display:block;margin-top:6px">' +
+    '注不是標準答案：張志聰讀的是同一部經，他的話可以幫你「看懂原文在說什麼」，' +
+    '但不能拿來當原文的證據。要判斷一條通則站不站得住，仍回原文逐字核。</span>';
+  box.appendChild(tail);
+
+  nextLinks(box, [['通則：共同點', '#/law'], ['變體：不同寫法', '#/variant'], ['方法：收錄狀況', '#/method']]);
 };
 
 /* ---------------- 九宫八風（背景） ---------------- */
@@ -1413,8 +1484,8 @@ VIEWS.method = function (box) {
       });
       var zw = h('div', '', 'table-wrap'); zw.innerHTML = '<table>' + zt + '</table>';
       zc.appendChild(zw);
-      zc.appendChild(h('p', '清·張志聰《靈樞集註》已確認有公版全文（維基文庫、殆知閣）與影印本，' +
-        '但本輪只登記、不急著收——沒有去注分經與逐字校對就引用，等於假引用。', 'small muted'));
+      zc.appendChild(h('p', '清·張志聰《靈樞集註》已去注分經入庫：772 條注繫到經文句，' +
+        '20 條通則有注可對。<a href="#/jizhu">看「集註」頁</a>。注文只取節錄，未與影印本逐字校。', 'small muted'));
       box.appendChild(zc);
     }
 

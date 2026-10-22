@@ -146,6 +146,26 @@ def safety_gaps():
     return gaps
 
 
+
+def jizhu_stats():
+    """集註（張志聰注）：去注分經後的三個防線——
+    注文不得是經文漏網（4-gram 覆蓋率 >0.6 即疑）、比對率不得低於 90%、篇數須 81。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '張注.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0, 0
+    zh = {k: v for x in d['篇'] for k, v in x.get('注', {}).items()}
+    corpus = ''.join(B.values())
+
+    def cover(t):
+        g = [t[i:i + 4] for i in range(len(t) - 3)]
+        return sum(1 for x in g if x in corpus) / len(g) if g else 0.0
+
+    leak = sum(1 for t in zh.values() if cover(t) > 0.6)
+    low = sum(1 for x in d['篇'] if x.get('比對率', 100) < 90)
+    return len(zh), leak, low
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -174,6 +194,9 @@ def metrics():
         '通則界過短': law_bounds_short(),
         '跨書引文不符': cross_quotes_bad(),
         '安全提醒缺漏': safety_gaps(),
+        '集註有注句': jizhu_stats()[0],
+        '集註疑漏經文': jizhu_stats()[1],
+        '集註低比對篇': jizhu_stats()[2],
     }
 
 

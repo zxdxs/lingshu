@@ -100,6 +100,12 @@ def main():
     covmap = load('data/篇_收錄.json')
     jiugong = load('data/九宫八風.json')
     zhujia = load('data/注家.json')
+    # 集註：data/張注.json 存全部 772 條注（節錄），data.js 只帶統計、81 條示例與通則對讀
+    zz = load('data/張注.json')
+    jizhu = {'說明': zz['說明'], '來源': zz['來源'], '取用': zz['取用'],
+             '方法': zz['方法'], '局限': zz.get('局限', ''), '統計': zz['統計'],
+             '篇': [{k: v for k, v in x.items() if k != '注'} for x in zz['篇']],
+             '例': zz['例'], '通則': zz['通則']}
     bianti = load('data/變體.json')
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
@@ -220,6 +226,7 @@ def main():
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
         'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti,
+        'jizhu': jizhu,
         'defs': defs,
         'suwen': suwen,
     }

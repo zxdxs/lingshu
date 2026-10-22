@@ -189,3 +189,19 @@ body.show-sid .sid{display:inline}
 .bh-item{border-top:1px dashed var(--line);padding-top:12px;margin-top:14px}
 .bh-item:first-of-type{border-top:0;padding-top:0;margin-top:0}
 .bh-item h3{margin:0 0 6px;font-size:.98rem;color:var(--brand)}
+
+/* 導覽分組與「接著看」 */
+.nav-sep{flex:none;width:1px;height:18px;background:var(--line);margin:0 4px;align-self:center}
+.next{margin:28px 0 0;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:6px 12px;
+  flex-wrap:wrap;align-items:baseline}
+.next-k{font-size:.76rem;letter-spacing:.16em;color:var(--brand2)}
+.next a{font-size:.9rem}
+
+/* 導覽分組與「接著看」 */
+.nav-sep{flex:none;width:1px;height:18px;background:var(--line);margin:0 4px;align-self:center}
+.next{margin:28px 0 0;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:6px 12px;
+  flex-wrap:wrap;align-items:baseline}
+.next-k{font-size:.76rem;letter-spacing:.16em;color:var(--brand2)}
+.next a{font-size:.9rem}
+.map-list{margin:.4em 0 0 1.1em;padding:0;font-size:.9rem;line-height:1.9}
+.map-list li{margin:0}

@@ -20,9 +20,22 @@ function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%
 function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String(p.seq) === String(seq); })[0]; }
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
-var NAV = [['home','首頁'],['themes','主題'],['law','通則'],['meridian','十二經'],['binghou','病候'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],
-           ['prep','九鍼'],['method','方法'],['collation','校勘'],['limits','限制'],
-           ['mine','我的'],['about','關於']];
+function nextLinks(box, links) {
+  var d = h('div', '', 'next');
+  d.innerHTML = '<span class="next-k">接著看</span>' + (links || []).map(function (x) {
+    return '<a href="' + x[1] + '">' + x[0] + '</a>';
+  }).join('');
+  box.appendChild(d);
+}
+
+var NAV = [
+  ['home','首頁',1], ['themes','主題'], ['law','通則'],
+  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'],
+  ['items','題庫',1], ['concept','概念'],
+  ['suwen','異同',1], ['prep','九鍼'],
+  ['method','方法',1], ['collation','校勘'], ['limits','限制'],
+  ['mine','我的',1], ['about','關於']
+];
 var VIEWS = {};
 
 /* ---------------- 首頁 ---------------- */
@@ -63,15 +76,28 @@ VIEWS.home = function (box) {
   });
   box.appendChild(tg);
 
-  var g = h('div', '', 'grid');
-  [['目的','讓原文可讀、可練、可查','讀得進去，也練得出來；不以「看懂了」當作學會。'],
-   ['價值','把可驗的部分公開','引文逐字比對、答案分型、模組原文、限制與矛盾——全部可查。'],
-   ['為什麼現在做','市面上的靈樞多止於導讀','練習紀錄與校勘痕跡很少公開；這份材料把兩者一起留下。']].forEach(function (x) {
+  // 全站地圖：按「先讀什麼、再練什麼、最後查什麼」排，不按頁面建立時間排
+  var MAP = [
+    ['入門', [['主題', '#/themes', '靈樞在講什麼'], ['通則', '#/law', '44 條反覆出現的規矩']]],
+    ['讀原文', [['通讀', '#/read', '81 篇'], ['十二經', '#/meridian', '六套通道'], ['病候', '#/binghou', '四組模板']]],
+    ['練與查', [['題庫', '#/items', '1031 題'], ['概念', '#/concept', '12 張'], ['九鍼', '#/prep', '九種鍼']]],
+    ['對照', [['異同', '#/suwen', '靈樞 vs 素問']]],
+    ['查核', [['方法', '#/method', '可不可信'], ['校勘', '#/collation', '19 點'], ['限制', '#/limits', '34 條']]],
+    ['自己', [['我的', '#/mine', '進度'], ['關於', '#/about', '授權與出處'], ['聯絡', '#/contact', '指正']]]
+  ];
+  box.appendChild(h('h2', '全站地圖'));
+  box.appendChild(h('p', '按「先讀什麼、再練什麼、最後查什麼」排。每一頁的底部也有『接著看』，不會走進死路。', 'small muted'));
+  var mg = h('div', '', 'grid');
+  MAP.forEach(function (g) {
     var c = h('div', '', 'card');
-    c.innerHTML = '<h3>' + x[0] + '</h3><p class="small muted">' + x[1] + '</p><p>' + x[2] + '</p>';
-    g.appendChild(c);
+    var hh = '<h3>' + esc(g[0]) + '</h3><ul class="map-list">';
+    g[1].forEach(function (x) {
+      hh += '<li><a href="' + x[1] + '">' + esc(x[0]) + '</a> <span class="small muted">' + esc(x[2]) + '</span></li>';
+    });
+    c.innerHTML = hh + '</ul>';
+    mg.appendChild(c);
   });
-  box.appendChild(g);
+  box.appendChild(mg);
 
   var lawCard = h('div', '', 'card');
   lawCard.innerHTML = '<h3>靈樞在講規矩，不只是講故事</h3>' +
@@ -189,7 +215,8 @@ VIEWS.read = function (box, q) {
     pb.innerHTML = bar(all, (LS.pian || []).length) + '<div class="small muted">全書已讀 ' + all + '/' + (LS.pian || []).length + '　·　本次顯示 ' + total + ' 篇</div>';
   }
   sel.onchange = render; inp.oninput = render; render();
-};
+
+  nextLinks(box, [['通則：這幾篇在講什麼規矩', '#/law'], ['十二經：把篇裡的經脉抽出來看', '#/meridian'], ['練這一篇的題', '#/items']]);};
 function readOne(box, seq) {
   var p = bySeq(seq);
   if (!p) { box.appendChild(h('p', '本篇不存在。')); return; }
@@ -290,7 +317,8 @@ VIEWS.items = function (box, q) {
     cnt.textContent = '顯示 ' + shown + ' 題' + (shown >= 20 ? '（請用篩選縮小）' : '');
   }
   f1.onchange = f2.onchange = f3.onchange = render; render();
-};
+
+  nextLinks(box, [['我的：看成績與正確率', '#/mine'], ['通則：題目背後的原則', '#/law'], ['限制：哪些題還待專家核', '#/limits']]);};
 function itemCard(it) {
   var c = h('div', '', 'card');
   var head = h('div', '');
@@ -361,7 +389,8 @@ VIEWS.concept = function (box) {
     g.appendChild(card);
   });
   box.appendChild(g);
-};
+
+  nextLinks(box, [['通則：這些詞在哪些原則裡', '#/law'], ['十二經病候', '#/meridian'], ['練概念類題目', '#/items']]);};
 
 
 /* ---------------- 異同：靈樞與素問 ---------------- */
@@ -1001,7 +1030,8 @@ VIEWS.prep = function (box) {
     '<a href="#/read?seq=1">〈九鍼十二原〉</a>　<a href="#/read?seq=78">〈九鍼論〉</a>　' +
     '<a href="#/read?seq=7">〈官鍼〉</a></p>';
   box.appendChild(c);
-};
+
+  nextLinks(box, [['十二經：鍼刺的對象', '#/meridian'], ['校勘：毫鍼長度的差異', '#/collation'], ['方法：本站可不可信', '#/method']]);};
 
 /* ---------------- 方法 ---------------- */
 VIEWS.method = function (box) {
@@ -1019,7 +1049,8 @@ VIEWS.method = function (box) {
     t2.innerHTML += '<tr><td>' + esc(r.id) + '</td><td>' + esc(r.point) + '</td><td>' + esc(r.verdict) + '</td></tr>';
   });
   box.appendChild(t2);
-};
+
+  nextLinks(box, [['校勘：19 條三源並排', '#/collation'], ['限制：34 條能力邊界', '#/limits'], ['異同：與素問的比較', '#/suwen']]);};
 
 /* ---------------- 校勘 ---------------- */
 VIEWS.collation = function (box) {
@@ -1036,7 +1067,8 @@ VIEWS.collation = function (box) {
       '<td class="small">' + esc((r.verdict || '').slice(0, 14)) + '</td></tr>';
   });
   box.appendChild(t);
-};
+
+  nextLinks(box, [['限制：還沒解決的', '#/limits'], ['方法：稽核怎麼做', '#/method'], ['回原文對照', '#/read']]);};
 
 /* ---------------- 限制 ---------------- */
 VIEWS.limits = function (box) {
@@ -1052,7 +1084,8 @@ VIEWS.limits = function (box) {
   });
   box.appendChild(t);
   box.appendChild(h('p', '三項最要緊：臨床主張未驗證、15 條答案為整理語、6 道案例題待專家核。', 'small'));
-};
+
+  nextLinks(box, [['方法：校勘與矛盾', '#/method'], ['指正與聯絡', '#/contact'], ['我的：進度與正確率', '#/mine']]);};
 
 /* ---------------- 我的 ---------------- */
 VIEWS.mine = function (box) {
@@ -1105,7 +1138,8 @@ VIEWS.mine = function (box) {
   b.onclick = function () { if (!confirm('清除已讀與作答紀錄？')) return; STATE.read = {}; STATE.log = {}; save(); route(); };
   box.appendChild(b);
   box.appendChild(h('p', '進度只存在這個瀏覽器（localStorage），不上傳。', 'small muted'));
-};
+
+  nextLinks(box, [['通讀：繼續讀', '#/read'], ['題庫：繼續練', '#/items'], ['限制：知道邊界', '#/limits']]);};
 
 /* ---------------- 關於 ---------------- */
 VIEWS.about = function (box) {
@@ -1136,7 +1170,8 @@ VIEWS.about = function (box) {
     box.appendChild(h('p', '待決：' + pend.join('、') + '（其餘皆已定稿；填入後重建即生效）', 'small'));
   }
   box.appendChild(h('p', LS.meta.safety_note, 'small'));
-  box.appendChild(h('p', 'small', '<a href="#/contact">✉️ 看到錯、想指正，或要問授權範圍 →</a>'));
+  box.appendChild(h('p', 'small', '<a href="#/contact">✉️ 看到錯、想指正，或要問授權範圍 →</a>　·　' +
+    '<a href="#/home">全站地圖（首頁）</a>'));
 };
 
 
@@ -1191,7 +1226,8 @@ VIEWS.contact = function (box) {
   cl.innerHTML = '<p class="small">' + md(C.close || '') + '</p>' +
     '<p class="muted small" style="text-align:right;margin-top:12px">⚠ ' + esc(C.seal || '') + '</p>';
   box.appendChild(cl);
-};
+
+  nextLinks(box, [['回限制', '#/limits'], ['看關於', '#/about'], ['回首頁地圖', '#/home']]);};
 
 /* 供檢查脚本確認有哪些視圖（已下架的路由不該再被連結） */
 window.__ROUTES = Object.keys(VIEWS);
@@ -1229,6 +1265,7 @@ function route() {
 function boot() {
   var nav = $('#nav');
   NAV.forEach(function (x) {
+    if (x[2]) nav.appendChild(el('span', 'nav-sep', ''));
     var a = document.createElement('a');
     a.href = '#/' + x[0]; a.textContent = x[1]; a.setAttribute('data-k', x[0]);
     nav.appendChild(a);

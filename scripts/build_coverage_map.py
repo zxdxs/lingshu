@@ -113,6 +113,9 @@ def main():
                      '只有題': len(onlyq)},
             '只有題的篇': [{'序': r['序'], '篇': r['篇']} for r in onlyq],
             '任務線': lines,
+            '存而不論': [{'序': 77, '篇': '九宫八風',
+                          '理由': '九宫八風是占術系統（九宫、八風、太一移日），與針灸原理不同層；'
+                                  '硬抽成一條「原則」會失真。本站收其文，不強作通則。'}] if 77 in cov else [],
             '篇': ROWS}
     p = os.path.join(ROOT, 'data', '篇_收錄.json')
     json.dump(data, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)

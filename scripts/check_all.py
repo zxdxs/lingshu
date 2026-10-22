@@ -75,6 +75,15 @@ def docs_pending():
     return pend
 
 
+def law_bounds_short():
+    """通則的「界」是防過度推論的欄位；少於 20 字視為不合格。"""
+    try:
+        law = json.load(open(os.path.join(ROOT, 'data', '通則.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return -1
+    return sum(1 for g in law['組'] for x in g['條'] if len(x.get('界', '')) < 20)
+
+
 def leijing_bad():
     """通則裡標了「《類經》亦收此段」的引文，必須真的在該卷找得到；回傳不符條數。"""
     import glob
@@ -162,6 +171,7 @@ def metrics():
         '文件數': len(glob.glob(os.path.join(ROOT, 'docs', '*.md'))),
         '發布待決': release_pending(),
         '類經對讀不符': leijing_bad(),
+        '通則界過短': law_bounds_short(),
         '跨書引文不符': cross_quotes_bad(),
         '安全提醒缺漏': safety_gaps(),
     }

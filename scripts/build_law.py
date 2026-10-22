@@ -14,6 +14,10 @@ import json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JU = {s['id']: s for s in json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'),
                                           encoding='utf-8'))['句']}
+ITEMS = json.load(open(os.path.join(ROOT, 'data', '題庫_示例.json'), encoding='utf-8'))['題']
+ITEM_BY_SEQ = {}
+for _i in ITEMS:
+    ITEM_BY_SEQ.setdefault(_i['source']['篇序'], []).append(_i['item_id'])
 
 # (句ID, 這一引要說明什麼)
 LAW = [
@@ -284,7 +288,7 @@ LAW = [
   '用': '讀到『著之玉版』這類句子，注意它標記的是作者認為最重要的部分——那些段落通常就是一篇的結論。',
   '界': '『玉版』是載體，不是權威認證；內容對錯仍要自己核。'},
  {'組': '十、傳承：技藝給誰', '名': '學習有序',
-  '原則': '學有次第：先通十二經脉的病候，才談得上〈終始〉；不知終始，鍼道就断了。',
+  '原則': '學有次第：先通十二經脉的病候，才談得上〈終始〉；不知終始，鍼道就斷了。',
   '引': [('9-1-41', '必先通十二經脉之所生病，而後可得傳于終始矣'), ('5-1-5', '九鍼之玄，要在終始；不知終始，鍼道咸絕'), ('1-1-4', '令可傳於後世，必明為之法')],
   '推演': '靈樞自己給了課程表：經脉病候是入門，終始是核心，寫成法度才能傳。這比『多讀多練』具體。',
   '用': '照這一條排自己的次序：先能把十二經的『是動／所生病』說清楚，再讀終始與刺法。',
@@ -349,6 +353,14 @@ def main():
                     '引': qs, '推演': L['推演'], '用': L['用'], '界': L['界']})
     if missing:
         raise SystemExit(f'句ID 不存在：{missing}')
+
+    # 相關練習：依引文所屬篇章，反查題庫（只算，不挑）
+    for x in out:
+        seqs = sorted({JU[q['id']]['seq'] for q in x['引']})
+        ids = []
+        for sq in seqs:
+            ids.extend(ITEM_BY_SEQ.get(sq, []))
+        x['相關題'] = {'數': len(ids), '篇': seqs}
 
     groups = []
     for x in out:

@@ -1071,9 +1071,14 @@ VIEWS.law = function (box, q) {
       var seen = {}, seqs = [];
       (x['引'] || []).forEach(function (q) { if (!seen[q['seq']]) { seen[q['seq']] = 1; seqs.push([q['seq'], q['篇']]); } });
       if (seqs.length) {
+        var prac = '';
+        if (x['相關題'] && x['相關題']['數']) {
+          prac = '　·　相關練習 <a href="#/items?seq=' + x['相關題']['篇'][0] + '">' +
+            x['相關題']['數'] + ' 題</a>';
+        }
         art.appendChild(h('p', '回原文：' + seqs.map(function (p) {
           return '<a href="#/read?seq=' + p[0] + '">〈' + esc(p[1]) + '〉</a>';
-        }).join('　'), 'small'));
+        }).join('　') + prac, 'small'));
       }
       sec.appendChild(art);
     });

@@ -30,7 +30,7 @@ function nextLinks(box, links) {
 
 var NAV = [
   ['home','首頁',1], ['themes','主題'], ['law','通則'],
-  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['jiugong','九宫'],
+  ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['variant','變體'], ['jiugong','九宫'],
   ['items','題庫',1], ['concept','概念'],
   ['suwen','異同',1], ['prep','九鍼'],
   ['search','搜尋',1], ['method','方法'], ['collation','校勘'], ['limits','限制'],
@@ -663,6 +663,51 @@ VIEWS.search = function (box, q) {
   nextLinks(box, [['通則', '#/law'], ['十二經', '#/meridian'], ['題庫', '#/items']]);
 };
 
+
+
+/* ---------------- 變體：同一原則的多種寫法 ---------------- */
+VIEWS.variant = function (box) {
+  var D = LS.bianti || {}, groups = D['組'] || [];
+  box.appendChild(h('h1', '變體：同一原則的多種寫法'));
+  box.appendChild(h('p', '靈樞不是一次寫成的教科書，是不同來源的彙編。同一個原則，常在不同篇換一副說法。' +
+    '這一頁把四組並排，看它換了什麼、沒換什麼。', 'lead'));
+
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>怎麼看這些組</h3><ul class="small">' +
+    '<li>每組不是「矛盾」，而是<b>不同的判準</b>：同一個詞，各篇用不同方式在量。</li>' +
+    '<li>差異處是我（編者）的整理，標『歸』；引文照原文，可回查。</li>' +
+    '<li>讀法：遇到這些詞，先問「這一段用哪把尺」，再談它的內容。</li></ul>' +
+    '<p class="small muted">共 ' + groups.length + ' 組、' + (D['說明'] ? D['說明']['條數'] : '') + ' 句。</p>';
+  box.appendChild(intro);
+
+  groups.forEach(function (g) {
+    var c = h('div', '', 'card');
+    c.appendChild(el('h2', '', g['組']));
+    c.appendChild(h('p', '<b>問題</b>：' + esc(g['問題']), 'small'));
+    var t = '<tr><th style="width:96px">篇</th><th>原文</th><th style="width:34%">這一句在說什麼</th></tr>';
+    (g['條'] || []).forEach(function (x) {
+      t += '<tr><td class="small">' + esc(x['篇']) + '<br/><span class="src">' + esc(x['id']) + '</span></td>' +
+        '<td class="small">' + esc(x['文']) + '</td><td class="small muted">' + esc(x['註']) + '</td></tr>';
+    });
+    var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + t + '</table>';
+    c.appendChild(w);
+    c.appendChild(h('p', '<b>差在哪</b>（歸）：' + md(g['差']), 'small'));
+    c.appendChild(h('p', '<b>讀時注意</b>（歸）：' + md(g['用']), 'small'));
+    box.appendChild(c);
+  });
+
+  var tail = h('div', '', 'card');
+  tail.innerHTML = '<h3>為什麼單獨立一頁</h3>' +
+    '<p class="small">通則那一頁把「共同點」抽出來；這一頁把「不同寫法」並排。' +
+    '兩者合看，才不會把靈樞讀成一本前後一致的手冊——它本來就不是。</p>' +
+    '<p class="small muted">本頁只做四組；其餘可做而未做的：死期判斷的兩種寫法（日數 vs 死不治）、' +
+    '刺法四套清單（工具／病位／五體／目的）、營衛的兩種計數（度與周）。</p>' +
+    '<p class="small"><a href="#/law">回通則</a>　·　<a href="#/binghou">看病候</a>　·　' +
+    '<a href="#/read">回通讀</a></p>';
+  box.appendChild(tail);
+
+  nextLinks(box, [['通則：共同點', '#/law'], ['病候：證候怎麼寫', '#/binghou'], ['方法：收錄狀況', '#/method']]);
+};
 
 /* ---------------- 九宫八風（背景） ---------------- */
 VIEWS.jiugong = function (box) {

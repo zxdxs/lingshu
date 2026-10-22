@@ -152,3 +152,15 @@ body.show-sid .sid{display:inline}
 .route .st:last-child::after{display:none}
 .route .st b{color:var(--brand)}
 @media (max-width:640px){.route .st{grid-template-columns:84px 1fr;}.route .st>div:last-child{grid-column:2}}
+
+/* 指正與聯絡 */
+.want-k{font-size:.95rem;margin:16px 0 4px;color:var(--brand)}
+.contact-row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;
+  border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.contact-row:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.contact-txt{flex:1 1 260px;min-width:0}
+.mail{display:inline-block;margin-top:4px;font-size:1rem;letter-spacing:.02em;
+  border-bottom:1px solid var(--brand);padding-bottom:1px}
+.site{border-top:1px dashed var(--line);padding-top:12px;margin-top:12px}
+.site:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.site-a{font-weight:600}

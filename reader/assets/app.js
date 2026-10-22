@@ -11,7 +11,9 @@ function $(s, r) { return (r || document).querySelector(s); }
 function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
 function h(tag, html, cls) { var e = document.createElement(tag); if (cls) e.className = cls; e.innerHTML = html; return e; }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-function md(s) { return esc(s).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>'); }
+function md(s) {
+  return esc(s).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code>$1</code>');
+}
 function stat(k) { return (LS.meta && LS.meta.stats && LS.meta.stats[k]) || 0; }
 function pct(a, b) { return b ? Math.round(a / b * 100) : 0; }
 function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%"></i></div>'; }
@@ -25,7 +27,7 @@ var VIEWS = {};
 
 /* ---------------- 首頁 ---------------- */
 VIEWS.home = function (box) {
-  var hero = h('div', 'hero', '');
+  var hero = h('div', '', 'hero');
   hero.innerHTML =
     '<div class="kicker">中醫典籍導讀 · 黃帝內經</div>' +
     '<h1>靈樞經</h1>' +
@@ -44,7 +46,7 @@ VIEWS.home = function (box) {
     '</div>';
   box.appendChild(hero);
 
-  var safe = h('div', 'alert');
+  var safe = h('div', '', 'alert');
   safe.innerHTML = '<b>' + esc(LS.meta.safety) + '</b>' +
     '<span class="small" style="display:block;margin-top:6px">本站的題目、模組與案例只用原文證候作情境，' +
     '不提供劑量、療程或操作步驟；任何臨床處置請由指導醫師決定。</span>';
@@ -52,20 +54,20 @@ VIEWS.home = function (box) {
 
   box.appendChild(h('h2', '五個主題'));
   box.appendChild(h('p', '主題的劃分與命名為編者所加，非原文原有分類。', 'small muted'));
-  var tg = h('div', 'grid');
+  var tg = h('div', '', 'grid');
   (LS.themes || []).forEach(function (t) {
-    var c = h('div', 'card', '');
+    var c = h('div', '', 'card');
     c.innerHTML = '<h3>' + esc(t.題) + '</h3><p class="small"><b>' + esc(t.一句) + '</b></p>' +
       '<a class="small" href="#/themes">讀這個主題 →</a>';
     tg.appendChild(c);
   });
   box.appendChild(tg);
 
-  var g = h('div', 'grid');
+  var g = h('div', '', 'grid');
   [['目的','讓原文可讀、可練、可查','讀得進去，也練得出來；不以「看懂了」當作學會。'],
    ['價值','把可驗的部分公開','引文逐字比對、答案分型、模組原文、限制與矛盾——全部可查。'],
    ['為什麼現在做','市面上的靈樞多止於導讀','練習紀錄與校勘痕跡很少公開；這份材料把兩者一起留下。']].forEach(function (x) {
-    var c = h('div', 'card', '');
+    var c = h('div', '', 'card');
     c.innerHTML = '<h3>' + x[0] + '</h3><p class="small muted">' + x[1] + '</p><p>' + x[2] + '</p>';
     g.appendChild(c);
   });
@@ -89,7 +91,7 @@ VIEWS.home = function (box) {
     '<tr><td>遷移</td><td>新情境自動運用</td><td>案例題（6 道，待專家核）</td></tr>';
   box.appendChild(t2);
 
-  var no = h('div', 'card', '');
+  var no = h('div', '', 'card');
   no.innerHTML = '<h3>本站不做什麼</h3><ul class="small" style="margin:.4em 0 0 1.1em;padding:0">' +
     '<li>不替代臨床判斷：所有臨床主張未經驗證，<b>不可據以施治</b>。</li>' +
     '<li>不把素問納入主體：只在對照時引用。</li>' +
@@ -102,12 +104,12 @@ VIEWS.home = function (box) {
 /* ---------------- 主題 ---------------- */
 VIEWS.themes = function (box) {
   box.appendChild(h('h1', '靈樞在講什麼'));
-  var note = h('div', 'card', '');
+  var note = h('div', '', 'card');
   note.innerHTML = '<b>先說清楚</b>：以下五個主題的<b>劃分與命名是編者所加</b>，不是《靈樞》原有的分類。原文只提供材料；' +
     '每一條主張下面都附原文與句 ID，讀者可以不同意這個分法，直接讀原文。';
   box.appendChild(note);
   (LS.themes || []).forEach(function (t, i) {
-    var c = h('div', 'card', '');
+    var c = h('div', '', 'card');
     var qs = (t.句 || []).map(function (q) {
       return '<div class="tiao"><span class="pill b">' + esc(q.id || '') + '</span>' + esc(q.文) +
         ' <span class="small muted">《靈樞·' + esc((LS.pian || []).filter(function (p) { return p.seq === q.篇; })[0]?.name || '') + '》</span></div>';
@@ -142,7 +144,7 @@ VIEWS.themes = function (box) {
 VIEWS.read = function (box, q) {
   if (q.seq) return readOne(box, q.seq);
   box.appendChild(h('h1', '通讀'));
-  var row = h('div', 'row');
+  var row = h('div', '', 'row');
   var sel = document.createElement('select');
   sel.appendChild(new Option('全部卷', ''));
   (LS.juan || []).forEach(function (j) { sel.appendChild(new Option(j.label + '（' + j.n + ' 篇）', j.no)); });
@@ -151,7 +153,7 @@ VIEWS.read = function (box, q) {
   row.appendChild(sel); row.appendChild(inp); row.appendChild(note);
   box.appendChild(row);
   var pb = h('div', ''); box.appendChild(pb);
-  var list = h('div', 'list'); box.appendChild(list);
+  var list = h('div', '', 'list'); box.appendChild(list);
   function render() {
     list.innerHTML = '';
     var jf = sel.value, kw = inp.value.trim(), done = 0, total = 0;
@@ -161,7 +163,7 @@ VIEWS.read = function (box, q) {
       total++;
       var read = STATE.read && STATE.read[p.seq];
       if (read) done++;
-      var d = h('div', 'tiao', '');
+      var d = h('div', '', 'tiao');
       d.innerHTML = '<span class="no">' + p.seq + '</span>' +
         '<a href="#/read?seq=' + p.seq + '">' + esc(p.name) + '</a>' +
         ' <span class="small muted">' + (p.juan ? '卷' + p.juan + ' · ' : '') + p.chars + ' 字 · ' + (p.items || 0) + ' 題</span>' +
@@ -178,7 +180,7 @@ function readOne(box, seq) {
   if (!p) { box.appendChild(h('p', '本篇不存在。')); return; }
   box.appendChild(h('h1', p.name));
   box.appendChild(h('p', (p.juan ? '卷' + p.juan + ' · ' : '') + p.chars + ' 字 · ' + (p.items || 0) + ' 題', 'small muted'));
-  var row = h('div', 'row');
+  var row = h('div', '', 'row');
   var b = el('button', 'btn', STATE.read && STATE.read[p.seq] ? '已讀 ✓' : '標為已讀'); b.type = 'button';
   var b2 = el('button', 'btn ghost', '← 回通讀'); b2.type = 'button';
   var b3 = el('a', 'btn ghost', '看本篇題目'); b3.href = '#/items?seq=' + p.seq;
@@ -186,7 +188,7 @@ function readOne(box, seq) {
   b2.onclick = function () { location.hash = '#/read'; };
   row.appendChild(b); row.appendChild(b2); row.appendChild(b3);
   box.appendChild(row);
-  var t = h('div', 'orig');
+  var t = h('div', '', 'orig');
   p.text.split('\n').forEach(function (line, dn) {
     if (!line.trim()) return;
     var para = document.createElement('p');
@@ -229,13 +231,13 @@ VIEWS.items = function (box, q) {
   var attempts = Object.keys(log).length;
   var ok = Object.keys(log).filter(function (k) { return log[k] === 'ok'; }).length;
   box.appendChild(h('div', '', ''));
-  var head = h('div', 'card', '');
+  var head = h('div', '', 'card');
   head.innerHTML = bar(attempts, stat('items')) +
     '<div class="small muted">已作答 ' + attempts + ' / ' + stat('items') + '　·　答對 ' + ok +
     '（' + pct(ok, attempts) + '%）</div>';
   box.appendChild(head);
 
-  var row = h('div', 'row');
+  var row = h('div', '', 'row');
   var f1 = document.createElement('select');
   [['', '全部題型'], ['fill_blank', '填空'], ['mcq', '選擇'], ['error_identification', '辨誤']].forEach(function (x) { f1.appendChild(new Option(x[1], x[0])); });
   var f2 = document.createElement('select');
@@ -250,7 +252,7 @@ VIEWS.items = function (box, q) {
   var theme = q.theme ? (LS.themes || []).filter(function (t) { return t.id === q.theme; })[0] : null;
   var tSeqs = theme ? (theme.篇 || []).map(String) : null;
   if (theme) {
-    var tp = h('p', 'small', '');
+    var tp = h('p', '', 'small');
     tp.innerHTML = '主題：<b>' + esc(theme.題) + '</b>　<span class="muted">' + esc(theme.一句) + '</span>　<a href="#/items">清除</a>';
     box.appendChild(tp);
   }
@@ -275,7 +277,7 @@ VIEWS.items = function (box, q) {
   f1.onchange = f2.onchange = f3.onchange = render; render();
 };
 function itemCard(it) {
-  var c = h('div', 'card', '');
+  var c = h('div', '', 'card');
   var head = h('div', '');
   head.innerHTML = '<span class="pill b">' + esc(it.pian) + '</span>' +
     '<span class="pill">' + ({ fill_blank: '填空', mcq: '選擇', error_identification: '辨誤' }[it.type] || it.type) + '</span>' +
@@ -304,11 +306,11 @@ function itemCard(it) {
     });
     c.appendChild(ans);
   } else {
-    var row = h('div', 'row');
+    var row = h('div', '', 'row');
     var b = el('button', 'btn ghost', '顯示答案'); b.type = 'button';
     var r1 = el('button', 'btn', '答對'); r1.type = 'button';
     var r2 = el('button', 'btn ghost', '答錯'); r2.type = 'button';
-    var a = h('div', 'ans', '');
+    var a = h('div', '', 'ans');
     a.style.display = 'none';
     a.innerHTML = '<b>' + esc(it.answer) + '</b>' +
       (it.acc && it.acc.length ? ' <span class="small muted">（亦可：' + esc(it.acc.join('、')) + '）</span>' : '') +
@@ -351,7 +353,7 @@ VIEWS.index = function (box) {
   box.appendChild(h('h1', '索引'));
   var cats = {};
   (LS.index || []).forEach(function (r) { cats[r.c] = 1; });
-  var row = h('div', 'row');
+  var row = h('div', '', 'row');
   var inp = document.createElement('input'); inp.type = 'search'; inp.placeholder = '查名詞、篇名…'; inp.style.minWidth = '240px';
   var sel = document.createElement('select');
   sel.appendChild(new Option('全部類別', ''));
@@ -404,7 +406,7 @@ VIEWS.prep = function (box) {
 VIEWS.method = function (box) {
   box.appendChild(h('h1', '方法與校勘'));
   box.appendChild(h('p', '這一頁回答「這本書可不可信」。完整方法見 docs/01、33、82、88。', 'small muted'));
-  var c = h('div', 'card', '');
+  var c = h('div', '', 'card');
   c.innerHTML = '<h3>校勘（' + (LS.collation || []).length + ' 點）</h3>' +
     '<p class="small">三源並排（底本／太素／類經）與覆蓋率另成一頁。</p>' +
     '<a class="btn ghost" href="#/collation">看三源並排 →</a>';
@@ -430,7 +432,7 @@ VIEWS.coverage = function (box) {
     var k = per[it.seq] = per[it.seq] || [0, 0];
     k[1]++; if (log[id] === 'ok') k[0]++;
   });
-  var row = h('div', 'row');
+  var row = h('div', '', 'row');
   var sel = document.createElement('select');
   [['', '全部篇'], ['todo', '未讀'], ['thin', '題少（≤6）'], ['wrong', '曾答錯']].forEach(function (x) { sel.appendChild(new Option(x[1], x[0])); });
   var note = el('span', 'small muted', '');
@@ -494,7 +496,7 @@ VIEWS.collation = function (box) {
 /* ---------------- 限制 ---------------- */
 VIEWS.limits = function (box) {
   box.appendChild(h('h1', '已知限制'));
-  var sg = h('div', 'alert');
+  var sg = h('div', '', 'alert');
   sg.innerHTML = '<b>' + esc(LS.meta.safety) + '</b>';
   box.appendChild(sg);
   box.appendChild(h('p', '先說不能做什麼。完整清單見 data/能力邊界.csv。', 'small muted'));
@@ -520,7 +522,7 @@ VIEWS.mine = function (box) {
     var k = byType[it.type] || (byType[it.type] = [0, 0]);
     k[1]++; if (log[id] === 'ok') k[0]++;
   });
-  var c = h('div', 'card', '');
+  var c = h('div', '', 'card');
   c.innerHTML = '<h3>通讀</h3>' + bar(read, (LS.pian || []).length) +
     '<div class="small muted">已讀 ' + read + ' / ' + (LS.pian || []).length + ' 篇</div>' +
     '<h3 style="margin-top:18px">題庫</h3>' + bar(Object.keys(log).length, stat('items')) +
@@ -589,6 +591,61 @@ VIEWS.about = function (box) {
     box.appendChild(h('p', '待決：' + pend.join('、') + '（其餘皆已定稿；填入後重建即生效）', 'small'));
   }
   box.appendChild(h('p', LS.meta.safety_note, 'small'));
+  box.appendChild(h('p', 'small', '<a href="#/contact">✉️ 看到錯、想指正，或要問授權範圍 →</a>'));
+};
+
+
+/* ---------------- 指正與聯絡 ---------------- */
+VIEWS.contact = function (box) {
+  var C = LS.contact || {};
+  box.appendChild(h('h1', esc(C.title || '指正與聯絡')));
+  if (C.lead) { var ld = h('div', '', 'card'); ld.innerHTML = '<p>' + md(C.lead) + '</p>'; box.appendChild(ld); }
+
+  if ((C.want || []).length) {
+    var w = h('div', '', 'card');
+    w.appendChild(el('h3', '', '最需要人幫忙的五件事'));
+    w.appendChild(h('p', '前兩項是站上最大的不確定處，回報一處就少一處。', 'small muted'));
+    C.want.forEach(function (x) {
+      w.appendChild(el('h4', 'want-k', x.k));
+      w.appendChild(h('p', md(x.d), 'small'));
+    });
+    box.appendChild(w);
+  }
+
+  var it = h('div', '', 'card');
+  it.appendChild(el('h3', '', '怎麼聯絡'));
+  (C.items || []).forEach(function (x) {
+    var row = h('div', '', 'contact-row');
+    var left = h('div', '', 'contact-txt');
+    left.appendChild(el('h4', '', x.k));
+    var d = h('p', md(x.d), 'small'); left.appendChild(d);
+    if (x.mail) {
+      var a = el('a', 'mail', x.mailText || x.mail);
+      a.href = 'mailto:' + x.mail; left.appendChild(a);
+    } else {
+      left.appendChild(h('p', '<b>待補</b>——發布前會填上可公開的郵箱；目前請透過下方相關站點聯絡。', 'small'));
+    }
+    row.appendChild(left); it.appendChild(row);
+  });
+  box.appendChild(it);
+
+  var st = h('div', '', 'card');
+  st.appendChild(el('h3', '', '相關站點'));
+  (C.sites || []).forEach(function (x) {
+    var d = h('div', '', 'site');
+    var a = el('a', 'site-a', x.k + ' ↗');
+    a.href = x.url; a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener noreferrer');
+    d.appendChild(a);
+    d.appendChild(h('p', md(x.d), 'small'));
+    d.appendChild(el('p', 'tiny muted', x.url));
+    st.appendChild(d);
+  });
+  box.appendChild(st);
+
+  var cl = h('div', '', 'card');
+  cl.innerHTML = '<p class="small">' + md(C.close || '') + '</p>' +
+    '<p class="muted small" style="text-align:right;margin-top:12px">⚠ ' + esc(C.seal || '') + '</p>';
+  box.appendChild(cl);
 };
 
 /* ---------------- 路由 ---------------- */
@@ -629,14 +686,14 @@ function boot() {
     nav.appendChild(a);
   });
   $('#stripe').textContent = LS.meta.warn;
-  $('#footLinks').innerHTML = '<a href="#/limits">限制</a><a href="#/method">校勘</a><a href="#/items">題庫</a><a href="#/about">關於</a>';
+  $('#footLinks').innerHTML = '<a href="#/contact">✉️ 指正與聯絡</a><a href="#/limits">限制</a><a href="#/method">校勘</a><a href="#/items">題庫</a><a href="#/about">關於</a>';
   window.addEventListener('hashchange', route);
   if (!STATE.agree) gate(); else route();
 }
 function gate() {
   var view = $('#view');
   view.innerHTML = '';
-  var g = h('div', 'gate');
+  var g = h('div', '', 'gate');
   g.innerHTML = '<h2>使用前確認</h2>' +
     '<div class="alert"><b>' + esc(LS.meta.safety) + '</b></div>' +
     '<p>本材料是讀書與練習工具，不是診療工具，也不是教材的替代品。' +

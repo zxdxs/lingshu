@@ -128,6 +128,7 @@
 | 站名 | `docs/112_站名.md`（中醫典籍導讀﹣靈樞經；落在哪六處、還沒定的四項） |
 | 發布待決 | `docs/113_發布待決.md`＋`data/發布資訊.json`（授權已定 CC BY-NC-SA 4.0；聯絡與 Anki 實測仍待決） |
 | 安全提醒 | `docs/114_安全提醒.md`（七個出口同一句話；`check_all` 指標『安全提醒缺漏』須為 0） |
+| 聯繫頁 | `docs/115_聯繫頁.md`＋`data/聯絡.json`（照傷寒站骨架；五項求助數字由 `build_contact.py` 算） |
 | 有什麼禁忌 | `docs/38_禁忌清單.md` |
 | 做過什麼、錯過什麼 | `docs/22_回頭評估.md`、`docs/34_價值點遺漏稽核.md` |
 
@@ -138,7 +139,7 @@
 ```
 底本/       L0 原文、經文、正規化、音釋、異體字表
 data/       題庫、模組、表格、校勘記錄、能力邊界、發布資訊（站名／授權／聯絡）
-docs/       114 份說明文件
+docs/       116 份說明文件
 scripts/    產線腳本（解析、抽取、生成、校準、匯出）
 export/     Anki 牌組、全題表、實體索引（可直接用）
 vendor/     見證本與來源（SBCK、太素、類經、素問）
@@ -174,6 +175,7 @@ build_base_text.py        底本解析（含音釋剝離、補頁）
 - 打包：`python3 scripts/package_release.py 1.0.0` → `dist/lingshu-v1.0.0.zip` ＋ `manifest-v1.0.0.json`（含計數與 sha256）。
 - **發布資訊單一來源**：`data/發布資訊.json`（站名、版本、授權、聯絡、案例題、Anki 實測、引用格式）。改完要重跑 `build_reader.py`，否則 `check_reader` 會以「不同步」擋下。見 `docs/113_發布待決.md`。
 - **授權**：CC BY-NC-SA 4.0（原文屬公共領域，授權及於新增之標點、校記、題目、圖表）；通知文件見 [`LICENSE.txt`](LICENSE.txt)，法律文本以 creativecommons.org 為準。
+- **指正與聯絡**：頁腳常駐 `#/contact`（或關於頁連結）。求助項目與數字由 `scripts/build_contact.py` 生成，改資料後須重跑。
 - **發布前必做**：① 在真實 Anki 匯入 `export/靈樞_填空.apkg`（708 卡）並按過一次（目前未測）；② 填聯絡。`check_all` 的`發布待決`須為 0。見 `docs/100_發布前檢查.md`。
 
 ## 授權與來源

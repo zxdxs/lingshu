@@ -85,6 +85,8 @@ def main():
 
     rel = load('data/發布資訊.json')
 
+    contact = load('data/聯絡.json')
+
     data = {
         'meta': {
             'title': rel['站名'],
@@ -128,6 +130,7 @@ def main():
                      'use': r.get('功能', ''), 'src': r.get('原文', '')} for r in nd],
         'yinshi': [{'juan': r.get('卷', ''), 'text': r.get('音釋', '')[:220]} for r in yin],
         'concepts': cpts,
+        'contact': contact,
     }
     os.makedirs(OUT, exist_ok=True)
     js = '/* 由 scripts/build_reader.py 生成，請勿手改。 */\nwindow.LS = ' + \

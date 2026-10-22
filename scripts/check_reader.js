@@ -28,7 +28,7 @@ function walk(n, acc) {
   return acc;
 }
 
-const views = ["home", "themes", "read", "items", "concept", "index", "coverage", "prep", "method", "collation", "limits", "mine", "about"];
+const views = ["home", "themes", "read", "items", "concept", "index", "coverage", "prep", "method", "collation", "limits", "mine", "about", "contact"];
 let fails = 0;
 
 function Option(text, value) { const o = mkEl("option"); o.textContent = text; o.value = value; return o; }
@@ -61,7 +61,8 @@ function boot(agree) {
   const html = () => walk(viewNode, []).map(n => (n._html || "") + (n._text || "")).join(" ");
   const go = h => { win.location.hash = "#" + h; viewNode._html = ""; viewNode.children = [];
     (listeners.hashchange || []).forEach(f => f()); return html(); };
-  return { ctx, win, viewNode, listeners, html, go, cache, doc };
+  const classes = () => walk(viewNode, []).map(n => n.className).filter(Boolean).join(" ").split(/\s+/).filter(Boolean);
+  return { ctx, win, viewNode, listeners, html, go, cache, doc, classes };
 }
 
 const env = boot(true);
@@ -108,5 +109,42 @@ if (!gateHtml.includes(SAFE)) missing.push("gate");
 if (!gateHtml.includes("帶教資格")) missing.push("gate按鈕");
 if (missing.length) { fails++; console.log("  ✗ safety 未出現安全提醒：" + missing.join("、")); }
 else console.log(`  ✓ safety 頂欄／確認頁／首頁／限制頁／關於頁皆顯示：${SAFE.slice(0, 24)}…`);
+
+/* 樣式類別：h() 的參數順序是 (tag, html, cls)，寫錯會讓 .card/.hero 靜靜失效，
+   畫面「變簡陋」卻不報錯。這裡逐視圖點名必要類別。 */
+const NEED = {
+  "/home": ["hero", "card", "grid", "alert"],
+  "/themes": ["card"],
+  "/read": ["list", "tiao"],
+  "/read?seq=40": ["orig"],
+  "/items?seq=40": ["card"],
+  "/limits": ["alert"],
+  "/contact": ["card", "want-k", "site", "contact-row"],
+};
+const clsFails = [];
+Object.keys(NEED).forEach(r => {
+  env.go(r);
+  const got = env.classes();
+  const miss = NEED[r].filter(c => got.indexOf(c) < 0);
+  if (miss.length) clsFails.push(`${r} 缺 .${miss.join(" .")}`);
+});
+if (clsFails.length) { fails++; console.log("  ✗ classes " + clsFails.join("；")); }
+else console.log("  ✓ classes 7 個視圖的必要樣式類別都在");
+
+/* 聯絡頁：五項求助與相關站點必須由 data/聯絡.json 來，且郵箱狀態要與發布資訊一致
+   （未填就必須看得到「待補」，不能靜靜留白）。 */
+const CONTACT = JSON.parse(fs.readFileSync(path.join(ROOT, "data/聯絡.json"), "utf8"));
+const cHtml = env.go("/contact");
+const cFails = [];
+if ((CONTACT.want || []).length < 3) cFails.push("求助項目少於 3 項");
+(CONTACT.want || []).forEach(x => { if (!cHtml.includes(x.k)) cFails.push("缺求助項：" + x.k.slice(0, 8)); });
+(CONTACT.sites || []).forEach(x => { if (!cHtml.includes(x.url)) cFails.push("缺站點：" + x.k); });
+if (!cHtml.includes(CONTACT.seal)) cFails.push("頁尾沒有安全提醒短句");
+if (CONTACT.contact_ready) {
+  if (!cHtml.includes(CONTACT.items[0].mail)) cFails.push("郵箱已填卻沒顯示");
+  if (cHtml.includes("待補")) cFails.push("郵箱已填卻仍顯示待補");
+} else if (!cHtml.includes("待補")) cFails.push("郵箱未填卻沒顯示待補");
+if (cFails.length) { fails++; console.log("  ✗ contact " + cFails.join("；")); }
+else console.log(`  ✓ contact  求助 ${CONTACT.want.length} 項／站點 ${CONTACT.sites.length} 個／郵箱 ${CONTACT.contact_ready ? "已填" : "待補"}`);
 
 process.exit(fails ? 1 : 0);

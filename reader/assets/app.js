@@ -20,7 +20,7 @@ function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%
 function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String(p.seq) === String(seq); })[0]; }
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
-var NAV = [['home','首頁'],['themes','主題'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],
+var NAV = [['home','首頁'],['themes','主題'],['law','通則'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],
            ['prep','九鍼'],['method','方法'],['collation','校勘'],['limits','限制'],
            ['mine','我的'],['about','關於']];
 var VIEWS = {};
@@ -72,6 +72,14 @@ VIEWS.home = function (box) {
     g.appendChild(c);
   });
   box.appendChild(g);
+
+  var lawCard = h('div', '', 'card');
+  lawCard.innerHTML = '<h3>靈樞在講規矩，不只是講故事</h3>' +
+    '<p class="small">「虚則實之，滿則泄之」「司外揣內」「粗守形，上守神」「中而不去則精失」——' +
+    '這些句子散在八十一篇裡，反覆出現。本站抽成 <b>' + ((LS.law || {})['條數'] || 16) + ' 條通則</b>，' +
+    '每條都掛句ID，可回原文對。</p>' +
+    '<p class="small"><a href="#/law">看通則 →</a></p>';
+  box.appendChild(lawCard);
 
   var sw = h('div', '', 'card');
   sw.innerHTML = '<h3>靈樞與素問，差在哪</h3>' +
@@ -569,6 +577,85 @@ VIEWS.suwen = function (box) {
   box.appendChild(c7);
 
   box.appendChild(h('p', '引文規矩：「」只給靈樞原文（逐字機器驗證）；『』給素問、類經與我自撰的詞。', 'small muted'));
+};
+
+
+/* ---------------- 通則 ---------------- */
+VIEWS.law = function (box, q) {
+  var L = LS.law || {};
+  box.appendChild(h('h1', '通則：靈樞反覆在講的那些規矩'));
+  box.appendChild(h('p', '這一頁不是摘要，是把散在八十一篇裡、反覆出現的判準抽出來。' +
+    '每條都掛著句ID，可以回原文對；抽得對不對，你看著原文判斷。', 'lead'));
+
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>怎麼讀這一頁</h3><ul class="small">' +
+    '<li><b>原則</b>是編者的歸納（歸）；<b>引</b>是原文，句ID 可回查（原）。</li>' +
+    '<li><b>推演</b>是這條原則往下走會得到什麼；<b>用</b>是拿它去讀原文時可以問的問題。</li>' +
+    '<li><b>界</b>寫的是不能推到哪裡——通則最容易變成過度推論。</li>' +
+    '<li>本頁只講「怎麼讀」，不講「怎麼做」。操作、劑量、手法不在這裡，也不該從網頁學。</li></ul>';
+  box.appendChild(intro);
+
+  // 目錄
+  var toc = h('div', '', 'card');
+  toc.appendChild(el('h3', '', '十六條，六組'));
+  (L['組'] || []).forEach(function (g) {
+    var p = h('p', '<b>' + esc(g['組']) + '</b>　', 'small');
+    g['條'].forEach(function (x) {
+      var a = el('a', '', x['n'] + '. ' + x['名']);
+      a.href = '#/law?n=' + x['n'];
+      p.appendChild(a);
+      p.appendChild(document.createTextNode('　'));
+    });
+    toc.appendChild(p);
+  });
+  toc.appendChild(h('p', '判準：一條通則至少要能由兩篇支持；只在一篇出現的寫法，留在那一篇的模組裡，不升為通則。', 'small muted'));
+  box.appendChild(toc);
+
+  (L['組'] || []).forEach(function (g) {
+    var sec = h('div', '', 'card');
+    sec.appendChild(el('h2', '', g['組']));
+    (g['條'] || []).forEach(function (x) {
+      var art = h('div', '', 'law-item');
+      art.setAttribute('id', 'law' + x['n']);
+      art.appendChild(el('h3', '', x['n'] + '. ' + x['名']));
+      art.appendChild(h('p', '<b>原則</b>（歸）：' + md(x['原則'])));
+      (x['引'] || []).forEach(function (q) {
+        var qq = h('div', '', 'quote');
+        qq.innerHTML = esc(q['文']) +
+          '<div class="src">——《靈樞·' + esc(q['篇']) + '》 · 句 ' + esc(q['id']) +
+          '　·　' + esc(q['註']) + '</div>';
+        art.appendChild(qq);
+      });
+      art.appendChild(h('p', '<b>推演</b>（歸）：' + md(x['推演']), 'small'));
+      art.appendChild(h('p', '<b>用</b>（歸）：' + md(x['用']), 'small'));
+      art.appendChild(h('p', '<b>界</b>（空／歸）：' + md(x['界']), 'small muted'));
+      sec.appendChild(art);
+    });
+    box.appendChild(sec);
+  });
+
+  var tail = h('div', '', 'card');
+  tail.innerHTML = '<h3>為什麼要抽成通則</h3>' +
+    '<p class="small">單篇讀，容易記住故事；通則讀，才看得出同一個判斷在不同篇裡換了什麼說法。' +
+    '本站的「概念」頁處理一個詞的幾層意思，這一頁處理一條規矩的幾種說法——兩者都是為了讓八十一篇彼此對得上。</p>' +
+    '<p class="small muted">抽通則的代價是簡化：原文的條件往往比一條原則複雜。所以每條都留「界」，' +
+    '把不能推的地方寫出來。</p>' +
+    '<h3 style="margin-top:18px">本站怎麼對待「傳承」</h3>' +
+    '<p class="small">靈樞自己立了傳授的規矩（上頁第 14–16 條）。本站照著做，方式是：</p>' +
+    '<ul class="small">' +
+    '<li><b>給理解，不給操作</b>：不提供劑量、療程、進針深度或手法步驟——那些需要師授與臨床責任。</li>' +
+    '<li><b>每句可回原文</b>：所有引文掛句ID；抽出來的原則標『歸』，不冒充原文。</li>' +
+    '<li><b>限制公開</b>：能力邊界 34 條、矛盾 14 條，寫在站上而不是藏起來。</li>' +
+    '<li><b>可傳但不可私佔</b>：內容以 CC BY-NC-SA 4.0 釋出——可以教、可以改，但要同樣開放、不得商業使用。</li>' +
+    '<li><b>先說誰能用</b>：僅供在有帶教資格的執業中醫師指導下使用。</li></ul>' +
+    '<p class="small"><a href="#/themes">回主題</a>　·　<a href="#/suwen">看靈樞與素問的差別</a>　·　' +
+    '<a href="#/limits">看本站的能力邊界</a></p>';
+  box.appendChild(tail);
+
+  if (q && q.n) {
+    var target = document.getElementById('law' + q.n);
+    if (target) target.scrollIntoView ? target.scrollIntoView({ block: 'start' }) : null;
+  }
 };
 
 /* ---------------- 九鍼 ---------------- */

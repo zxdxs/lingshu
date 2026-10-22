@@ -83,6 +83,7 @@ def main():
     rel = load('data/發布資訊.json')
 
     contact = load('data/聯絡.json')
+    law = load('data/通則.json')
     suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json'),
              'quant': load('data/異同_量化.json')}
 
@@ -124,6 +125,7 @@ def main():
                      'use': r.get('功能', ''), 'src': r.get('原文', '')} for r in nd],
         'concepts': cpts,
         'contact': contact,
+        'law': law,
         'suwen': suwen,
     }
     os.makedirs(OUT, exist_ok=True)

@@ -37,6 +37,7 @@ ROUTES = {
     'items?seq=40': {'card': 3},
     'concept': {'card': 3},
     'suwen': {'card': 5, 'quote': 1},
+    'law': {'card': 3, 'quote': 3},
     'prep': {'card': 1},
     'method': {},
     'collation': {},
@@ -168,7 +169,7 @@ def main():
             bad.append('沒有 h1')
         if rep['stripe'] != STRIPE:
             bad.append(f'頂欄不是安全提醒（{rep["stripe"][:20]}）')
-        if rep['nav'] != 12 or rep['foot'] != 5:
+        if rep['nav'] != 13 or rep['foot'] != 5:
             bad.append(f'導覽 {rep["nav"]}／頁腳 {rep["foot"]}（應 13／5）')
         for k, v in need.items():
             if rep.get(k, 0) < v:

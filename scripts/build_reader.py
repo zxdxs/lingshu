@@ -26,6 +26,20 @@ def main():
     nd = list(csv.DictReader(open(os.path.join(ROOT, 'data', '表_九鍼.csv'), encoding='utf-8-sig')))
     yin = load('底本/音釋層.json')['音釋']
     cov = load('data/三源覆蓋率.json')['篇']
+    sidx = load('底本/靈樞經_句索引.json')['句']
+    byseq = {}
+    for x in sidx:
+        byseq.setdefault(x['seq'], []).append(x)
+    themes = load('data/主題.json')['主題']
+    for t in themes:
+        for qq in t.get('句', []):
+            n = __import__('check_quotes').norm(qq['文'])
+            hit = ''
+            for x in byseq.get(qq['篇'], []):
+                if n and (n in x['norm'] or (len(x['norm']) >= 6 and x['norm'] in n)):
+                    hit = x['id']; break
+            qq['id'] = hit
+        t['篇名'] = [next((p['篇名_規範'] for p in ch if p['序'] == s), '') for s in t.get('篇', [])]
     import glob as _g
     cpts = []
     for f in sorted(_g.glob(os.path.join(ROOT, 'data', '多層_*.json'))):
@@ -94,6 +108,7 @@ def main():
                        'base': r.get('底本讀法', ''), 'taisu': r.get('太素', '') or '—',
                        'leijing': r.get('類經', '') or '—', 'verdict': r.get('判定', ''),
                        'basis': r.get('依據', ''), 'impact': r.get('影響', '')} for r in col],
+        'themes': themes,
         'coverage': [{'seq': r.get('篇序', ''), 'pian': r.get('篇名', ''), 'chars': r.get('字數', 0),
                       't4': r.get('太素K4'), 't12': r.get('太素K12'),
                       'l4': r.get('類經K4'), 'l12': r.get('類經K12'),

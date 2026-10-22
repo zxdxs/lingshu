@@ -18,7 +18,7 @@ function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%
 function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String(p.seq) === String(seq); })[0]; }
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
-var NAV = [['home','首頁'],['read','通讀'],['items','題庫'],['concept','概念'],['index','索引'],
+var NAV = [['home','首頁'],['themes','主題'],['read','通讀'],['items','題庫'],['concept','概念'],['index','索引'],
            ['coverage','覆蓋'],['prep','準備'],['method','方法'],['collation','校勘'],['limits','限制'],
            ['mine','我的'],['about','關於']];
 var VIEWS = {};
@@ -32,9 +32,9 @@ VIEWS.home = function (box) {
     '<p class="lead">把《靈樞》讀成<b>可以驗收的判斷力</b>：81 篇原文、' + stat('items') + ' 道題，' +
     '每一句都能回到底本，每一條限制都寫在站上。</p>' +
     '<div class="row" style="margin-top:14px">' +
-      '<a class="btn" href="#/read">入口 01 · 讀原文</a>' +
-      '<a class="btn ghost" href="#/items">入口 02 · 練題</a>' +
-      '<a class="btn ghost" href="#/concept">入口 03 · 查概念</a>' +
+      '<a class="btn" href="#/themes">入口 01 · 看主題</a>' +
+      '<a class="btn ghost" href="#/read">入口 02 · 讀原文</a>' +
+      '<a class="btn ghost" href="#/items">入口 03 · 練題</a>' +
     '</div>' +
     '<div class="stats" style="margin-top:18px">' +
       '<div class="stat"><b>' + stat('pian') + '</b><span>篇</span></div>' +
@@ -43,6 +43,16 @@ VIEWS.home = function (box) {
       '<div class="stat"><b>' + stat('quote_seg') + '</b><span>逐字核過的引文段</span></div>' +
     '</div>';
   box.appendChild(hero);
+
+  box.appendChild(h('h2', '五個主題'));
+  var tg = h('div', 'grid');
+  (LS.themes || []).forEach(function (t) {
+    var c = h('div', 'card', '');
+    c.innerHTML = '<h3>' + esc(t.題) + '</h3><p class="small"><b>' + esc(t.一句) + '</b></p>' +
+      '<a class="small" href="#/themes">讀這個主題 →</a>';
+    tg.appendChild(c);
+  });
+  box.appendChild(tg);
 
   var g = h('div', 'grid');
   [['目的','讓原文可讀、可練、可查','讀得進去，也練得出來；不以「看懂了」當作學會。'],
@@ -80,6 +90,30 @@ VIEWS.home = function (box) {
     '<li>不掩蓋不確定：限制 ' + stat('limits') + ' 條、矛盾 ' + stat('contradictions') + ' 條公開列出。</li></ul>' +
     '<p class="small" style="margin-top:10px"><a href="#/limits">看已知限制</a>　·　<a href="#/method">看校勘與矛盾</a>　·　<a href="#/about">看授權與出處</a></p>';
   box.appendChild(no);
+};
+
+/* ---------------- 主題 ---------------- */
+VIEWS.themes = function (box) {
+  box.appendChild(h('h1', '靈樞在講什麼'));
+  box.appendChild(h('p', '不按篇讀，按「身體—病變—表現—判斷」讀。每一條主張下面都附原文與句 ID。', 'small muted'));
+  (LS.themes || []).forEach(function (t, i) {
+    var c = h('div', 'card', '');
+    var qs = (t.句 || []).map(function (q) {
+      return '<div class="tiao"><span class="pill b">' + esc(q.id || '') + '</span>' + esc(q.文) +
+        ' <span class="small muted">《靈樞·' + esc((LS.pian || []).filter(function (p) { return p.seq === q.篇; })[0]?.name || '') + '》</span></div>';
+    }).join('');
+    var ps = (t.篇名 || []).map(function (n, j) {
+      return '<a class="pill" href="#/read?seq=' + t.篇[j] + '">' + esc(n) + '</a>';
+    }).join('');
+    c.innerHTML = '<div class="small muted">主題 ' + (i + 1) + '</div>' +
+      '<h3 style="margin:.2em 0">' + esc(t.題) + '</h3>' +
+      '<p style="font-size:1.05rem"><b>' + esc(t.一句) + '</b></p>' +
+      '<p>' + esc(t.主張) + '</p>' + qs +
+      '<div class="row" style="margin-top:8px">' + ps + '</div>' +
+      (t.圖 ? '<p class="small"><a href="../export/' + esc(t.圖) + '" target="_blank">看圖 →</a></p>' : '') +
+      '<p class="small muted">邊界：' + esc(t.邊界 || '') + '</p>';
+    box.appendChild(c);
+  });
 };
 
 /* ---------------- 通讀 ---------------- */

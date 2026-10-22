@@ -28,7 +28,7 @@ function walk(n, acc) {
   return acc;
 }
 
-const views = ["home", "read", "items", "concept", "index", "coverage", "prep", "method", "collation", "limits", "mine", "about"];
+const views = ["home", "themes", "read", "items", "concept", "index", "coverage", "prep", "method", "collation", "limits", "mine", "about"];
 const store = {};
 const listeners = {};
 let fails = 0;

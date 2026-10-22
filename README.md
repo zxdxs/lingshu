@@ -129,6 +129,7 @@
 | 發布待決 | `docs/113_發布待決.md`＋`data/發布資訊.json`（授權已定 CC BY-NC-SA 4.0；聯絡與 Anki 實測仍待決） |
 | 安全提醒 | `docs/114_安全提醒.md`（七個出口同一句話；`check_all` 指標『安全提醒缺漏』須為 0） |
 | 聯繫頁 | `docs/115_聯繫頁.md`＋`data/聯絡.json`（照傷寒站骨架；五項求助數字由 `build_contact.py` 算） |
+| 放出來跑 | `docs/116_放出來跑一遍.md`（本機 server；`scripts/smoke_browser.py` 用真 Chrome 跑 16 路由＋2 情境） |
 | 有什麼禁忌 | `docs/38_禁忌清單.md` |
 | 做過什麼、錯過什麼 | `docs/22_回頭評估.md`、`docs/34_價值點遺漏稽核.md` |
 
@@ -139,7 +140,7 @@
 ```
 底本/       L0 原文、經文、正規化、音釋、異體字表
 data/       題庫、模組、表格、校勘記錄、能力邊界、發布資訊（站名／授權／聯絡）
-docs/       116 份說明文件
+docs/       117 份說明文件
 scripts/    產線腳本（解析、抽取、生成、校準、匯出）
 export/     Anki 牌組、全題表、實體索引（可直接用）
 vendor/     見證本與來源（SBCK、太素、類經、素問）
@@ -168,6 +169,16 @@ build_base_text.py        底本解析（含音釋剝離、補頁）
 3. **能力邊界寫在成品裡**，不寫在心裡。
 
 ---
+
+## 怎麼開
+
+```bash
+cd reader && python3 -m http.server 8080 --bind 127.0.0.1   # 開 http://127.0.0.1:8080/
+```
+或直接雙擊 `reader/index.html`（`file://` 可跑，離線、零外部請求）。
+
+前端自我檢查：`node scripts/check_reader.js`（DOM 樁）＋
+`python3 scripts/smoke_browser.py`（真 Chrome：16 路由＋首次確認頁＋作答互動）。
 
 ## 版本與發布
 

@@ -18,6 +18,12 @@
 - 文件 113 份，引號待核 0。
 - `check_all` 17 項指標與基準差異 0；`check_reader` 13 視圖＋3 路由＋發布資訊一致性全通過。
 
+### 驗證（新增）
+- **真瀏覽器冒煙測試** `scripts/smoke_browser.py`：用 headless Chrome 跑 16 條路由，
+  逐條驗 h1／頂欄安全提醒／導覽與頁腳數量／必要元素；另跑兩個情境——未同意時停在確認頁、
+  作答互動（顯示答案→答對→選項判定→切路由）與 `localStorage` 落地。全數通過。
+- 本機服務實測：`/`、`app.js`、`data.js`、`style.css` 皆 200；補 inline SVG favicon 消除 404。
+
 ### 修正（重要）
 - **樣式類別全數失效**：`app.js` 的 `h(tag, html, cls)` 有 30 處寫成 `h('div','card','')`，
   class 落空、內容被覆蓋。`.hero` `.card` `.grid` `.orig` `.row` `.tiao` `.gate` 一直沒生效，

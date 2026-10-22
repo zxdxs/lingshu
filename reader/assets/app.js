@@ -1234,6 +1234,12 @@ VIEWS.law = function (box, q) {
         art.appendChild(h('p', '回原文：' + seqs.map(function (p) {
           return '<a href="#/read?seq=' + p[0] + '">〈' + esc(p[1]) + '〉</a>';
         }).join('　') + prac, 'small'));
+        if ((x['類經'] || []).length) {
+          var vols = {}, vlist = [];
+          (x['類經'] || []).forEach(function (y) { if (!vols[y['卷']]) { vols[y['卷']] = 1; vlist.push(y['卷']); } });
+          art.appendChild(h('p', '《類經》亦收此段（卷 ' + vlist.sort(function (a, b) { return a - b; }).join('、') +
+            '）；張介賓按類編排，故只給卷號。', 'small muted'));
+        }
       }
       sec.appendChild(art);
     });

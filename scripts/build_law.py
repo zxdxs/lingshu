@@ -486,6 +486,36 @@ ROUTE = [
 ]
 
 
+def leijing_hits(items):
+    """逐條通則的引文，去《類經》找同一段；回傳 {n: [{id, 卷}]}。
+
+    類經按類編排、不按篇序，所以只能給卷號；比對用同一張異體表（norm）。
+    """
+    import glob, re
+    from check_quotes import norm as _norm
+    juan = {}
+    for f in sorted(glob.glob(os.path.join(ROOT, 'vendor', 'KR3e0085_類經', '*.txt'))):
+        raw = open(f, encoding='utf-8').read()
+        m = re.search(r'#\+PROPERTY: JUAN (\d+)', raw)
+        if not m:
+            continue
+        juan[int(m.group(1))] = _norm(raw)
+    out = {}
+    for x in items:
+        got = []
+        for q in x['引']:
+            nq = _norm(q['文'])
+            if len(nq) < 6:
+                continue
+            for j, t in juan.items():
+                if nq in t:
+                    got.append({'id': q['id'], '卷': j})
+                    break
+        if got:
+            out[x['n']] = got
+    return out
+
+
 def check_prose_quotes(data):
     """敘述層的「」也當引文驗：≥2 字者必須見於靈樞；1 字者為術語，略過。"""
     sys.path.insert(0, os.path.join(ROOT, 'scripts'))
@@ -537,6 +567,11 @@ def main():
         x['相關題'] = {'數': len(ids), '篇': seqs,
                        '重疊': len(over), '例': over[:3]}
 
+    lj = leijing_hits(out)
+    for x in out:
+        if x['n'] in lj:
+            x['類經'] = lj[x['n']]
+
     groups = []
     for x in out:
         if not groups or groups[-1]['組'] != x['組']:
@@ -551,7 +586,7 @@ def main():
         route.append({'階段': r['階段'], '題': r['題'], '為什麼': r['為什麼'],
                       '通則': ns,
                       '篇': [{'序': sq, '名': NAME[sq]} for sq in r['篇'] if sq in NAME]})
-    data = {'路徑': route,
+    data = {'類經對讀條數': len(lj), '路徑': route,
             '說明': {'標記': '原＝原文（句ID 可回查）；歸＝編者歸納；空＝未驗或不可推',
                      '來源': '底本/靈樞經_句索引.json',
                      '判準': '一條通則至少要能由兩篇支持；單篇的寫法留在該篇模組，不升為通則。'},

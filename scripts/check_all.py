@@ -75,6 +75,31 @@ def docs_pending():
     return pend
 
 
+def leijing_bad():
+    """通則裡標了「《類經》亦收此段」的引文，必須真的在該卷找得到；回傳不符條數。"""
+    import glob
+    from check_quotes import norm as _norm
+    try:
+        law = json.load(open(os.path.join(ROOT, 'data', '通則.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return -1
+    juan = {}
+    for f in glob.glob(os.path.join(ROOT, 'vendor', 'KR3e0085_類經', '*.txt')):
+        raw = open(f, encoding='utf-8').read()
+        m = re.search(r'#\+PROPERTY: JUAN (\d+)', raw)
+        if m:
+            juan[int(m.group(1))] = _norm(raw)
+    bad = 0
+    for g in law['組']:
+        for x in g['條']:
+            for y in x.get('類經', []):
+                t = juan.get(y['卷'], '')
+                q = next((z['文'] for z in x['引'] if z['id'] == y['id']), '')
+                if not q or _norm(q) not in t:
+                    bad += 1
+    return bad
+
+
 def release_pending():
     """發布前必要欄位仍未決的數量（資料來源：data/發布資訊.json）。"""
     try:
@@ -136,6 +161,7 @@ def metrics():
         '文件引文待核': docs_pending(),
         '文件數': len(glob.glob(os.path.join(ROOT, 'docs', '*.md'))),
         '發布待決': release_pending(),
+        '類經對讀不符': leijing_bad(),
         '跨書引文不符': cross_quotes_bad(),
         '安全提醒缺漏': safety_gaps(),
     }

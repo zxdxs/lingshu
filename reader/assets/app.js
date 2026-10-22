@@ -584,11 +584,12 @@ VIEWS.suwen = function (box) {
 /* ---------------- 十二經（四套通道） ---------------- */
 VIEWS.meridian = function (box, q) {
   var tab = (q && q.tab) || 'jing';
-  var TABS = [['jing', '十二經脉'], ['bie', '十二經别'], ['jin', '十二經筋'], ['luo', '十五絡']];
-  box.appendChild(h('h1', '十二經：四套通道，四種寫法'));
-  box.appendChild(h('p', '靈樞講「身體是通道」，用的不是一套圖，是四套：' +
-    '經脉講營衛運行的幹道，經别講離合出入，經筋講結聚與轉筋，絡脉講浮而可見的別出。' +
-    '四套的模板不同，能回答的問題也不同。', 'lead'));
+  var TABS = [['jing', '十二經脉'], ['bie', '十二經别'], ['jin', '十二經筋'],
+              ['luo', '十五絡'], ['shui', '十二經水'], ['shu', '五輸']];
+  box.appendChild(h('h1', '經脉諸層：六套寫法，同一個身體'));
+  box.appendChild(h('p', '靈樞講「身體是通道」，用的不是一套圖：經脉是幹道，經别是內部接頭，' +
+    '經筋是結聚，絡脉是浮而可見的別出，經水是把十二經比作十二條水道，五輸是每經的井滎腧經合。' +
+    '六套模板不同，能回答的問題也不同。', 'lead'));
 
   var tabRow = h('div', '', 'row');
   TABS.forEach(function (t) {
@@ -599,6 +600,8 @@ VIEWS.meridian = function (box, q) {
   box.appendChild(tabRow);
 
   if (tab === 'bie') return renderBie(box);
+  if (tab === 'shui') return renderShui(box);
+  if (tab === 'shu') return renderShu(box);
   if (tab === 'jin') return renderJin(box);
   if (tab === 'luo') return renderLuo(box);
   return renderJing(box, q);
@@ -727,6 +730,87 @@ function renderLuo(box) {
     box.appendChild(c);
   }
   box.appendChild(h('p', '刺絡的具體做法（刺結上、寫其邪出其血）需師授，本頁不列。', 'small muted'));
+}
+
+
+function renderShui(box) {
+  var D = LS.jingshui || {}, rows = D['水'] || [], dep = D['刺深'] || {};
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>經水：把十二經比作十二條水道</h3>' +
+    '<p class="small">〈經水〉的邏輯是「外合於水，內屬於藏府」：十二經各配一條河，' +
+    '再從水的大小深淺推到刺的深淺與灸的壯數。</p>' +
+    '<p class="small muted">共 ' + rows.length + ' 條對應。這是比附，不是測量；原文自己說「此一隅之陰陽也」。</p>';
+  box.appendChild(intro);
+
+  var t = h('table', '');
+  t.innerHTML = '<tr><th style="width:40px">#</th><th style="width:120px">經</th><th style="width:90px">水</th><th style="width:110px">內屬</th><th>原文</th></tr>';
+  rows.forEach(function (x) {
+    t.innerHTML += '<tr><td>' + x['序'] + '</td><td>' + esc(x['經']) + '</td><td><b>' + esc(x['水']) + '</b></td>' +
+      '<td class="small">' + esc(x['內屬']) + '</td><td class="small">' + esc(x['文']) +
+      ' <a href="#/read?seq=12">回原文</a></td></tr>';
+  });
+  box.appendChild(t);
+
+  if ((dep['足'] || []).length) {
+    var c = h('div', '', 'card');
+    c.appendChild(el('h3', '', '刺深與留呼：足六經有數，手經一律從簡'));
+    var t2 = '<tr><th style="width:110px">經</th><th style="width:80px">深</th><th style="width:80px">留</th><th>原文</th></tr>';
+    dep['足'].forEach(function (x) {
+      t2 += '<tr><td>' + esc(x['經']) + '</td><td class="num">' + x['深'] + ' 分</td><td class="num">' + x['留'] + ' 呼</td>' +
+        '<td class="small">' + esc(x['文']) + '</td></tr>';
+    });
+    var tw = h('div', '', 'table-wrap'); tw.innerHTML = '<table>' + t2 + '</table>';
+    c.appendChild(tw);
+    ['手', '法天之常', '過度之害'].forEach(function (k) {
+      if (!dep[k]) return;
+      var p = h('p', '', 'small');
+      p.innerHTML = (k === '手' ? '<b>手之陰陽</b>：' : k === '法天之常' ? '<b>法天之常</b>：' : '<b>過度之害</b>：') +
+        esc(dep[k]['文']) + ' <span class="src">句 ' + esc(dep[k]['id']) + '</span>';
+      c.appendChild(p);
+    });
+    c.appendChild(h('p', '這些數字是本篇的規定，不是現代操作標準；本站不提供操作。', 'small muted'));
+    box.appendChild(c);
+  }
+  box.appendChild(h('p', '<a href="#/read?seq=12">讀〈經水〉全文</a>', 'small'));
+}
+
+function renderShu(box) {
+  var D = LS.wushu || {}, rows = D['輸'] || [];
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>五輸：井、滎、腧、經、合</h3>' +
+    '<p class="small">〈本輸〉一經一句，句內用「；」分五段：井→滎→腧→經→合。' +
+    '陽經在腧與經之間多一個「原」。原文只用兩個字交代每穴的位置，其餘靠師授。</p>' +
+    '<p class="small muted">共 ' + rows.length + ' 經（五藏五＋六府六）。' +
+    '心主（心包）的五輸不在〈本輸〉——這是原文的實況，不是漏抄。</p>';
+  box.appendChild(intro);
+
+  var order = ['井', '滎', '腧', '原', '經', '合'];
+  var t = h('table', '');
+  t.innerHTML = '<tr><th style="width:130px">經</th>' + order.map(function (k) { return '<th>' + k + '</th>'; }).join('') + '</tr>';
+  rows.forEach(function (x) {
+    var cells = order.map(function (k) {
+      var v = x['五輸'][k];
+      return '<td' + (v ? '' : ' class="muted small"') + '>' + (v ? esc(v['穴']) : '—') + '</td>';
+    }).join('');
+    t.innerHTML += '<tr><td>' + esc(x['經']) + '</td>' + cells + '</tr>';
+  });
+  box.appendChild(t);
+  box.appendChild(h('p', '表 五輸-1　陰經無「原」穴，以腧為原；陽經另有原穴。', 'small muted'));
+
+  rows.forEach(function (x) {
+    var c = h('div', '', 'card mer-card');
+    c.appendChild(el('h2', '', x['經']));
+    order.forEach(function (k) {
+      var v = x['五輸'][k];
+      if (!v) return;
+      var d = h('div', '', 'mer-row');
+      d.innerHTML = '<span class="mer-k">' + k + '</span><span class="mer-v">' + esc(v['文'].replace(/^○/, '')) + '</span>' +
+        '<span class="src">句 ' + esc(x['id']) + '</span>';
+      c.appendChild(d);
+    });
+    box.appendChild(c);
+  });
+  box.appendChild(h('p', '<a href="#/read?seq=2">讀〈本輸〉全文</a>', 'small'));
 }
 
 /* ---------------- 通則 ---------------- *//* ---------------- 通則 ---------------- */

@@ -45,6 +45,7 @@ VIEWS.home = function (box) {
   box.appendChild(hero);
 
   box.appendChild(h('h2', '五個主題'));
+  box.appendChild(h('p', '主題的劃分與命名為編者所加，非原文原有分類。', 'small muted'));
   var tg = h('div', 'grid');
   (LS.themes || []).forEach(function (t) {
     var c = h('div', 'card', '');
@@ -95,7 +96,10 @@ VIEWS.home = function (box) {
 /* ---------------- 主題 ---------------- */
 VIEWS.themes = function (box) {
   box.appendChild(h('h1', '靈樞在講什麼'));
-  box.appendChild(h('p', '不按篇讀，按「身體—病變—表現—判斷」讀。每一條主張下面都附原文與句 ID。', 'small muted'));
+  var note = h('div', 'card', '');
+  note.innerHTML = '<b>先說清楚</b>：以下五個主題的<b>劃分與命名是編者所加</b>，不是《靈樞》原有的分類。原文只提供材料；' +
+    '每一條主張下面都附原文與句 ID，讀者可以不同意這個分法，直接讀原文。';
+  box.appendChild(note);
   (LS.themes || []).forEach(function (t, i) {
     var c = h('div', 'card', '');
     var qs = (t.句 || []).map(function (q) {
@@ -116,7 +120,7 @@ VIEWS.themes = function (box) {
         '<p class="small muted">七站都在〈百病始生〉同一段（66-5-1 至 66-5-7），原文用「留而不去」串起來。</p>';
     }
     var cnt = (LS.items || []).filter(function (it) { return (t.篇 || []).indexOf(it.seq) >= 0; }).length;
-    c.innerHTML = '<div class="small muted">主題 ' + (i + 1) + '</div>' +
+    c.innerHTML = '<div class="small muted">主題 ' + (i + 1) + '　<span class="pill y">編者歸納</span></div>' +
       '<h3 style="margin:.2em 0">' + esc(t.題) + '</h3>' +
       '<p style="font-size:1.05rem"><b>' + esc(t.一句) + '</b></p>' +
       '<p>' + esc(t.主張) + '</p>' + qs + route +
@@ -318,7 +322,7 @@ function log2(id, ok) { STATE.log = STATE.log || {}; STATE.log[id] = ok ? 'ok' :
 /* ---------------- 概念 ---------------- */
 VIEWS.concept = function (box) {
   box.appendChild(h('h1', '概念'));
-  box.appendChild(h('p', '同一個詞在《靈樞》裡有幾層意思。每張卡列出各層原文與出處；圖是輔助。', 'small muted'));
+  box.appendChild(h('p', '同一個詞在《靈樞》裡有幾層意思。每張卡的<b>分層方式與命名是編者整理</b>；各層原文與出處則逐字取自底本。', 'small muted'));
   var g = h('div', '');
   (LS.concepts || []).forEach(function (c) {
     var card = document.createElement('details');

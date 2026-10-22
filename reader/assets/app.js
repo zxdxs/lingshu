@@ -581,42 +581,57 @@ VIEWS.suwen = function (box) {
 
 
 
-/* ---------------- 十二經 ---------------- */
+/* ---------------- 十二經（四套通道） ---------------- */
 VIEWS.meridian = function (box, q) {
-  var M = LS.mer || {};
-  box.appendChild(h('h1', '十二經：一經六句的模板'));
-  box.appendChild(h('p', '〈經脉〉把每一經都寫成同一個模板：起止 → 是動則病 → 是主所生病 → 虛實 → 治法 → 脉口人迎。' +
-    '這個模板本身就是知識：它告訴你「一條經該交代哪些事」。', 'lead'));
+  var tab = (q && q.tab) || 'jing';
+  var TABS = [['jing', '十二經脉'], ['bie', '十二經别'], ['jin', '十二經筋'], ['luo', '十五絡']];
+  box.appendChild(h('h1', '十二經：四套通道，四種寫法'));
+  box.appendChild(h('p', '靈樞講「身體是通道」，用的不是一套圖，是四套：' +
+    '經脉講營衛運行的幹道，經别講離合出入，經筋講結聚與轉筋，絡脉講浮而可見的別出。' +
+    '四套的模板不同，能回答的問題也不同。', 'lead'));
 
+  var tabRow = h('div', '', 'row');
+  TABS.forEach(function (t) {
+    var a = el('a', 'btn' + (t[0] === tab ? '' : ' ghost'), t[1]);
+    a.href = '#/meridian?tab=' + t[0];
+    tabRow.appendChild(a);
+  });
+  box.appendChild(tabRow);
+
+  if (tab === 'bie') return renderBie(box);
+  if (tab === 'jin') return renderJin(box);
+  if (tab === 'luo') return renderLuo(box);
+  return renderJing(box, q);
+};
+
+function renderJing(box, q) {
+  var M = LS.mer || {};
   var intro = h('div', '', 'card');
-  intro.innerHTML = '<h3>怎麼用這一頁</h3><ul class="small">' +
-    '<li><b>是動則病</b>：經氣異常時的第一組反應，多為沿經的症狀。</li>' +
-    '<li><b>是主…所生病</b>：這一經「所主」的病，範圍比是動寬，常涉及所屬藏府。</li>' +
-    '<li>兩者是靈樞的原話，不是後世分類；本頁只照抄與計數，不代為解釋。</li>' +
-    '<li>本頁不含取穴與操作。要動手，需師授。</li></ul>' +
-    '<p class="small muted">共 ' + (M['經'] || []).length + ' 經；「是動」句內證候 ' +
-    (M['經'] || []).reduce(function (a, x) { return a + (x['動數'] || 0); }, 0) + ' 項，' +
-    '「所生病」句內證候 ' + (M['經'] || []).reduce(function (a, x) { return a + (x['生數'] || 0); }, 0) + ' 項（以逗號斷句計）。</p>';
+  intro.innerHTML = '<h3>經脉：一經六句的模板</h3><ul class="small">' +
+    '<li>起止 → 是動則病 → 是主所生病 → 虛實 → 治法 → 脉口人迎。</li>' +
+    '<li><b>是動則病</b>：經氣異常的第一組反應；<b>是主所生病</b>：這一經所主的病，常涉藏府。</li>' +
+    '<li>共 ' + (M['經'] || []).length + ' 經；動候 ' +
+    (M['經'] || []).reduce(function (a, x) { return a + (x['動數'] || 0); }, 0) + ' 項、生病 ' +
+    (M['經'] || []).reduce(function (a, x) { return a + (x['生數'] || 0); }, 0) + ' 項（以逗號斷句計）。</li>' +
+    '<li>本頁不含取穴與操作；要動手，需師授。</li></ul>';
   box.appendChild(intro);
 
-  // 總表
   var t = h('table', '');
-  t.innerHTML = '<tr><th style="width:40px">#</th><th>經</th><th style="width:64px">動</th><th style="width:64px">所生</th><th>是動則病（前段）</th></tr>';
+  t.innerHTML = '<tr><th style="width:40px">#</th><th>經</th><th style="width:60px">動</th><th style="width:60px">所生</th><th>是動則病（前段）</th></tr>';
   (M['經'] || []).forEach(function (x) {
     var d = (x['是動'] ? x['是動']['文'] : '').split('是動則病')[1] || '';
-    t.innerHTML += '<tr><td>' + x['序'] + '</td><td><a href="#/meridian?n=' + x['序'] + '">' + esc(x['經']) + '</a></td>' +
+    t.innerHTML += '<tr><td>' + x['序'] + '</td><td><a href="#/meridian?tab=jing&n=' + x['序'] + '">' + esc(x['經']) + '</a></td>' +
       '<td class="num">' + (x['動數'] || 0) + '</td><td class="num">' + (x['生數'] || 0) + '</td>' +
       '<td class="small">' + esc(d.slice(0, 42)) + (d.length > 42 ? '…' : '') + '</td></tr>';
   });
-  box.appendChild(h('p', '表 十二經-1　證候數以逗號斷句計，與後世條文數不同。', 'small muted'));
+  box.appendChild(h('p', '表 經脉-1　證候數以逗號斷句計，與後世條文數不同。', 'small muted'));
   box.appendChild(t);
 
-  // 逐經卡
   (M['經'] || []).forEach(function (x) {
     var c = h('div', '', 'card mer-card');
     c.setAttribute('id', 'mer' + x['序']);
     c.appendChild(el('h2', '', x['序'] + '、' + x['經']));
-    [['起止', '起止（原文）'], ['是動', '是動則病'], ['所生病', '是主所生病'], ['虛實', '氣盛／氣虛'],
+    [['起止', '起止'], ['是動', '是動則病'], ['所生病', '是主所生病'], ['虛實', '氣盛／氣虛'],
      ['治法', '治法'], ['脉口', '脉口與人迎']].forEach(function (pair) {
       var k = pair[0];
       if (!x[k]) return;
@@ -628,23 +643,93 @@ VIEWS.meridian = function (box, q) {
     });
     box.appendChild(c);
   });
+  if (q && q.n) { var el0 = document.getElementById('mer' + q.n); if (el0 && el0.scrollIntoView) el0.scrollIntoView({ block: 'start' }); }
+}
 
-  var tail = h('div', '', 'card');
-  tail.innerHTML = '<h3>為什麼值得整頁讀完</h3>' +
-    '<p class="small">單看一條經，像症狀清單；十二條並排，就看得出三件事：' +
-    '①「是動」多在體表與沿經，②「所生病」常帶藏府，③每條經的末句都在講「盛則寫之，虛則補之」。' +
-    '同一個模板重複十二次，本身就是靈樞的教學法。</p>' +
-    '<p class="small"><a href="#/law">回通則</a>　·　<a href="#/concept">看概念卡</a>　·　' +
-    '<a href="#/read?seq=10">讀〈經脉〉全文</a></p>';
-  box.appendChild(tail);
+function renderBie(box) {
+  var D = LS.jingbie || {}, rows = D['正'] || [];
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>經别：離合出入</h3>' +
+    '<p class="small">〈經别〉問的是「離合出入」：十二正經各自別出一支，走到身體深處與表裡經相合。' +
+    '十二正配成六組，每組稱「一合」。它不講穴位、講的是內部的接頭。</p>' +
+    '<p class="small muted">共 ' + rows.length + ' 正、' + (rows.length / 2) + ' 合。文句照抄原文。</p>';
+  box.appendChild(intro);
+  var by = {};
+  rows.forEach(function (x) { (by[x['合']] = by[x['合']] || []).push(x); });
+  Object.keys(by).forEach(function (k) {
+    var c = h('div', '', 'card mer-card');
+    c.appendChild(el('h2', '', '第 ' + k + ' 合'));
+    by[k].forEach(function (x) {
+      var d = h('div', '', 'mer-row');
+      d.innerHTML = '<span class="mer-k">' + esc(x['經']) + '</span>' +
+        '<span class="mer-v">' + esc(x['文'].replace(/^○/, '')) + '</span>' +
+        '<span class="src">句 ' + esc(x['id']) + '　<a href="#/read?seq=11">回原文</a></span>';
+      c.appendChild(d);
+    });
+    box.appendChild(c);
+  });
+  box.appendChild(h('p', '經别的走向是內部接合，不是體表路線；不要與經脉圖混讀。', 'small muted'));
+}
 
-  if (q && q.n) {
-    var target = document.getElementById('mer' + q.n);
-    if (target && target.scrollIntoView) target.scrollIntoView({ block: 'start' });
+function renderJin(box) {
+  var D = LS.jingjin || {}, rows = D['筋'] || [];
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>經筋：結聚與轉筋</h3>' +
+    '<p class="small">〈經筋〉每條都從四肢寫到頭面，用的是「結于某處」——它講的是筋的結聚點，不是氣血流注。' +
+    '病候以「其病…」開頭，治法固定一句：' +
+    '『治在燔鍼劫刺，以知爲數，以痛爲輸』，最後給一個季節性的名字（仲春痺、孟春痺…）。</p>' +
+    '<p class="small muted">共 ' + rows.length + ' 筋。本頁不提供操作。</p>';
+  box.appendChild(intro);
+  rows.forEach(function (x) {
+    var c = h('div', '', 'card mer-card');
+    c.setAttribute('id', 'jin' + x['序']);
+    c.appendChild(el('h2', '', x['序'] + '、' + x['經'] + '之筋'));
+    [['起止', '起止'], ['病', '其病'], ['治', '治則與命名']].forEach(function (pair) {
+      var k = pair[0];
+      if (!x[k]) return;
+      var d = h('div', '', 'mer-row');
+      d.innerHTML = '<span class="mer-k">' + pair[1] + '</span>' +
+        '<span class="mer-v">' + esc(x[k]['文'].replace(/^○/, '')) + '</span>' +
+        '<span class="src">句 ' + esc(x[k]['id']) + '　<a href="#/read?seq=13">回原文</a></span>';
+      c.appendChild(d);
+    });
+    (x['附'] || []).forEach(function (y) {
+      var d = h('div', '', 'mer-row');
+      d.innerHTML = '<span class="mer-k">附</span><span class="mer-v">' + esc(y['文'].replace(/^○/, '')) + '</span>' +
+        '<span class="src">句 ' + esc(y['id']) + '</span>';
+      c.appendChild(d);
+    });
+    box.appendChild(c);
+  });
+  box.appendChild(h('p', '經筋的病候多為轉筋、腫痛、拘急——與經脉的「是動／所生病」寫法明顯不同。', 'small muted'));
+}
+
+function renderLuo(box) {
+  var D = LS.luomai || {}, rows = D['絡'] || [];
+  var intro = h('div', '', 'card');
+  intro.innerHTML = '<h3>十五絡：浮而可見的那一層</h3>' +
+    '<p class="small">〈經脉〉說『諸脉之浮而常見者，皆絡脉也』。十五別各有一個穴名，' +
+    '病候固定寫成「實則…，虛則…，取之所別」。</p>' +
+    '<p class="small muted">共 ' + rows.length + ' 別（十二經之別 + 任、督、脾之大絡）。</p>';
+  box.appendChild(intro);
+  var t = h('table', '');
+  t.innerHTML = '<tr><th style="width:40px">#</th><th style="width:120px">別</th><th style="width:76px">穴</th><th>起止</th><th style="width:34%">病候（實／虛）</th></tr>';
+  rows.forEach(function (x) {
+    t.innerHTML += '<tr><td>' + x['序'] + '</td><td class="small">' + esc(x['別']) + '</td>' +
+      '<td>' + esc(x['穴']) + '</td>' +
+      '<td class="small">' + esc(x['起止'] ? x['起止']['文'].replace(/^○/, '') : '') + '</td>' +
+      '<td class="small">' + esc(x['病'] ? x['病']['文'].replace(/^○/, '') : '') + '</td></tr>';
+  });
+  box.appendChild(t);
+  if (D['總結']) {
+    var c = h('div', '', 'card');
+    c.innerHTML = '<p class="quote">' + esc(D['總結']['文']) + '<div class="src">——〈經脉〉 · 句 ' + esc(D['總結']['id']) + '</div></p>';
+    box.appendChild(c);
   }
-};
+  box.appendChild(h('p', '刺絡的具體做法（刺結上、寫其邪出其血）需師授，本頁不列。', 'small muted'));
+}
 
-/* ---------------- 通則 ---------------- */
+/* ---------------- 通則 ---------------- *//* ---------------- 通則 ---------------- */
 VIEWS.law = function (box, q) {
   var L = LS.law || {};
   box.appendChild(h('h1', '通則：靈樞反覆在講的那些規矩'));

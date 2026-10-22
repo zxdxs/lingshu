@@ -75,9 +75,9 @@ VIEWS.home = function (box) {
 
   var sw = h('div', '', 'card');
   sw.innerHTML = '<h3>靈樞與素問，差在哪</h3>' +
-    '<p class="small">兩書同屬《內經》，但不是同一種書。用字密度算給你看：靈樞的「鍼」是素問的三倍，' +
-    '補寫的語言幾乎只在靈樞；素問的「天」「五運」則是靈樞的兩倍以上。</p>' +
-    '<p class="small"><a href="#/suwen">看對照：規模、用字、重出句、平行篇 →</a></p>';
+    '<p class="small">兩書同屬《內經》，但不是同一種書：一個把知識建立在「量」上，一個建立在「理」上；' +
+    '一個用一日為尺度，一個用一甲子；一個記「這一個人」，一個記「人這一類」。</p>' +
+    '<p class="small"><a href="#/suwen">看五條差別與機器量測（規模、用字、重出句、平行篇）→</a></p>';
   box.appendChild(sw);
 
   box.appendChild(h('h2', '訓練怎麼進行'));
@@ -368,6 +368,99 @@ VIEWS.suwen = function (box) {
     '<p class="small muted">本頁數字全部由 <code>scripts/compare_suwen.py</code> 從兩份經文算出；' +
     '引文由 <code>scripts/audit_cross_quotes.py</code> 逐字比對所標來源。</p>';
   box.appendChild(warn);
+
+
+  // ── 五條差別（頁面主體，放在量測之前）──
+  var QT = (LS.suwen && LS.suwen.quant) || {};
+  var DIFF = (N['差別'] || []);
+  function rateTable(key) {
+    var rows = (QT['詞頻'] || {})[key] || [];
+    if (!rows.length) return '';
+    var h = '<table><tr><th style="width:56px">詞</th><th style="width:80px">靈樞</th><th style="width:80px">素問</th><th>倍數</th></tr>';
+    rows.forEach(function (x) {
+      var a = x['靈樞萬字'], b = x['素問萬字'];
+      var m = (b > 0 && a > 0) ? (a >= b ? (a / b) : -(b / a)) : 0;
+      var note = !b ? '靈樞獨有' : (!a ? '素問獨有' : (m >= 0 ? '靈樞 ' + m.toFixed(1) + ' 倍' : '素問 ' + (-m).toFixed(1) + ' 倍'));
+      h += '<tr><td>' + esc(x['詞']) + '</td><td>' + a + '</td><td>' + b + '</td><td class="small muted">' + note + '</td></tr>';
+    });
+    return h + '</table>';
+  }
+  function quantTable(which) {
+    var rows = ((QT['量化'] || {})[which] || []).slice(0, 8);
+    if (!rows.length) return '';
+    var h = '<table><tr><th style="width:120px">篇</th><th style="width:60px">條</th><th>序</th></tr>';
+    rows.forEach(function (x) {
+      h += '<tr><td><a href="#/read?seq=' + x['序'] + '">' + esc(x['篇']) + '</a></td><td>' + x['條'] + '</td><td class="small muted">' + x['序'] + '</td></tr>';
+    });
+    return h + '</table>';
+  }
+  function answererTable() {
+    var A = QT['應答者'] || {};
+    if (!(A['總次數'] || []).length) return '';
+    var h = '<table><tr><th style="width:80px">應答者</th><th style="width:70px">次數</th></tr>';
+    (A['總次數'] || []).forEach(function (x) { h += '<tr><td>' + esc(x['名']) + '</td><td>' + x['次數'] + '</td></tr>'; });
+    h += '</table>';
+    var by = {};
+    (A['非岐伯主答篇'] || []).forEach(function (x) { (by[x['主答']] = by[x['主答']] || []).push(x['篇']); });
+    Object.keys(by).forEach(function (k) {
+      h += '<p class="small"><b>' + esc(k) + '</b>（' + by[k].length + ' 篇）：' + esc(by[k].join('、')) + '</p>';
+    });
+    return h;
+  }
+
+  if (DIFF.length) {
+    var c0 = h('div', '', 'card');
+    c0.appendChild(el('h2', '', '差別在哪：五條'));
+    c0.appendChild(h('p', '以下五條是編者的判斷（『歸』），每條後面接能查的部分（引文逐字驗過、詞頻機器算）；' +
+      '量不到的部分會直接寫『量不到』，不拿語氣當證據。', 'small'));
+    DIFF.forEach(function (d) {
+      var sec = h('div', '', 'card');
+      sec.appendChild(h('h3', '', d['n'] + '、' + esc(d['題'])));
+      sec.appendChild(h('p', '<b>主張</b>：' + md(d['主張'])));
+      (d['證據'] || []).forEach(function (q) {
+        sec.appendChild(h('p', '「' + esc(q['引']) + '」', 'quote'));
+        sec.appendChild(h('p', '——' + esc(q['來源']), 'small muted'));
+      });
+      if (d['表'] === '量化') {
+        sec.appendChild(h('h4', '量化榜（句內出現數字＋尺寸單位；規則寫在腳本裡）', 'small'));
+        sec.appendChild(h('div', 'table-wrap', quantTable('量身體（寸尺丈分度…）')));
+        sec.appendChild(h('h4', '量時間（日、刻、息…）', 'small'));
+        sec.appendChild(h('div', 'table-wrap', quantTable('量時間（日刻息壯遍宿）')));
+      } else if (d['表'] === '時間') {
+        sec.appendChild(h('div', 'table-wrap', rateTable('時間（日週期）')));
+        sec.appendChild(h('div', 'table-wrap', rateTable('時間（年與甲子）')));
+      } else if (d['表'] === '個體') {
+        sec.appendChild(h('div', 'table-wrap', rateTable('個體差異')));
+      } else if (d['表'] === '界限') {
+        sec.appendChild(h('div', 'table-wrap', rateTable('界限與死期')));
+      } else if (d['表'] === '師承') {
+        sec.appendChild(h('div', 'table-wrap', answererTable()));
+        sec.appendChild(h('div', 'table-wrap', rateTable('師承痕跡')));
+      }
+      if (d['說']) sec.appendChild(h('p', md(d['說']), 'small'));
+      if (d['更正']) sec.appendChild(h('p', '<b>出處更正</b>：' + md(d['更正']), 'small'));
+      if (d['反證']) {
+        var anti = h('div', '', 'alert');
+        anti.innerHTML = '<b>反證／量不到的部分</b><br/>' + md(d['反證']);
+        sec.appendChild(anti);
+      }
+      if (d['例外']) sec.appendChild(h('p', '例外：' + md(d['例外']), 'small muted'));
+      c0.appendChild(sec);
+    });
+    box.appendChild(c0);
+  }
+
+  // 來歷（史崧序、遺篇）
+  if ((N['來歷'] || []).length) {
+    var cl0 = h('div', '', 'card');
+    cl0.appendChild(el('h2', '', '來歷：兩書的整理不對稱'));
+    N['來歷'].forEach(function (x) {
+      cl0.appendChild(h('p', '「' + esc(x['引']) + '」', 'quote'));
+      cl0.appendChild(h('p', '——' + esc(x['來源']), 'small muted'));
+      cl0.appendChild(h('p', esc(x['說']), 'small'));
+    });
+    box.appendChild(cl0);
+  }
 
   // 名實
   if ((N['名實'] || []).length) {

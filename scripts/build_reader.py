@@ -86,7 +86,8 @@ def main():
     rel = load('data/發布資訊.json')
 
     contact = load('data/聯絡.json')
-    suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json')}
+    suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json'),
+             'quant': load('data/異同_量化.json')}
 
     data = {
         'meta': {

@@ -169,3 +169,5 @@ body.show-sid .sid{display:inline}
 .lead{font-size:.98rem;color:var(--ink2);max-width:720px;line-height:1.85}
 .quote{font-family:"Songti TC","Noto Serif TC",Georgia,serif;font-size:1.06rem;line-height:1.95;
   margin:12px 0 2px;padding-left:14px;border-left:3px solid var(--brand2);color:var(--ink)}
+.table-wrap{overflow-x:auto;margin:8px 0}
+.table-wrap table{min-width:100%}

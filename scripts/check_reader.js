@@ -11,7 +11,11 @@ const BAD = /undefined|NaN|\[object Object\]/g;
 function mkEl(tag) {
   const e = {
     tagName: tag, className: "", _text: "", _html: "", style: {}, children: [], attrs: {},
-    appendChild(c) { this.children.push(c); return c; },
+    /* 嚴格模仿瀏覽器：appendChild 只收節點。樁太寬容會讓 'appendChild("...")' 這種錯漏過 */
+    appendChild(c) {
+      if (!c || typeof c !== "object") throw new TypeError("appendChild: parameter 1 is not of type 'Node'（收到 " + typeof c + "）");
+      this.children.push(c); return c;
+    },
     setAttribute(k, v) { this.attrs[k] = v; },
     getAttribute(k) { return this.attrs[k]; },
     addEventListener() {}, onclick: null,

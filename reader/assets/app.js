@@ -78,7 +78,7 @@ VIEWS.home = function (box) {
 
   // 全站地圖：按「先讀什麼、再練什麼、最後查什麼」排，不按頁面建立時間排
   var MAP = [
-    ['入門', [['主題', '#/themes', '靈樞在講什麼'], ['通則', '#/law', '44 條反覆出現的規矩']]],
+    ['入門', [['主題', '#/themes', '靈樞在講什麼'], ['通則', '#/law', ((LS.law || {})['條數'] || 44) + ' 條反覆出現的規矩']]],
     ['讀原文', [['通讀', '#/read', '81 篇'], ['十二經', '#/meridian', '六套通道'], ['病候', '#/binghou', '四組模板']]],
     ['練與查', [['題庫', '#/items', '1031 題'], ['概念', '#/concept', '12 張'], ['九鍼', '#/prep', '九種鍼']]],
     ['對照', [['異同', '#/suwen', '靈樞 vs 素問']]],
@@ -960,7 +960,24 @@ function renderYingwei(box) {
       ' <span class="src">句 ' + esc(q['id']) + '</span>';
     c2.appendChild(p);
   });
+  c2.appendChild(el('h3', '', '夜行五藏：腎→心→肺→肝→脾→復注於腎'));
+  ((D['衛氣'] || {})['夜行'] || []).forEach(function (q) {
+    var p = h('p', '', 'small');
+    p.innerHTML = esc(q['文']) + ' <span class="src">句 ' + esc(q['id']) + '</span>';
+    c2.appendChild(p);
+  });
   box.appendChild(c2);
+
+  var c25 = h('div', '', 'card');
+  c25.appendChild(el('h2', '', '候時而刺：時間是操作條件'));
+  c25.appendChild(h('p', '〈衛氣行〉最後一段把「什麼時候刺」寫成一套刻度：以平旦為紀、以夜盡為始、一日一夜水下百刻。' +
+    '這段話也是通則第 36 條「逢時」的依據。', 'small'));
+  ((D['衛氣'] || {})['候時'] || []).forEach(function (q) {
+    var p = h('p', '', 'quote');
+    p.innerHTML = esc(q['文']) + '<div class="src">句 ' + esc(q['id']) + '　<a href="#/read?seq=76">回原文</a></div>';
+    c25.appendChild(p);
+  });
+  box.appendChild(c25);
 
   var c3 = h('div', '', 'card');
   c3.appendChild(el('h2', '', '營氣：十二經次序'));

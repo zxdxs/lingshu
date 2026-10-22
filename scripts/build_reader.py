@@ -19,13 +19,10 @@ def main():
     ch = load('底本/靈樞經_81篇.json')['篇']
     ju = {c['序']: c for c in load('底本/靈樞經_句讀層.json')['篇']}
     items = load('data/題庫_示例.json')
-    idx = list(csv.DictReader(open(os.path.join(ROOT, 'export', '索引.csv'), encoding='utf-8-sig')))
     lim = list(csv.DictReader(open(os.path.join(ROOT, 'data', '能力邊界.csv'), encoding='utf-8-sig')))
     con = list(csv.DictReader(open(os.path.join(ROOT, 'data', '矛盾清單.csv'), encoding='utf-8-sig')))
     col = list(csv.DictReader(open(os.path.join(ROOT, 'data', '校勘點.csv'), encoding='utf-8-sig')))
     nd = list(csv.DictReader(open(os.path.join(ROOT, 'data', '表_九鍼.csv'), encoding='utf-8-sig')))
-    yin = load('底本/音釋層.json')['音釋']
-    cov = load('data/三源覆蓋率.json')['篇']
     sidx = load('底本/靈樞經_句索引.json')['句']
     byseq = {}
     for x in sidx:
@@ -99,7 +96,7 @@ def main():
                       'items': items['題數'], 'fill': items['題型分布'].get('fill_blank', 0),
                       'mcq': items['題型分布'].get('mcq', 0),
                       'err': items['題型分布'].get('error_identification', 0),
-                      'index': len(idx), 'limits': len(lim), 'contradictions': len(con),
+                      'limits': len(lim), 'contradictions': len(con),
                       'ans_yuanwen': sum(1 for i in items['題'] if i.get('答案類型') == '原文'),
                       'ans_tuisuan': sum(1 for i in items['題'] if i.get('答案類型') == '推算'),
                       'ans_zhengli': sum(1 for i in items['題'] if i.get('答案類型') == '整理語'),
@@ -113,8 +110,6 @@ def main():
                  for k, v in sorted(juan.items(), key=lambda x: (x[0] == '', str(x[0])))],
         'pian': pian,
         'items': its,
-        'index': [{'c': r.get('類', ''), 'n': r.get('名', ''), 'seq': r.get('篇序', ''),
-                   'pian': r.get('篇名', ''), 'pos': r.get('位置', '')} for r in idx],
         'limits': [{'id': r.get('編號', ''), 'cat': r.get('範疇', ''), 'issue': r.get('問題', ''),
                     'sev': r.get('嚴重度', ''), 'status': r.get('現狀', '')} for r in lim],
         'contradictions': [{'id': r.get('編號', ''), 'type': r.get('類型', ''), 'point': r.get('爭點', ''),
@@ -125,13 +120,8 @@ def main():
                        'leijing': r.get('類經', '') or '—', 'verdict': r.get('判定', ''),
                        'basis': r.get('依據', ''), 'impact': r.get('影響', '')} for r in col],
         'themes': themes,
-        'coverage': [{'seq': r.get('篇序', ''), 'pian': r.get('篇名', ''), 'chars': r.get('字數', 0),
-                      't4': r.get('太素K4'), 't12': r.get('太素K12'),
-                      'l4': r.get('類經K4'), 'l12': r.get('類經K12'),
-                      'verdict': r.get('判讀', '')} for r in cov],
         'needles': [{'no': r.get('序', ''), 'name': r.get('鍼', ''), 'len': r.get('長', ''),
                      'use': r.get('功能', ''), 'src': r.get('原文', '')} for r in nd],
-        'yinshi': [{'juan': r.get('卷', ''), 'text': r.get('音釋', '')[:220]} for r in yin],
         'concepts': cpts,
         'contact': contact,
         'suwen': suwen,
@@ -140,7 +130,7 @@ def main():
     js = '/* 由 scripts/build_reader.py 生成，請勿手改。 */\nwindow.LS = ' + \
          json.dumps(data, ensure_ascii=False, separators=(',', ':')) + ';\n'
     open(os.path.join(OUT, 'data.js'), 'w', encoding='utf-8').write(js)
-    print(f"寫出 reader/assets/data.js：{len(js)/1024:.0f} KB｜篇 {len(pian)}｜題 {len(its)}｜索引 {len(idx)}")
+    print(f"寫出 reader/assets/data.js：{len(js)/1024:.0f} KB｜篇 {len(pian)}｜題 {len(its)}")
 
 
 if __name__ == '__main__':

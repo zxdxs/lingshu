@@ -20,8 +20,8 @@ function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%
 function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String(p.seq) === String(seq); })[0]; }
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
-var NAV = [['home','首頁'],['themes','主題'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],['index','索引'],
-           ['coverage','覆蓋'],['prep','準備'],['method','方法'],['collation','校勘'],['limits','限制'],
+var NAV = [['home','首頁'],['themes','主題'],['read','通讀'],['items','題庫'],['concept','概念'],['suwen','異同'],
+           ['prep','九鍼'],['method','方法'],['collation','校勘'],['limits','限制'],
            ['mine','我的'],['about','關於']];
 var VIEWS = {};
 
@@ -85,7 +85,7 @@ VIEWS.home = function (box) {
   t.innerHTML = '<tr><th style="width:86px">入口</th><th>要做的事</th><th style="width:150px">產出物（不留下＝沒做）</th></tr>' +
     '<tr><td>讀</td><td>通讀一篇，遇校記停下來看</td><td>標為已讀（本機記錄）</td></tr>' +
     '<tr><td>練</td><td>作答並看解析與出處</td><td>對錯紀錄；' + stat('items') + ' 題可追</td></tr>' +
-    '<tr><td>查</td><td>用索引或概念卡回查</td><td>找到篇、句與出處</td></tr>';
+    '<tr><td>查</td><td>用概念卡與題庫篩選回查</td><td>找到篇、句與出處</td></tr>';
   box.appendChild(t);
   box.appendChild(h('p', '表 首頁-1　三個入口與各自的產出物。數字取自 data/題庫_示例.json 與底本。', 'small muted'));
 
@@ -571,58 +571,26 @@ VIEWS.suwen = function (box) {
   box.appendChild(h('p', '引文規矩：「」只給靈樞原文（逐字機器驗證）；『』給素問、類經與我自撰的詞。', 'small muted'));
 };
 
-/* ---------------- 索引 ---------------- */
-VIEWS.index = function (box) {
-  box.appendChild(h('h1', '索引'));
-  var cats = {};
-  (LS.index || []).forEach(function (r) { cats[r.c] = 1; });
-  var row = h('div', '', 'row');
-  var inp = document.createElement('input'); inp.type = 'search'; inp.placeholder = '查名詞、篇名…'; inp.style.minWidth = '240px';
-  var sel = document.createElement('select');
-  sel.appendChild(new Option('全部類別', ''));
-  Object.keys(cats).forEach(function (k) { sel.appendChild(new Option(k, k)); });
-  var cnt = el('span', 'small muted', '');
-  row.appendChild(inp); row.appendChild(sel); row.appendChild(cnt); box.appendChild(row);
-  var out = h('div', ''); box.appendChild(out);
-  function render() {
-    var q = inp.value.trim(), cf = sel.value;
-    out.innerHTML = '';
-    var n = 0;
-    var tb = h('table', '');
-    tb.innerHTML = '<tr><th style="width:70px">類</th><th>名</th><th style="width:120px">篇</th><th style="width:90px">位置</th></tr>';
-    (LS.index || []).forEach(function (r) {
-      if (cf && r.c !== cf) return;
-      var hay = (r.n || '') + ' ' + (r.pian || '');
-      if (q && hay.indexOf(q) < 0) return;
-      if (n++ >= 80) return;
-      tb.innerHTML += '<tr><td>' + esc(r.c) + '</td><td>' + esc(r.n) + '</td><td>' + esc(r.pian) + '</td><td>' + esc(r.pos) + '</td></tr>';
-    });
-    out.appendChild(tb);
-    cnt.textContent = '顯示 ' + Math.min(n, 80) + ' 條';
-  }
-  inp.oninput = render; sel.onchange = render; render();
-};
-
-/* ---------------- 準備 ---------------- */
+/* ---------------- 九鍼 ---------------- */
 VIEWS.prep = function (box) {
-  box.appendChild(h('h1', '準備'));
-  box.appendChild(h('p', '讀之前先補三樣：九鍼、音釋、度量。這三樣不懂，後面會一直卡。', 'small muted'));
-  box.appendChild(h('h2', '九鍼'));
+  box.appendChild(h('h1', '九鍼'));
+  box.appendChild(h('p', '讀靈樞之前，這一頁要能背：九種鍼、各長多少、各自拿來做什麼。' +
+    '靈樞談刺法幾乎都預設你認得這九樣。', 'small'));
   var t = h('table', '');
-  t.innerHTML = '<tr><th style="width:56px">序</th><th style="width:76px">鍼</th><th style="width:80px">長</th><th>用途</th></tr>';
+  t.innerHTML = '<tr><th style="width:44px">序</th><th style="width:68px">鍼</th><th style="width:76px">長</th><th>用途與原文</th></tr>';
   (LS.needles || []).forEach(function (n) {
-    t.innerHTML += '<tr><td>' + esc(n.no) + '</td><td>' + esc(n.name) + '</td><td>' + esc(n.len) + '</td><td>' + esc(n.use) + '</td></tr>';
+    t.innerHTML += '<tr><td>' + esc(n.no) + '</td><td>' + esc(n.name) + '</td><td>' + esc(n.len) +
+      '</td><td>' + esc(n.use) + '<div class="src">原文：' + esc(n.src) + '</div></td></tr>';
   });
   box.appendChild(t);
-  box.appendChild(h('p', '出處：〈九鍼十二原〉與〈九鍼論〉；兩篇毫鍼長度不同，見方法頁。', 'small muted'));
-
-  box.appendChild(h('h2', '音釋'));
-  box.appendChild(h('p', '史崧音釋（底本卷末），按卷排列；只節錄前 220 字。', 'small muted'));
-  var y = h('div', '');
-  (LS.yinshi || []).slice(0, 12).forEach(function (r) {
-    y.appendChild(h('div', 'card', '<h3>卷 ' + esc(String(r.juan).replace(/^0+/, '')) + '</h3><p class="small">' + esc(r.text) + '…</p>'));
-  });
-  box.appendChild(y);
+  box.appendChild(h('p', '出處：〈九鍼十二原〉與〈九鍼論〉。兩篇毫鍼長度不同（一寸六分／三寸六分），' +
+    '是底本自身的差異，不是排印錯。', 'small muted'));
+  var c = h('div', '', 'card');
+  c.innerHTML = '<h3>為什麼先讀這個</h3><p class="small">靈樞的病位、刺法、禁忌，最後多以「用哪一根鍼」收尾。' +
+    '不認得九鍼，讀到「員利者，取之於…」就只剩字面。回原文：' +
+    '<a href="#/read?seq=1">〈九鍼十二原〉</a>　<a href="#/read?seq=78">〈九鍼論〉</a>　' +
+    '<a href="#/read?seq=7">〈官鍼〉</a></p>';
+  box.appendChild(c);
 };
 
 /* ---------------- 方法 ---------------- */
@@ -631,7 +599,7 @@ VIEWS.method = function (box) {
   box.appendChild(h('p', '這一頁回答「這本書可不可信」。完整方法見 docs/01、33、82、88。', 'small muted'));
   var c = h('div', '', 'card');
   c.innerHTML = '<h3>校勘（' + (LS.collation || []).length + ' 點）</h3>' +
-    '<p class="small">三源並排（底本／太素／類經）與覆蓋率另成一頁。</p>' +
+    '<p class="small">三源並排（底本／太素／類經）另成一頁；覆蓋率的原始數字在 data/三源覆蓋率.json。</p>' +
     '<a class="btn ghost" href="#/collation">看三源並排 →</a>';
   box.appendChild(c);
   box.appendChild(h('h2', '矛盾（' + (LS.contradictions || []).length + '）'));
@@ -641,62 +609,6 @@ VIEWS.method = function (box) {
     t2.innerHTML += '<tr><td>' + esc(r.id) + '</td><td>' + esc(r.point) + '</td><td>' + esc(r.verdict) + '</td></tr>';
   });
   box.appendChild(t2);
-};
-
-/* ---------------- 覆蓋 ---------------- */
-VIEWS.coverage = function (box) {
-  box.appendChild(h('h1', '覆蓋表'));
-  box.appendChild(h('p', '81 篇 × 字數 × 題數 × 已讀 × 正確率。聲韻站用 376 章分工表推進度；這裡用同一種表看自己讀到哪。', 'small muted'));
-  var log = STATE.log || {}, idx = {};
-  (LS.items || []).forEach(function (i) { idx[i.id] = i; });
-  var per = {};
-  Object.keys(log).forEach(function (id) {
-    var it = idx[id]; if (!it) return;
-    var k = per[it.seq] = per[it.seq] || [0, 0];
-    k[1]++; if (log[id] === 'ok') k[0]++;
-  });
-  var row = h('div', '', 'row');
-  var sel = document.createElement('select');
-  [['', '全部篇'], ['todo', '未讀'], ['thin', '題少（≤6）'], ['wrong', '曾答錯']].forEach(function (x) { sel.appendChild(new Option(x[1], x[0])); });
-  var note = el('span', 'small muted', '');
-  row.appendChild(sel); row.appendChild(note); box.appendChild(row);
-  var out = h('div', ''); box.appendChild(out);
-  function render() {
-    out.innerHTML = '';
-    var t = h('table', '');
-    t.innerHTML = '<tr><th style="width:52px">#</th><th>篇</th><th style="width:70px">字數</th>' +
-      '<th style="width:52px">題</th><th style="width:52px">已讀</th><th style="width:64px">作答</th><th style="width:64px">正確率</th></tr>';
-    var n = 0, items = 0, read = 0;
-    (LS.pian || []).forEach(function (p) {
-      var rd = STATE.read && STATE.read[p.seq];
-      var st = per[p.seq] || [0, 0];
-      if (sel.value === 'todo' && rd) return;
-      if (sel.value === 'thin' && (p.items || 0) > 6) return;
-      if (sel.value === 'wrong' && !(st[1] > st[0])) return;
-      n++; items += p.items || 0; if (rd) read++;
-      t.innerHTML += '<tr><td>' + p.seq + '</td><td><a href="#/read?seq=' + p.seq + '">' + esc(p.name) + '</a></td>' +
-        '<td class="num">' + p.chars + '</td><td class="num">' + (p.items || 0) + '</td>' +
-        '<td>' + (rd ? '<span class="pill g">已讀</span>' : '<span class="small muted">—</span>') + '</td>' +
-        '<td class="num">' + st[1] + '</td><td class="num">' + (st[1] ? pct(st[0], st[1]) + '%' : '—') + '</td></tr>';
-    });
-    out.appendChild(t);
-    note.textContent = '顯示 ' + n + ' 篇　·　題 ' + items + '　·　已讀 ' + read;
-  }
-  sel.onchange = render; render();
-
-  var det = document.createElement('details');
-  det.className = 'card';
-  var t2 = h('table', '');
-  t2.innerHTML = '<tr><th style="width:52px">#</th><th>篇</th><th style="width:120px">太素 K4/K12</th><th style="width:120px">類經 K4/K12</th><th style="width:140px">判讀</th></tr>';
-  (LS.coverage || []).forEach(function (r) {
-    t2.innerHTML += '<tr><td>' + esc(r.seq) + '</td><td class="small">' + esc(r.pian) + '</td>' +
-      '<td class="num small">' + (r.t4 == null ? '—' : r.t4 + ' / ' + r.t12) + '</td>' +
-      '<td class="num small">' + (r.l4 == null ? '—' : r.l4 + ' / ' + r.l12) + '</td>' +
-      '<td class="small">' + esc(r.verdict || '') + '</td></tr>';
-  });
-  det.innerHTML = '<summary><b>三源覆蓋率</b>　<span class="small muted">81 篇；K4／K12 為 4-gram／12-gram 重合率</span></summary>';
-  det.appendChild(t2);
-  box.appendChild(det);
 };
 
 /* ---------------- 校勘 ---------------- */
@@ -870,6 +782,9 @@ VIEWS.contact = function (box) {
     '<p class="muted small" style="text-align:right;margin-top:12px">⚠ ' + esc(C.seal || '') + '</p>';
   box.appendChild(cl);
 };
+
+/* 供檢查脚本確認有哪些視圖（已下架的路由不該再被連結） */
+window.__ROUTES = Object.keys(VIEWS);
 
 /* ---------------- 路由 ---------------- */
 function parseHash() {

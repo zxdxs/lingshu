@@ -32,7 +32,7 @@ function walk(n, acc) {
   return acc;
 }
 
-const views = ["home", "themes", "read", "items", "concept", "suwen", "index", "coverage", "prep", "method", "collation", "limits", "mine", "about", "contact"];
+const views = ["home", "themes", "read", "items", "concept", "suwen", "prep", "method", "collation", "limits", "mine", "about", "contact"];
 let fails = 0;
 
 function Option(text, value) { const o = mkEl("option"); o.textContent = text; o.value = value; return o; }
@@ -113,6 +113,12 @@ if (!gateHtml.includes(SAFE)) missing.push("gate");
 if (!gateHtml.includes("帶教資格")) missing.push("gate按鈕");
 if (missing.length) { fails++; console.log("  ✗ safety 未出現安全提醒：" + missing.join("、")); }
 else console.log(`  ✓ safety 頂欄／確認頁／首頁／限制頁／關於頁皆顯示：${SAFE.slice(0, 24)}…`);
+
+/* 已下架：索引與覆蓋表（見 docs/119）。若有人把連結加回來，這裡要紅。 */
+const REMOVED = ["index", "coverage"];
+const back = REMOVED.filter(r => (ctx.window.__ROUTES || []).indexOf(r) >= 0);
+if (back.length) { fails++; console.log("  ✗ removed 已下架視圖又出現：" + back.join("、")); }
+else console.log("  ✓ removed  索引／覆蓋表已下架（" + (ctx.window.__ROUTES || []).length + " 個視圖）");
 
 /* 樣式類別：h() 的參數順序是 (tag, html, cls)，寫錯會讓 .card/.hero 靜靜失效，
    畫面「變簡陋」卻不報錯。這裡逐視圖點名必要類別。 */

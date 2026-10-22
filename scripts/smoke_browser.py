@@ -37,9 +37,7 @@ ROUTES = {
     'items?seq=40': {'card': 3},
     'concept': {'card': 3},
     'suwen': {'card': 5, 'quote': 1},
-    'index': {'card': 0},
-    'coverage': {},
-    'prep': {},
+    'prep': {'card': 1},
     'method': {},
     'collation': {},
     'limits': {'alert': 1},
@@ -61,7 +59,9 @@ setTimeout(function () {
     hero: q('.hero'), card: q('.card'), grid: q('.grid'), alert: q('.alert'),
     row: q('.row'), tiao: q('.tiao'), orig: q('.orig'), list: q('.list'), quote: q('.quote'),
     stripe: (document.querySelector('#stripe') || {}).textContent || '',
-    nav: q('#nav a'), foot: q('#footLinks a') };
+    nav: q('#nav a'), foot: q('#footLinks a'),
+    routes: window.__ROUTES || [],
+    links: Array.prototype.map.call(document.querySelectorAll('a[href^="#/"]'), function (a) { return a.getAttribute('href'); }) };
   document.getElementById('smoke').textContent = 'SMOKE=' + JSON.stringify(rep);
 }, 900);
 </script>
@@ -153,10 +153,14 @@ def main():
     fails = []
 
     print(f'瀏覽器：{chrome.split("/")[-1]}　（{len(ROUTES)} 條路由 + 2 個情境）')
+    seen, routes_known = {}, []
     for route, need in ROUTES.items():
         rep = dump(chrome, base + route_page + '#/' + route, os.path.join(tmp, 'p' + str(abs(hash(route)) % 99999)))
         if not rep:
             fails.append(f'{route}: 沒拿到 SMOKE 回報（頁面可能沒載入）'); continue
+        for href in (rep.get('links') or []):
+            seen.setdefault(href, route)
+        routes_known = rep.get('routes') or routes_known
         bad = []
         if rep['errors']:
             bad.append('JS 錯誤 ' + '; '.join(rep['errors']))
@@ -164,7 +168,7 @@ def main():
             bad.append('沒有 h1')
         if rep['stripe'] != STRIPE:
             bad.append(f'頂欄不是安全提醒（{rep["stripe"][:20]}）')
-        if rep['nav'] != 14 or rep['foot'] != 5:
+        if rep['nav'] != 12 or rep['foot'] != 5:
             bad.append(f'導覽 {rep["nav"]}／頁腳 {rep["foot"]}（應 13／5）')
         for k, v in need.items():
             if rep.get(k, 0) < v:
@@ -173,6 +177,17 @@ def main():
             fails.append(f'{route}: ' + '；'.join(bad))
         else:
             print(f'  ✓ {route:<14} h1={rep["h1"][:12]:<12} card={rep["card"]:<3} alert={rep["alert"]}')
+
+    # 死連結：每個頁面的 #/... 連結都要指向存在的視圖（刪頁面時最容易漏掉的一步）
+    dead = []
+    for href, where in seen.items():
+        name = href.split('?')[0].replace('#/', '').strip('/')
+        if name and name not in routes_known:
+            dead.append(f'{href}（出現在 {where}）')
+    if dead:
+        fails.append('死連結：' + '、'.join(dead))
+    else:
+        print(f'  ✓ links          {len(seen)} 個站內連結，全部指向存在的視圖')
 
     # 情境一：未同意 → 必須停在確認頁
     gate = dump(chrome, base + 'index.html#/home', os.path.join(tmp, 'gate'))

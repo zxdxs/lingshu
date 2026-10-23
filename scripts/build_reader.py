@@ -103,6 +103,9 @@ def main():
     jiayi = load('data/甲乙經.json')
     jiayitiao = load('data/甲乙經條_引用.json')
     taisuzhu = load('data/太素注.json')
+    taisupa = load('data/太素平按.json')
+    taisupa = {'說明': taisupa['說明'], '來源': taisupa['來源'], '統計': taisupa['統計'],
+               '卷': taisupa['卷'], '條': taisupa['條'][:10]}
     _ti = load('data/太素注索引.json')
     taisuindex = {'說明': _ti['說明'], '統計': _ti['統計'], '篇': _ti['篇'],
                   '樣本': [r for r in _ti['條'] if r['屬'] == '靈樞'][:20]}
@@ -254,7 +257,7 @@ def main():
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
         'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti,
-        'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao, 'taisuzhu': taisuzhu, 'taisuindex': taisuindex,
+        'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao, 'taisuzhu': taisuzhu, 'taisupa': taisupa, 'taisuindex': taisuindex,
         'defs': defs,
         'suwen': suwen,
     }

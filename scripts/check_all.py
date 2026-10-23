@@ -303,6 +303,17 @@ def taisu_index():
     return len(d['條']), bad
 
 
+def taisu_pingan():
+    """太素平按（蕭延平校記）：卷 1–30、文以「平按」開頭且 ≥6 字。回傳（條, 壞列）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '太素平按.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    bad = sum(1 for x in d['條']
+              if not (0 <= x['卷'] <= 30) or not x['文'].startswith('平按') or len(x['文']) < 6)
+    return d['統計']['段'], bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -348,6 +359,8 @@ def metrics():
         '太素注不符': taisu_zhu()[1],
         '太素索引段': taisu_index()[0],
         '太素索引不符': taisu_index()[1],
+        '太素平按條': taisu_pingan()[0],
+        '太素平按不符': taisu_pingan()[1],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

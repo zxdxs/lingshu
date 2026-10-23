@@ -106,12 +106,22 @@ def build(parts, grams, grams4):
                 merged.append((a, b, c))
         jing = [(a, b) for a, b, c in merged if c and b - a >= MIN_RUN]
         notes = []
+        pingan = []
         for a, b, c in merged:
             if c and b - a >= MIN_RUN:
                 continue
             if any(skip[k] for k in range(a, b)):
                 continue
             text = raw[idx[a]:idx[b - 1] + 1]
+            raw_text = re.sub(r'\s+', '', text)
+            if '平按' in raw_text:
+                # 一段候選裡可能有好幾條平按，逐條切開
+                parts_pa = raw_text.split('平按')
+                for seg in parts_pa[1:]:
+                    seg = ('平按' + seg).strip()
+                    if len(seg) >= 6:
+                        pingan.append({'pos': a, '文': seg[:240],
+                                       '類': (v['heads'][0] if v['heads'] else '')})
             text = split_pingan(text)
             text = re.sub(r'\s+', '', text)
             if len(text) < MINLEN:
@@ -130,7 +140,7 @@ def build(parts, grams, grams4):
                     break
             notes.append({'pos': a, '文': text[:400], '密度': round(den, 2), '篇': sect})
         vols.append({'卷': v['卷'], 'heads': v['heads'], 'stream': stream,
-                     'jing': jing, 'notes': notes, 'ranges': ranges})
+                     'jing': jing, 'notes': notes, 'ranges': ranges, 'pingan': pingan})
     return vols
 
 
@@ -287,6 +297,28 @@ def main():
     json.dump(idx, open(os.path.join(ROOT, 'data', '太素注索引.json'), 'w', encoding='utf-8'),
               ensure_ascii=False, indent=1)
     print('索引', idx_stat, '篇', len(idx['篇']))
+
+    # ── 平按（蕭延平校記）另立一層 ──
+    pa = []
+    for v in vols:
+        for x in v.get('pingan', []):
+            pa.append({'卷': v['卷'], '類': x['類'], '文': x['文']})
+    pa_txt = ''.join(x['文'] for x in pa)
+    pa_stat = {'段': len(pa), '字': len(pa_txt),
+               '見素問': pa_txt.count('見素問'), '見靈樞': pa_txt.count('見靈樞'),
+               '見甲乙': pa_txt.count('見甲乙'),
+               '提靈樞': pa_txt.count('靈樞'), '提素問': pa_txt.count('素問'),
+               '提甲乙': pa_txt.count('甲乙'), '提袁刻': pa_txt.count('袁刻'),
+               '提原抄': pa_txt.count('原抄'), '提別本': pa_txt.count('別本')}
+    json.dump({'說明': '太素「平按」＝蕭延平《黃帝內經太素》校記，非楊上善注。'
+                       '內容多為版本異文、闕文與補入說明；照錄簡體，未校。',
+               '來源': 'vendor/KR3ea031_太素（Kanripo 錄文）',
+               '統計': pa_stat,
+               '卷': [{'卷': v['卷'], '段': len(v.get('pingan', []))} for v in vols if v.get('pingan')],
+               '條': pa[:200], '全': len(pa)},
+              open(os.path.join(ROOT, 'data', '太素平按.json'), 'w', encoding='utf-8'),
+              ensure_ascii=False, indent=1)
+    print('平按', pa_stat, '（檔案只存前 200 段）')
 
     data = {'說明': '隋·楊上善《太素》注文節錄：以底本 n-gram 切經／注，切平按與書眉，'
                    '密度過濾後取引文後一段。機器分離、未校。',

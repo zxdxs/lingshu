@@ -1771,6 +1771,34 @@ VIEWS.collation = function (box) {
     box.appendChild(fc);
   }
 
+  var TP = LS.taisupa || {}, tp = TP['統計'] || {};
+  if ((tp['段'] || 0) > 0) {
+    var fp = fold('太素平按：蕭延平的校記（' + tp['段'] + ' 條，展開看）', false);
+    fp.appendChild(h('p', '太素的「平按」不是楊上善注，是民國蕭延平校刻《太素》時寫的校記：' +
+      '記版本異文、闕文、補入與他書對應。這一層過去被丟棄，現在單獨收起來。' +
+      '統計為字串出現次數（「提甲乙」＝文中出現「甲乙」二字，含「甲乙經」）。', 'small'));
+    var pt = '<tr><th style="width:150px">項</th><th style="width:90px">次</th><th>說明</th></tr>';
+    var WHY2 = { '段': '校記條數', '字': '校記字數', '見素問': '明言「此條見素問…」',
+      '見靈樞': '明言「此條見靈樞…」', '見甲乙': '明言「此條見甲乙…」',
+      '提靈樞': '文中出現「靈樞」', '提素問': '文中出現「素問」', '提甲乙': '文中出現「甲乙」',
+      '提袁刻': '引袁刻（袁氏刻本）', '提原抄': '引原抄（影寫本）', '提別本': '引別本' };
+    Object.keys(WHY2).forEach(function (k) {
+      if (tp[k] == null) return;
+      pt += '<tr><td>' + esc(k) + '</td><td class="num">' + tp[k] + '</td>' +
+        '<td class="small muted">' + esc(WHY2[k]) + '</td></tr>';
+    });
+    var pw2 = h('div', '', 'table-wrap'); pw2.innerHTML = '<table>' + pt + '</table>';
+    fp.appendChild(pw2);
+    fp.appendChild(h('p', '前 10 條樣本：', 'small muted'));
+    var ps = '<tr><th style="width:56px">卷</th><th>校記（節錄）</th></tr>';
+    (TP['條'] || []).forEach(function (x) {
+      ps += '<tr><td class="num">' + x['卷'] + '</td><td class="small">' + esc(x['文']) + '</td></tr>';
+    });
+    var pw3 = h('div', '', 'table-wrap'); pw3.innerHTML = '<table>' + ps + '</table>';
+    fp.appendChild(pw3);
+    box.appendChild(fp);
+  }
+
   nextLinks(box, [['限制：還沒解決的', '#/limits'], ['方法：稽核怎麼做', '#/method'], ['回原文對照', '#/read']]);};
 
 /* ---------------- 限制 ---------------- */

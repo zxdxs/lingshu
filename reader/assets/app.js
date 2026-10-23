@@ -20,6 +20,16 @@ function bar(a, b) { return '<div class="bar"><i style="width:' + pct(a, b) + '%
 function bySeq(seq) { return (LS.pian || []).filter(function (p) { return String(p.seq) === String(seq); })[0]; }
 function hash(s) { var x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x; }
 
+function fold(title, open) {
+  var d = document.createElement('details');
+  d.className = 'fold';
+  if (open) d.open = true;
+  var sm = document.createElement('summary');
+  sm.textContent = title;
+  d.appendChild(sm);
+  return d;
+}
+
 function nextLinks(box, links) {
   var d = h('div', '', 'next');
   d.innerHTML = '<span class="next-k">接著看</span>' + (links || []).map(function (x) {
@@ -745,8 +755,8 @@ VIEWS.jizhu = function (box) {
     box.appendChild(c);
   });
 
-  box.appendChild(h('h3', '八十一篇各取一條'));
-  box.appendChild(h('p', '每篇取字數最多的一條注，看張志聰在這篇最用力講什麼。', 'small muted'));
+  var fd1 = fold('八十一篇各取一條（81 條，展開看）', false);
+  fd1.appendChild(h('p', '每篇取字數最多的一條注，看張志聰在這篇最用力講什麼。', 'small muted'));
   var cc = h('div', '', 'card');
   cases.forEach(function (x) {
     var d = h('div', '', 'zj-case');
@@ -756,10 +766,12 @@ VIEWS.jizhu = function (box) {
       '<div class="zj-note"><b>張注</b>' + esc(x['注']) + '</div>';
     cc.appendChild(d);
   });
-  box.appendChild(cc);
+  fd1.appendChild(cc);
+  box.appendChild(fd1);
 
-  var tbl = h('div', '', 'card');
-  tbl.appendChild(h('h3', '逐篇注文分布'));
+  var fd2 = fold('逐篇注文分布（81 列，展開看）', false);
+  var tbl = h('div', '');
+  tbl.appendChild(h('p', '逐篇的注句數、注字數與比對率。', 'small'));
   tbl.appendChild(h('p', '「比對率」＝該篇集註文字中能與底本經文逐字對上的比例；比例低，代表該篇注多、或文字差異大。', 'small muted'));
   var t = '<tr><th style="width:56px">序</th><th>篇</th><th style="width:70px">注句</th>' +
     '<th style="width:80px">注字</th><th style="width:70px">比對率</th></tr>';
@@ -771,7 +783,8 @@ VIEWS.jizhu = function (box) {
   });
   var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + t + '</table>';
   tbl.appendChild(w);
-  box.appendChild(tbl);
+  fd2.appendChild(tbl);
+  box.appendChild(fd2);
 
   var L = LS.leizhu || {}, lst = L['統計'] || {};
   box.appendChild(h('h2', '二、張介賓《類經》注（明）'));
@@ -784,8 +797,8 @@ VIEWS.jizhu = function (box) {
     '<li><b>局限</b>：類經為四庫全書錄文，注文照錄無標點；只取引文句末 −8～+12 字內的注，' +
     '寧可少收，也不把隔壁句的注拉過來；注中「…」表示前後兩段注之間有跳接。</li></ul>';
   box.appendChild(b1);
-  box.appendChild(h('h3', '通則引文與類經注'));
-  box.appendChild(h('p', '與上一節同一批通則，換一家注。卷號是類經卷次——類經按類編排，沒有靈樞篇序。', 'small muted'));
+  var fl1 = fold('通則引文與類經注（' + ((L['條'] || []).length) + ' 條，展開看）', false);
+  fl1.appendChild(h('p', '與上一節同一批通則，換一家注。卷號是類經卷次——類經按類編排，沒有靈樞篇序。', 'small muted'));
   (L['條'] || []).forEach(function (t) {
     var c = h('div', '', 'card');
     c.appendChild(h('h3', '', t['n'] + '. ' + t['名'] + '　<span class="pill">' + esc(t['組'] || '') + '</span>'));
@@ -795,8 +808,9 @@ VIEWS.jizhu = function (box) {
       c.appendChild(h('div', '「' + esc(q['文']) + '」', 'quote'));
       c.appendChild(h('div', '<b>類經注</b>' + esc(q['注']), 'zj-note'));
     });
-    box.appendChild(c);
+    fl1.appendChild(c);
   });
+  box.appendChild(fl1);
 
   var X = LS.lingshi || {}, xs = X['統計'] || {};
   box.appendChild(h('h2', '三、丹波元簡《靈樞識》（日·江戶）'));
@@ -810,8 +824,8 @@ VIEWS.jizhu = function (box) {
     '<li><b>局限</b>：條目以短句立目，有些句子不立條；「马云／张云／志云」是<b>轉引</b>，' +
     '不是本站直引原書；未與影印本校。</li></ul>';
   box.appendChild(c1);
-  box.appendChild(h('h3', '通則引文與靈樞識'));
-  box.appendChild(h('p', '同一批通則的第三家說。注裡引到他人處，前綴已標出是誰的話——那是轉引，不是原書。', 'small muted'));
+  var fl2 = fold('通則引文與靈樞識（' + ((X['通則'] || []).length) + ' 條，展開看）', false);
+  fl2.appendChild(h('p', '同一批通則的第三家說。注裡引到他人處，前綴已標出是誰的話——那是轉引，不是原書。', 'small muted'));
   (X['通則'] || []).forEach(function (t) {
     var c = h('div', '', 'card');
     c.appendChild(h('h3', '', t['n'] + '. ' + t['名'] + '　<span class="pill">' + esc(t['組'] || '') + '</span>'));
@@ -822,12 +836,14 @@ VIEWS.jizhu = function (box) {
         c.appendChild(h('div', '<b>' + esc(sg['家']) + '</b>' + esc(sg['文']), 'zj-note'));
       });
     });
-    box.appendChild(c);
+    fl2.appendChild(c);
   });
+  box.appendChild(fl2);
 
   var CV = (LS.jizhu || {})['覆蓋'] || {};
   if ((CV['條'] || []).length) {
-    var cv = h('div', '', 'card');
+    var fd3 = fold('三家覆蓋：哪幾條有注可讀（' + ((CV['條'] || []).length) + ' 條，展開看）', false);
+    var cv = h('div', '');
     var cs = CV['統計'] || {};
     cv.appendChild(el('h2', '', '三家覆蓋：哪幾條有注可讀'));
     cv.appendChild(h('p', '65 條通則中，三家都有注的 ' + (cs['3'] || 0) + ' 條、兩家 ' +
@@ -840,7 +856,8 @@ VIEWS.jizhu = function (box) {
     });
     var cw = h('div', '', 'table-wrap'); cw.innerHTML = '<table>' + ct + '</table>';
     cv.appendChild(cw);
-    box.appendChild(cv);
+    fd3.appendChild(cv);
+    box.appendChild(fd3);
   }
 
   var tail = h('div', '', 'alert');

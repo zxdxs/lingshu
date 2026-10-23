@@ -215,3 +215,10 @@ body.show-sid .sid{display:inline}
 .map-list li{margin:0}
 kbd{font-family:inherit;font-size:.82em;border:1px solid var(--line);border-bottom-width:2px;
   border-radius:4px;padding:0 4px;background:var(--card)}
+
+/* 摺疊區（注家頁等長頁用；零 JS） */
+.fold{margin:10px 0;border:1px solid var(--line);border-radius:10px;background:#fffdf8}
+.fold>summary{cursor:pointer;padding:10px 14px;font-size:.92rem;font-weight:600;color:var(--brand)}
+.fold>summary::marker{color:var(--brand2)}
+.fold[open]>summary{border-bottom:1px solid var(--line)}
+.fold>*:not(summary){margin:10px 14px}

@@ -255,6 +255,16 @@ def mashihao():
     return len(d['條']), bad
 
 
+def taisu_probe():
+    """太素探針：經文段數與密度是分離品質的代理指標，漂移即代表來源或參數變了。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '太素探針.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    st = d['統計']
+    return st['經文'], int(round(st['注密度'] * 100))
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -294,6 +304,8 @@ def metrics():
         '甲乙經條不符': jiayi_tiao()[1],
         '馬蒔轉引段': mashihao()[0],
         '馬蒔轉引不符': mashihao()[1],
+        '太素探針經文': taisu_probe()[0],
+        '太素注密度%': taisu_probe()[1],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

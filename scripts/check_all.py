@@ -265,6 +265,23 @@ def taisu_probe():
     return st['經文'], int(round(st['注密度'] * 100))
 
 
+def taisu_zhu():
+    """太素注對讀：卷 1–30、距離 −8～+80、文非空、句 id 在通則。回傳（引段, 壞列）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '太素注.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    law = json.load(open(os.path.join(ROOT, 'data', '通則.json'), encoding='utf-8'))
+    ids = {q['id'] for g in law['組'] for t in g['條'] for q in t['引']}
+    bad = 0
+    for t in d['通則']:
+        for q in t['引']:
+            if (q['id'] not in ids or not (1 <= q['卷'] <= 30) or len(q['注']) < 12
+                    or not (-8 <= q['距'] <= 80)):
+                bad += 1
+    return sum(len(t['引']) for t in d['通則']), bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -306,6 +323,8 @@ def metrics():
         '馬蒔轉引不符': mashihao()[1],
         '太素探針經文': taisu_probe()[0],
         '太素注密度%': taisu_probe()[1],
+        '太素注引': taisu_zhu()[0],
+        '太素注不符': taisu_zhu()[1],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

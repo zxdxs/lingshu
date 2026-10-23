@@ -873,6 +873,35 @@ VIEWS.jizhu = function (box) {
     box.appendChild(FM);
   }
 
+  var TS = LS.taisuzhu || {};
+  if ((TS['通則'] || []).length) {
+    var ts = TS['統計'] || {};
+    box.appendChild(h('h2', '四、楊上善《太素》注（隋）'));
+    var t1 = h('div', '', 'card');
+    t1.innerHTML = '<h3>這批注是怎麼來的</h3><ul class="small">' +
+      '<li><b>來源</b>：' + esc(TS['來源'] || '') + '</li>' +
+      '<li><b>方法</b>：' + esc(TS['方法'] || '') + '</li>' +
+      '<li><b>結果</b>：' + (ts['卷'] || 0) + ' 卷、經文 ' + (ts['經文字'] || 0).toLocaleString() +
+      ' 字、注段 ' + (ts['注段'] || 0).toLocaleString() + '、注字 ' + (ts['注字'] || 0).toLocaleString() +
+      '；通則引文可對注 <b>' + (ts['通則引'] || 0) + '</b> 段、<b>' + (ts['通則條'] || 0) + '</b> 條。</li>' +
+      '<li><b>局限</b>：太素錄文沒有經／注標記，這是<b>機器分離</b>，未與影印本校；' +
+      '注可能屬鄰句——每段都標「距」（與引文尾的字數），距越大越不可靠。</li></ul>';
+    box.appendChild(t1);
+    var ft4 = fold('通則引文與太素注（' + (ts['通則引'] || 0) + ' 段，展開看）', false);
+    ft4.appendChild(h('p', '與前三節同一批通則。太素為隋代舊注，年代最早，但分離最不確定。', 'small muted'));
+    (TS['通則'] || []).forEach(function (t) {
+      var c = h('div', '', 'card');
+      c.appendChild(h('h3', '', t['n'] + '. ' + t['名'] + '　<span class="pill">' + esc(t['組'] || '') + '</span>'));
+      (t['引'] || []).forEach(function (q) {
+        c.appendChild(h('p', '<span class="src">卷 ' + q['卷'] + '　距 ' + (q['距'] > 0 ? '+' : '') + q['距'] + ' 字</span>', 'small muted'));
+        c.appendChild(h('div', '「' + esc(q['文']) + '」', 'quote'));
+        c.appendChild(h('div', '<b>太素注</b>' + esc(q['注']), 'zj-note'));
+      });
+      ft4.appendChild(c);
+    });
+    box.appendChild(ft4);
+  }
+
   var CV = (LS.jizhu || {})['覆蓋'] || {};
   if ((CV['條'] || []).length) {
     var fd3 = fold('三家覆蓋：哪幾條有注可讀（' + ((CV['條'] || []).length) + ' 條，展開看）', false);

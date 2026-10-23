@@ -102,6 +102,7 @@ def main():
     zhujia = load('data/注家.json')
     jiayi = load('data/甲乙經.json')
     jiayitiao = load('data/甲乙經條_引用.json')
+    taisuzhu = load('data/太素注.json')
     _ls = load('data/靈樞識.json')
     lingshi = {'說明': _ls['說明'], '來源': _ls['來源'], '統計': _ls['統計'],
                '篇': _ls['篇'], '通則': _ls['通則'],
@@ -250,7 +251,7 @@ def main():
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
         'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti,
-        'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao,
+        'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao, 'taisuzhu': taisuzhu,
         'defs': defs,
         'suwen': suwen,
     }

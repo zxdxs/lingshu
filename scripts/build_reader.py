@@ -101,6 +101,7 @@ def main():
     jiugong = load('data/九宫八風.json')
     zhujia = load('data/注家.json')
     jiayi = load('data/甲乙經.json')
+    lingshi = load('data/靈樞識.json')
     # 集註：data/張注.json 存全部 772 條注（節錄），data.js 只帶統計、81 條示例與通則對讀
     zz = load('data/張注.json')
     jizhu = {'說明': zz['說明'], '來源': zz['來源'], '取用': zz['取用'],
@@ -228,7 +229,7 @@ def main():
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
         'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti,
-        'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi,
+        'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi,
         'defs': defs,
         'suwen': suwen,
     }

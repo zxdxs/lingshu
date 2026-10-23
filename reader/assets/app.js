@@ -798,6 +798,31 @@ VIEWS.jizhu = function (box) {
     box.appendChild(c);
   });
 
+  var X = LS.lingshi || {}, xs = X['統計'] || {};
+  box.appendChild(h('h2', '三、丹波元簡《靈樞識》（日·江戶）'));
+  var c1 = h('div', '', 'card');
+  c1.innerHTML = '<h3>這批注是怎麼來的</h3><ul class="small">' +
+    '<li><b>來源</b>：' + esc(X['來源'] || '') + '</li>' +
+    '<li><b>體例</b>：按經文短句立條；條下先轉引馬蒔（马云）、張介賓（张云）、張志聰（志云）之說，再下己見（簡案）。</li>' +
+    '<li><b>結果</b>：' + (xs['條'] || 0) + ' 條中 ' + (xs['繫上'] || 0) + ' 條對回底本句（約 ' +
+    Math.round(100 * (xs['繫上'] || 0) / Math.max(1, xs['條'] || 1)) + '%）；通則引文可對注 <b>' +
+    (xs['通則引'] || 0) + '</b> 段、<b>' + (xs['通則條'] || 0) + '</b> 條。</li>' +
+    '<li><b>局限</b>：條目以短句立目，有些句子不立條；「马云／张云／志云」是<b>轉引</b>，' +
+    '不是本站直引原書；未與影印本校。</li></ul>';
+  box.appendChild(c1);
+  box.appendChild(h('h3', '通則引文與靈樞識'));
+  box.appendChild(h('p', '同一批通則的第三家說。注裡引到他人處，前綴已標出是誰的話——那是轉引，不是原書。', 'small muted'));
+  (X['通則'] || []).forEach(function (t) {
+    var c = h('div', '', 'card');
+    c.appendChild(h('h3', '', t['n'] + '. ' + t['名'] + '　<span class="pill">' + esc(t['組'] || '') + '</span>'));
+    (t['引'] || []).forEach(function (q) {
+      c.appendChild(h('p', '<span class="src">' + esc(q['id']) + '</span>', 'small muted'));
+      c.appendChild(h('div', '「' + esc(q['文']) + '」', 'quote'));
+      c.appendChild(h('div', '<b>靈樞識</b>' + esc(q['注']), 'zj-note'));
+    });
+    box.appendChild(c);
+  });
+
   var tail = h('div', '', 'alert');
   tail.innerHTML = '<b>怎麼用這一頁</b><span class="small" style="display:block;margin-top:6px">' +
     '注不是標準答案：兩家讀的是同一部經，他們的話可以幫你「看懂原文在說什麼」，' +

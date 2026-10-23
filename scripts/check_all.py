@@ -197,6 +197,19 @@ def jiayi_stats():
     return d['統計']['有落點'], bad
 
 
+def lingshi_stats():
+    """靈樞識：引句 id 須在三源通則裡、注不短於 12 字。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '靈樞識.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    law = json.load(open(os.path.join(ROOT, 'data', '通則.json'), encoding='utf-8'))
+    ids = {q['id'] for g in law['組'] for t in g['條'] for q in t['引']}
+    # 靈樞識多為短校記（「甲乙方脉作經」一類），故只擋空注，不設長度下限
+    bad = sum(1 for t in d['通則'] for q in t['引'] if q['id'] not in ids or len(q['注']) < 4)
+    return d['統計']['繫上'], bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -232,6 +245,8 @@ def metrics():
         '類經注引不符': leizhu_stats()[1],
         '甲乙經落點': jiayi_stats()[0],
         '甲乙經落點不符': jiayi_stats()[1],
+        '靈樞識繫上': lingshi_stats()[0],
+        '靈樞識引不符': lingshi_stats()[1],
     }
 
 

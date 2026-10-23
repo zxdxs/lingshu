@@ -192,6 +192,102 @@ def main():
         if got:
             hits.append({'n': t['n'], '組': group, '名': t['名'], '引': got})
 
+    # ── 逐段索引：每一段注繫到它前面的那句經文（模糊比對，容忍異文）──
+    import difflib
+    ju = json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'), encoding='utf-8'))['句']
+    sq = json.load(open(os.path.join(ROOT, '底本', '素問_經文.json'), encoding='utf-8'))
+    jnorm = [(x['id'], norm_map(x['text'])[0]) for x in ju]
+    sqnorm = [(j['卷'], norm_map(j['文本'])[0]) for j in sq['卷']]
+    name = {p['序']: p['篇名'] for p in
+            json.load(open(os.path.join(ROOT, '底本', '靈樞經_81篇.json'), encoding='utf-8'))['篇']}
+
+    def gram_index(items):
+        idx = {}
+        for k, (_n, t) in enumerate(items):
+            for i in range(len(t) - 3):
+                idx.setdefault(t[i:i + 4], set()).add(k)
+        return idx
+
+    gj = gram_index(jnorm)
+    # 素問用「位置索引」：卷太長，直接算整卷相似度會趨近 0
+    sq_idx = {}
+    for (juan, t) in sqnorm:
+        for i in range(len(t) - 3):
+            sq_idx.setdefault(t[i:i + 4], []).append((juan, i))
+
+    def sq_best(tail, thr=0.7):
+        pos = set()
+        for i in range(len(tail) - 3):
+            for c in sq_idx.get(tail[i:i + 4], []):
+                pos.add(c)
+                if len(pos) > 200:
+                    break
+            if len(pos) > 200:
+                break
+        best_r, best_j = 0.0, None
+        for juan, i in list(pos)[:200]:
+            t = dict(sqnorm)[juan]
+            win = t[i:i + len(tail)]
+            r = difflib.SequenceMatcher(None, tail, win).ratio()
+            if r > best_r:
+                best_r, best_j = r, juan
+        return best_j, best_r
+
+    def best(tail, items, gidx, thr=0.7):
+        cand = set()
+        for i in range(len(tail) - 3):
+            cand |= gidx.get(tail[i:i + 4], set())
+        best_r, best_k = 0.0, None
+        for k in list(cand)[:200]:
+            r = difflib.SequenceMatcher(None, tail, items[k][1]).ratio()
+            if r > best_r:
+                best_r, best_k = r, k
+        return (items[best_k], best_r) if best_k is not None and best_r >= thr else (None, best_r)
+
+    rows = []
+    for v in vols:
+        spans = v['jing']
+        for n in v['notes']:
+            prev = None
+            for a, b in spans:
+                if b <= n['pos']:
+                    prev = (a, b)
+                else:
+                    break
+            target, kind, ratio = '', '', 0.0
+            if prev:
+                tail = v['stream'][max(prev[0], prev[1] - 40):prev[1]]
+                if len(tail) >= 8:
+                    hit, r = best(tail, jnorm, gj)
+                    if hit:
+                        target, kind, ratio = hit[0], '靈樞', round(r, 2)
+                    else:
+                        j2, r2 = sq_best(tail)
+                        if j2 is not None and r2 >= 0.7:
+                            target, kind, ratio = '素問卷%d' % j2, '素問', round(r2, 2)
+            rows.append({'卷': v['卷'], '類': (v['heads'][0] if v['heads'] else ''),
+                         '句': target or '', '屬': kind, '比': ratio,
+                         '距': (n['pos'] - prev[1]) if prev else -1,
+                         '文': n['文'][:120]})
+    idx_stat = {'段': len(rows), '靈樞': sum(1 for r in rows if r['屬'] == '靈樞'),
+                '素問': sum(1 for r in rows if r['屬'] == '素問'),
+                '未繫': sum(1 for r in rows if not r['屬'])}
+    per_pian = {}
+    for r in rows:
+        if r['屬'] == '靈樞':
+            k = r['句'].split('-')[0]
+            per_pian[k] = per_pian.get(k, 0) + 1
+    idx = {'說明': '太素注段索引：每段注繫到它前面的那句經文（靈樞句 id 或素問卷）。'
+                   '比對用 4-gram 取候選＋difflib 相似度 ≥0.7，容忍異文；「距」＝注段起點與該句末的字數。',
+           '來源': 'vendor/KR3ea031_太素；句 id 來自 底本/靈樞經_句索引.json',
+           '統計': idx_stat,
+           '篇': [{'序': int(k), '篇': name.get(int(k), ''), '段': v}
+                  for k, v in sorted(per_pian.items()) if k.isdigit()],
+           '條': rows}
+    json.dump(idx, open(os.path.join(ROOT, 'data', '太素注索引.json'), 'w', encoding='utf-8'),
+              ensure_ascii=False, indent=1)
+    print('索引', idx_stat, '篇', len(idx['篇']))
+
     data = {'說明': '隋·楊上善《太素》注文節錄：以底本 n-gram 切經／注，切平按與書眉，'
                    '密度過濾後取引文後一段。機器分離、未校。',
             '來源': 'vendor/KR3ea031_太素（Kanripo 錄文，缺 5 卷）',

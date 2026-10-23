@@ -282,6 +282,27 @@ def taisu_zhu():
     return sum(len(t['引']) for t in d['通則']), bad
 
 
+def taisu_index():
+    """太素逐段索引：屬只能是靈樞／素問／未繫；靈樞者句 id 須存在；比在 0–1。回傳（段, 壞列）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '太素注索引.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    ids = {x['id'] for x in json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'),
+                                          encoding='utf-8'))['句']}
+    bad = 0
+    for r in d['條']:
+        if r['屬'] not in ('靈樞', '素問', ''):
+            bad += 1
+        elif r['屬'] == '靈樞' and r['句'] not in ids:
+            bad += 1
+        elif r['屬'] == '素問' and not r['句'].startswith('素問卷'):
+            bad += 1
+        elif not (0 <= r['比'] <= 1) or len(r['文']) < 12:
+            bad += 1
+    return len(d['條']), bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -325,6 +346,8 @@ def metrics():
         '太素注密度%': taisu_probe()[1],
         '太素注引': taisu_zhu()[0],
         '太素注不符': taisu_zhu()[1],
+        '太素索引段': taisu_index()[0],
+        '太素索引不符': taisu_index()[1],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

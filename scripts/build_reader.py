@@ -109,6 +109,23 @@ def main():
              '篇': [{k: v for k, v in x.items() if k != '注'} for x in zz['篇']],
              '例': zz['例'], '通則': zz['通則']}
     leizhu = load('data/類經注.json')
+    # 三家覆蓋：哪些通則至少一家有注
+    _zz = {t['n'] for t in jizhu['通則']}
+    _lz = {t['n'] for t in leizhu['條']}
+    _ls = {t['n'] for t in lingshi['通則']}
+    _cov = []
+    for _g in law['組']:
+        for _t in _g['條']:
+            fam = []
+            if _t['n'] in _zz:
+                fam.append('張志聰')
+            if _t['n'] in _lz:
+                fam.append('張介賓')
+            if _t['n'] in _ls:
+                fam.append('丹波元簡')
+            _cov.append({'n': _t['n'], '名': _t['名'], '家': fam})
+    _dist = {str(k): sum(1 for x in _cov if len(x['家']) == k) for k in range(4)}
+    jizhu['覆蓋'] = {'統計': _dist, '條': [x for x in _cov if x['家']]}
     bianti = load('data/變體.json')
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}

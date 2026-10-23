@@ -34,6 +34,32 @@ def cn2int(s):
     return CN.get(s)
 
 
+MARK = re.compile(r'(马云|张云|志云|简案|甲乙|千金|外台|巢源|病源|杨上善|张本|志本|马本)')
+LABEL = {'马云': '馬蒔（轉引）', '张云': '張介賓（轉引）', '志云': '張志聰（轉引）',
+         '简案': '丹波元簡', '甲乙': '甲乙經', '千金': '千金方', '外台': '外台秘要',
+         '巢源': '巢氏病源', '病源': '巢氏病源', '杨上善': '楊上善（轉引）',
+         '张本': '版本校', '志本': '版本校', '马本': '版本校'}
+
+
+def split_note(text):
+    """把一條注按「马云／张云／志云／简案」等標記切段並署名。"""
+    out = []
+    pos = 0
+    for m in MARK.finditer(text):
+        if m.start() > pos:
+            seg = text[pos:m.start()]
+            out.append({'家': out[-1]['家'] if out and not out[-1]['文'] else '未署名', '文': seg})
+        out.append({'家': LABEL[m.group(1)], '文': ''})
+        pos = m.start()
+    if pos < len(text):
+        seg = text[pos:]
+        if out and not out[-1]['文']:
+            out[-1]['文'] = seg
+        else:
+            out.append({'家': '未署名', '文': seg})
+    return [x for x in out if x['文']]
+
+
 def load_paras():
     raw = open(os.path.join(ROOT, 'vendor', '丹波元簡_靈樞識', 'raw.html'),
                encoding='utf-8', errors='replace').read()
@@ -138,12 +164,19 @@ def main():
             cand = [(pos, d) for (s0, pos), d in notes.items()
                     if s0 == seq and p - 2 <= pos <= p + len(nq) + 4]
             if cand:
-                hit.append({'id': q['id'], '文': q['文'],
-                            '注': '…'.join(d['注'] for _pos, d in cand[:2])[:240]})
+                note = '…'.join(d['注'] for _pos, d in cand[:2])[:240]
+                hit.append({'id': q['id'], '文': q['文'], '注': note,
+                            'seg': split_note(note)})
         if hit:
             out['通則'].append({'n': t['n'], '組': group, '名': t['名'], '引': hit})
 
+    fam = {}
+    for t in out['通則']:
+        for q in t['引']:
+            for sg in q['seg']:
+                fam[sg['家']] = fam.get(sg['家'], 0) + 1
     out['統計'] = {'篇': sum(1 for x in out['篇'] if x['繫上']),
+                   '家別': fam,
                    '條': sum(x['條'] for x in out['篇']),
                    '繫上': sum(x['繫上'] for x in out['篇']),
                    '通則條': len(out['通則']),

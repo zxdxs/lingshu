@@ -210,6 +210,19 @@ def lingshi_stats():
     return d['統計']['繫上'], bad
 
 
+def zhu_coverage():
+    """三家注（集註／類經注／靈樞識）對 65 條通則的覆蓋：回傳（有注條數, 三家皆無條數）。"""
+    law = json.load(open(os.path.join(ROOT, 'data', '通則.json'), encoding='utf-8'))
+    try:
+        a = {t['n'] for t in json.load(open(os.path.join(ROOT, 'data', '張注.json'), encoding='utf-8'))['通則']}
+        b = {t['n'] for t in json.load(open(os.path.join(ROOT, 'data', '類經注.json'), encoding='utf-8'))['條']}
+        c = {t['n'] for t in json.load(open(os.path.join(ROOT, 'data', '靈樞識.json'), encoding='utf-8'))['通則']}
+    except FileNotFoundError:
+        return 0, 0
+    ns = [t['n'] for g in law['組'] for t in g['條']]
+    return sum(1 for n in ns if n in a | b | c), sum(1 for n in ns if n not in a | b | c)
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -247,6 +260,8 @@ def metrics():
         '甲乙經落點不符': jiayi_stats()[1],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
+        '注家有注條': zhu_coverage()[0],
+        '三家皆無': zhu_coverage()[1],
     }
 
 

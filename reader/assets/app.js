@@ -818,10 +818,30 @@ VIEWS.jizhu = function (box) {
     (t['引'] || []).forEach(function (q) {
       c.appendChild(h('p', '<span class="src">' + esc(q['id']) + '</span>', 'small muted'));
       c.appendChild(h('div', '「' + esc(q['文']) + '」', 'quote'));
-      c.appendChild(h('div', '<b>靈樞識</b>' + esc(q['注']), 'zj-note'));
+      (q['seg'] || [{ '家': '靈樞識', '文': q['注'] }]).forEach(function (sg) {
+        c.appendChild(h('div', '<b>' + esc(sg['家']) + '</b>' + esc(sg['文']), 'zj-note'));
+      });
     });
     box.appendChild(c);
   });
+
+  var CV = (LS.jizhu || {})['覆蓋'] || {};
+  if ((CV['條'] || []).length) {
+    var cv = h('div', '', 'card');
+    var cs = CV['統計'] || {};
+    cv.appendChild(el('h2', '', '三家覆蓋：哪幾條有注可讀'));
+    cv.appendChild(h('p', '65 條通則中，三家都有注的 ' + (cs['3'] || 0) + ' 條、兩家 ' +
+      (cs['2'] || 0) + ' 條、只有一家 ' + (cs['1'] || 0) + ' 條、三家都沒有 ' + (cs['0'] || 0) + ' 條。' +
+      '「有注」＝張志聰〈集註〉、張介賓〈類經注〉、丹波元簡〈靈樞識〉三家之一，能繫到該條引文。', 'small'));
+    var ct = '<tr><th style="width:44px">#</th><th>通則</th><th style="width:220px">有注的家</th></tr>';
+    CV['條'].forEach(function (x) {
+      ct += '<tr><td class="num">' + x['n'] + '</td><td class="small">' + esc(x['名']) + '</td>' +
+        '<td class="small">' + x['家'].map(function (f) { return '<span class="pill g">' + esc(f) + '</span>'; }).join(' ') + '</td></tr>';
+    });
+    var cw = h('div', '', 'table-wrap'); cw.innerHTML = '<table>' + ct + '</table>';
+    cv.appendChild(cw);
+    box.appendChild(cv);
+  }
 
   var tail = h('div', '', 'alert');
   tail.innerHTML = '<b>怎麼用這一頁</b><span class="small" style="display:block;margin-top:6px">' +

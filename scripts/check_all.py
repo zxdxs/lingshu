@@ -239,6 +239,22 @@ def jiayi_tiao():
     return len(d['條']), bad
 
 
+def mashihao():
+    """馬蒔轉引輯存：每段須有篇名、句子（可空）、非空文；回傳（段數, 壞列）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '馬蒔轉引.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    names = {p['篇名'] for p in CH}
+    ids = {x['id'] for x in json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'),
+                                          encoding='utf-8'))['句']}
+    bad = 0
+    for x in d['條']:
+        if x['篇'] not in names or len(x['文']) < 6 or (x['句'] and x['句'] not in ids):
+            bad += 1
+    return len(d['條']), bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -276,6 +292,8 @@ def metrics():
         '甲乙經落點不符': jiayi_stats()[1],
         '甲乙經條對應': jiayi_tiao()[0],
         '甲乙經條不符': jiayi_tiao()[1],
+        '馬蒔轉引段': mashihao()[0],
+        '馬蒔轉引不符': mashihao()[1],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

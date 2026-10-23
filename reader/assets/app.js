@@ -840,6 +840,39 @@ VIEWS.jizhu = function (box) {
   });
   box.appendChild(fl2);
 
+  var FD = fold('全書署名分佈（繫上的 ' + (xs['繫上'] || 0) + ' 條，展開看）', false);
+  FD.appendChild(h('p', '只算能繫到底本句的 ' + (xs['繫上'] || 0) + ' 條；未繫上的條目（約 ' +
+    ((xs['條'] || 0) - (xs['繫上'] || 0)) + ' 條）不列入。同一條可能同時引兩三家。', 'small muted'));
+  var ft = '<tr><th style="width:170px">家</th><th style="width:90px">段</th><th>說明</th></tr>';
+  var WHY = { '馬蒔（轉引）': '靈樞識引《靈樞注證發微》', '張介賓（轉引）': '靈樞識引《類經》注',
+    '張志聰（轉引）': '靈樞識引《靈樞集註》', '丹波元簡': '簡案，己見', '甲乙經': '校勘引甲乙經異文',
+    '千金方': '引《千金方》', '外台秘要': '引《外台秘要》', '巢氏病源': '引《諸病源候論》',
+    '版本校': '版本異文（张本／志本等）', '未署名': '段首引他書或脫標記' };
+  Object.keys(xs['家別'] || {}).sort(function (a, b) { return xs['家別'][b] - xs['家別'][a]; })
+    .forEach(function (fam) {
+      ft += '<tr><td>' + esc(fam) + '</td><td class="num">' + xs['家別'][fam] + '</td>' +
+        '<td class="small muted">' + esc(WHY[fam] || '') + '</td></tr>';
+    });
+  var fw = h('div', '', 'table-wrap'); fw.innerHTML = '<table>' + ft + '</table>';
+  FD.appendChild(fw);
+  box.appendChild(FD);
+
+  var MA = X['馬蒔'] || [];
+  if (MA.length) {
+    var FM = fold('馬蒔轉引輯存（全書 ' + (X['馬蒔總'] || MA.length) + ' 段，此處前 ' + MA.length +
+      ' 段，展開看）', false);
+    FM.appendChild(h('p', '馬蒔《靈樞注證發微》未入庫，這些話是《靈樞識》轉引的，可能節刪；' +
+      '引用時務必寫「轉引」。完整清單見資料檔與 CSV。', 'small'));
+    var mt = '<tr><th style="width:110px">篇</th><th style="width:64px">句</th><th>馬蒔說（轉引）</th></tr>';
+    MA.forEach(function (x) {
+      mt += '<tr><td class="small">' + esc(x['篇']) + '</td><td class="small muted">' +
+        esc(x['句'] || '—') + '</td><td class="small">' + esc(x['文']) + '</td></tr>';
+    });
+    var mw = h('div', '', 'table-wrap'); mw.innerHTML = '<table>' + mt + '</table>';
+    FM.appendChild(mw);
+    box.appendChild(FM);
+  }
+
   var CV = (LS.jizhu || {})['覆蓋'] || {};
   if ((CV['條'] || []).length) {
     var fd3 = fold('三家覆蓋：哪幾條有注可讀（' + ((CV['條'] || []).length) + ' 條，展開看）', false);

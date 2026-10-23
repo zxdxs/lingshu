@@ -106,6 +106,7 @@ def main():
            '統計': {}, '篇': [], '通則': []}
 
     notes = {}       # (序, 位置) -> 注
+    loose = []       # 未繫上句的馬蒔轉引（只記篇）
     per_pian = {}
     for seq in sorted(name):
         pl = sorted(byp.get(name[seq], []), key=lambda x: x['seq'])
@@ -138,12 +139,20 @@ def main():
                     p = q
                     break
             if p < 0:
+                # 條目對不上底本句，仍可知道它在哪一篇：把引馬蒔處輯下來，句 id 留空
+                if len(parts) >= 2:
+                    rest0 = ' '.join(parts[1:])
+                    for sg0 in split_note(rest0):
+                        if sg0['家'] == '馬蒔（轉引）':
+                            loose.append({'篇': name[seq], '句': '', '文': sg0['文'][:220]})
                 continue
             got += 1
             sid = pos2id[p] if p < len(pos2id) else pos2id[-1]
-            notes.setdefault((seq, p), {'句': sid, '注': rest[:200]})
+            notes.setdefault((seq, p), {'句': sid, '注': rest[:400], '序': seq,
+                                        'seg': split_note(rest[:400])})
         per_pian[seq] = {'條': len(items), '繫上': got}
-        out['篇'].append({'序': seq, '篇': name[seq], '條': len(items), '繫上': got})
+        out['篇'].append({'序': seq, '篇': name[seq], '條': len(items), '繫上': got,
+                          '家別': {}})
 
     # 通則引文：取引文範圍內的條目注
     law = json.load(open(os.path.join(ROOT, 'data', '通則.json'), encoding='utf-8'))
@@ -171,18 +180,48 @@ def main():
             out['通則'].append({'n': t['n'], '組': group, '名': t['名'], '引': hit})
 
     fam = {}
+    ma = []
+    fam_of = {x['序']: x for x in out['篇']}
+    for (seq, pos), d in notes.items():
+        for sg in d.get('seg', []):
+            fam[sg['家']] = fam.get(sg['家'], 0) + 1
+            if seq in fam_of:
+                b = fam_of[seq]['家別']
+                b[sg['家']] = b.get(sg['家'], 0) + 1
+            if sg['家'] == '馬蒔（轉引）':
+                ma.append({'篇': name[seq], '句': d['句'], '文': sg['文'][:220]})
     for t in out['通則']:
         for q in t['引']:
             for sg in q['seg']:
-                fam[sg['家']] = fam.get(sg['家'], 0) + 1
+                if sg['家'] not in fam:
+                    fam[sg['家']] = 1
+    def _body(x):
+        return re.sub(r'^(马云|张云|志云|简案|甲乙)[。、，\s]*', '', x)
+
+    out['馬蒔'] = [x for x in ma + loose if len(_body(x['文'])) >= 6]
     out['統計'] = {'篇': sum(1 for x in out['篇'] if x['繫上']),
                    '家別': fam,
                    '條': sum(x['條'] for x in out['篇']),
                    '繫上': sum(x['繫上'] for x in out['篇']),
                    '通則條': len(out['通則']),
-                   '通則引': sum(len(t['引']) for t in out['通則'])}
+                   '通則引': sum(len(t['引']) for t in out['通則']),
+                   '馬蒔總': len(out['馬蒔']), '馬蒔未繫上': len(loose)}
     with open(os.path.join(ROOT, 'data', '靈樞識.json'), 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
+    ma_data = {'說明': '《靈樞識》所引馬蒔說輯存（轉引，非馬蒔原書）。馬蒔《靈樞注證發微》未入庫，'
+                       '此處文字經丹波元簡轉手，可能節刪，引用時須標明轉引。',
+               '來源': 'vendor/丹波元簡_靈樞識（殆知閣）',
+               '數': len(out['馬蒔']), '條': out['馬蒔']}
+    with open(os.path.join(ROOT, 'data', '馬蒔轉引.json'), 'w', encoding='utf-8') as f:
+        json.dump(ma_data, f, ensure_ascii=False, indent=1)
+    import csv
+    os.makedirs(os.path.join(ROOT, 'export'), exist_ok=True)
+    with open(os.path.join(ROOT, 'export', '馬蒔轉引_靈樞識.csv'), 'w', encoding='utf-8-sig', newline='') as f:
+        w = csv.writer(f)
+        w.writerow(['篇', '句ID', '馬蒔說（靈樞識轉引）'])
+        for x in out['馬蒔']:
+            w.writerow([x['篇'], x['句'], x['文']])
+    print('馬蒔轉引', len(ma) + len(loose), '→ data/馬蒔轉引.json、export/馬蒔轉引_靈樞識.csv')
     print(out['統計'])
     for t in out['通則'][:5]:
         print(t['n'], t['名'], '|', t['引'][0]['注'][:90])

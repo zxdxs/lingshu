@@ -102,7 +102,10 @@ def main():
     zhujia = load('data/注家.json')
     jiayi = load('data/甲乙經.json')
     jiayitiao = load('data/甲乙經條_引用.json')
-    lingshi = load('data/靈樞識.json')
+    _ls = load('data/靈樞識.json')
+    lingshi = {'說明': _ls['說明'], '來源': _ls['來源'], '統計': _ls['統計'],
+               '篇': _ls['篇'], '通則': _ls['通則'],
+               '馬蒔': _ls.get('馬蒔', [])[:30], '馬蒔總': _ls.get('統計', {}).get('馬蒔總', 0)}
     # 集註：data/張注.json 存全部 772 條注（節錄），data.js 只帶統計、81 條示例與通則對讀
     zz = load('data/張注.json')
     jizhu = {'說明': zz['說明'], '來源': zz['來源'], '取用': zz['取用'],

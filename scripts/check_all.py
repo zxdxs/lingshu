@@ -183,6 +183,20 @@ def leizhu_stats():
     return d['統計']['段'], bad
 
 
+def jiayi_stats():
+    """甲乙經篇次對照：81 篇都要有落點、卷號 1–12、主落點篇名不得為空；回傳（有落點, 壞列）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '甲乙經.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    bad = 0
+    for x in d['篇']:
+        m = x.get('主')
+        if not m or not (1 <= m['卷'] <= 12) or not m.get('篇'):
+            bad += 1
+    return d['統計']['有落點'], bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -216,6 +230,8 @@ def metrics():
         '集註低比對篇': jizhu_stats()[2],
         '類經注段': leizhu_stats()[0],
         '類經注引不符': leizhu_stats()[1],
+        '甲乙經落點': jiayi_stats()[0],
+        '甲乙經落點不符': jiayi_stats()[1],
     }
 
 

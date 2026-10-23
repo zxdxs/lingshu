@@ -1572,6 +1572,32 @@ VIEWS.collation = function (box) {
   });
   box.appendChild(t);
 
+  var JY = LS.jiayi || {};
+  if ((JY['篇'] || []).length) {
+    var jc = h('div', '', 'card');
+    var js = JY['統計'] || {};
+    jc.appendChild(el('h2', '', '甲乙經：靈樞各篇落在哪一卷哪一篇'));
+    jc.appendChild(h('p', '《針灸甲乙經》把靈樞、素問按病類重編，是最早的同類編本。' +
+      '這裡不談「甲乙經收了哪些篇」，只算一件事：靈樞各篇的正文，在甲乙經的哪一篇裡重合最多。' +
+      '重合率＝該篇 4-gram 出現在該甲乙篇的比例；低於 30% 表示甲乙經刪改較多，或本法不適用。', 'small'));
+    jc.appendChild(h('p', '81 篇都有落點，其中 <b>' + (js['重合≥30%'] || 0) + '</b> 篇重合 ≥30%；' +
+      '通則引文能在甲乙經找到逐字同文的只有 <b>' + (js['通則引有落點'] || 0) + '</b> 段（' +
+      (js['通則條有落點'] || 0) + ' 條）——甲乙經多是改寫引用，逐字同文少。', 'small muted'));
+    var jt = '<tr><th style="width:44px">序</th><th>靈樞篇</th><th style="width:60px">甲乙卷</th>' +
+      '<th>甲乙篇</th><th style="width:64px">重合</th></tr>';
+    (JY['篇'] || []).forEach(function (x) {
+      var m = x['主'] || {};
+      jt += '<tr><td class="num">' + x['序'] + '</td><td class="small">' + esc(x['篇']) + '</td>' +
+        '<td class="num">' + (m['卷'] || '—') + '</td><td class="small">' + esc(m['篇'] || '—') + '</td>' +
+        '<td class="num">' + (x['重合'] || 0) + '%</td></tr>';
+    });
+    var jw = h('div', '', 'table-wrap'); jw.innerHTML = '<table>' + jt + '</table>';
+    jc.appendChild(jw);
+    jc.appendChild(h('p', '注意：這是「文字重合最多的篇」，不等於歷史上甲乙經作者的自注出處；' +
+      '甲乙經與靈樞的篇次對應需逐條建立，本頁只做第一步。', 'small muted'));
+    box.appendChild(jc);
+  }
+
   nextLinks(box, [['限制：還沒解決的', '#/limits'], ['方法：稽核怎麼做', '#/method'], ['回原文對照', '#/read']]);};
 
 /* ---------------- 限制 ---------------- */

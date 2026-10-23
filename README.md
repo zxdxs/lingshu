@@ -222,7 +222,7 @@ cd reader && python3 -m http.server 8080 --bind 127.0.0.1   # 開 http://127.0.0
 - **發布資訊單一來源**：`data/發布資訊.json`（站名、版本、授權、聯絡、案例題、Anki 實測、引用格式）。改完要重跑 `build_reader.py`，否則 `check_reader` 會以「不同步」擋下。見 `docs/113_發布待決.md`。
 - **授權**：CC BY-NC-SA 4.0（原文屬公共領域，授權及於新增之標點、校記、題目、圖表）；通知文件見 [`LICENSE.txt`](LICENSE.txt)，法律文本以 creativecommons.org 為準。
 - **指正與聯絡**：頁腳常駐 `#/contact`（或關於頁連結）。求助項目與數字由 `scripts/build_contact.py` 生成，改資料後須重跑。
-- **發布前必做**：① 在真實 Anki 匯入 `export/靈樞_填空.apkg`（745 卡）並按過一次（目前未測）；② 填聯絡。`check_all` 的`發布待決`須為 0。見 `docs/100_發布前檢查.md`。
+- **發布前必做**：① 在真實 Anki 匯入 `export/靈樞_填空.apkg`（745 卡）並按過一次（目前未測）；②（已辦）聯絡已填 `hello@solve-lab.cn`。`check_all` 的`發布待決`須為 0。見 `docs/100_發布前檢查.md`。
 
 ## 授權與來源
 

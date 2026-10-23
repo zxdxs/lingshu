@@ -24,11 +24,25 @@ def parse_juan(path):
     raw = open(path, encoding='utf-8').read()
     m = re.search(r'#\+PROPERTY: JUAN (\d+)', raw)
     if not m:
-        return None, '', []
+        return None, '', [], ''
     juan = int(m.group(1))
+    # 類名：卷首「類經卷X　明　張介賔　撰」之後那一行（如「藏象類」「運氣」）
+    lei = ''
+    clean_lines = []
+    for ln in raw.split('\n'):
+        t = ln.strip().replace('\u3000', '').replace('　', '').replace('¶', '')
+        if not t or t.startswith('#') or t.startswith('<pb:'):
+            continue
+        clean_lines.append(t)
+    for i, t in enumerate(clean_lines):
+        if re.fullmatch(r'類經卷[一二三四五六七八九十]+.*撰', t) and i + 1 < len(clean_lines):
+            lei = clean_lines[i + 1]
+            break
     body = re.sub(r'^#.*$', '', raw, flags=re.M)
     body = re.sub(r'<pb:[^>]+>', '', body)
     body = body.replace('¶', '').replace('\u3000', '').replace('\n', '').replace('　', '')
+    if lei and lei in body:
+        body = body.replace(lei, '', 1)
     jing, notes, cur, start, idx = [], [], None, None, 0
     for ch in body:
         if ch in '(（':
@@ -48,7 +62,7 @@ def parse_juan(path):
                 # 位置以「正規化後」計，才能與 norm(經文) 的 find 對齊
                 if norm(ch):
                     idx += 1
-    return juan, ''.join(jing), notes
+    return juan, ''.join(jing), notes, lei
 
 
 def main():
@@ -57,10 +71,10 @@ def main():
 
     JU = {}
     for f in sorted(glob.glob(os.path.join(ROOT, 'vendor', 'KR3e0085_類經', '*.txt'))):
-        juan, jing, notes = parse_juan(f)
+        juan, jing, notes, lei = parse_juan(f)
         if juan is None:
             continue
-        JU[juan] = {'經': norm(jing), '注': notes, 'raw': jing}
+        JU[juan] = {'經': norm(jing), '注': notes, 'raw': jing, '類': lei}
 
     out = {'說明': '明·張介賓《類經》注文節錄：括號內為注，括號外為經文；'
                    '注繫到其前一段經文，再用通則引文定位取注。',
@@ -86,7 +100,7 @@ def main():
                 if not cand:
                     continue
                 txt = '…'.join(x for _s, x in cand[:2])[:240]
-                got.append({'id': q['id'], '卷': j, '文': q['文'], '注': txt})
+                got.append({'id': q['id'], '卷': j, '類': d['類'], '文': q['文'], '注': txt})
                 break
         if got:
             tot += len(got)
@@ -97,7 +111,7 @@ def main():
         json.dump(out, f, ensure_ascii=False, indent=1)
     print(out['統計'])
     for x in out['條'][:6]:
-        print(x['n'], x['名'], x['引'][0]['卷'], '|', x['引'][0]['注'][:100])
+        print(x['n'], x['名'], x['引'][0]['卷'], x['引'][0].get('類', ''), '|', x['引'][0]['注'][:80])
 
 
 if __name__ == '__main__':

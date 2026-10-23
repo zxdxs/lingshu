@@ -177,7 +177,8 @@ def leizhu_stats():
     bad = 0
     for t in d['條']:
         for q in t['引']:
-            if q['id'] not in ids or not (1 <= q['卷'] <= 32) or len(q['注']) < 12:
+            if (q['id'] not in ids or not (1 <= q['卷'] <= 32) or len(q['注']) < 12
+                    or not q.get('類')):
                 bad += 1
     return d['統計']['段'], bad
 

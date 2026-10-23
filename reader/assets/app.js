@@ -790,7 +790,8 @@ VIEWS.jizhu = function (box) {
     var c = h('div', '', 'card');
     c.appendChild(h('h3', '', t['n'] + '. ' + t['名'] + '　<span class="pill">' + esc(t['組'] || '') + '</span>'));
     (t['引'] || []).forEach(function (q) {
-      c.appendChild(h('p', '<span class="src">類經卷 ' + q['卷'] + '　' + esc(q['id']) + '</span>', 'small muted'));
+      c.appendChild(h('p', '<span class="src">類經卷 ' + q['卷'] +
+        (q['類'] ? '　' + esc(q['類']) : '') + '　' + esc(q['id']) + '</span>', 'small muted'));
       c.appendChild(h('div', '「' + esc(q['文']) + '」', 'quote'));
       c.appendChild(h('div', '<b>類經注</b>' + esc(q['注']), 'zj-note'));
     });

@@ -1660,6 +1660,31 @@ VIEWS.collation = function (box) {
     box.appendChild(jc);
   }
 
+  var JT = LS.jiayitiao || {};
+  if ((JT['條'] || []).length) {
+    var jt = JT['統計'] || {};
+    var fc = fold('甲乙經逐條對應（引用句 ' + (jt['有對應'] || 0) + '／' + (jt['引用句'] || 0) +
+      ' 有對應，展開看）', false);
+    fc.appendChild(h('p', '把本站引用到的每一句（通則、變體、病候、癰疽、界限、十二經病候）拿去甲乙經找最相近的一條。' +
+      '相似度 ≥0.85 才收；差異只列不判——甲乙經改寫多，用字與文句都可能不同。' +
+      '全書可比 ' + (jt['同文'] || 0) + ' 句同文、' + (jt['近似'] || 0) + ' 句近似（合計 ' + (jt['總對上'] || 0) + '）。', 'small'));
+    var tt = '<tr><th style="width:52px">句</th><th>靈樞（底本）</th><th>甲乙經</th><th style="width:34%">差異（未判定）</th></tr>';
+    (JT['條'] || []).forEach(function (r) {
+      var d = (r['異'] || []).map(function (x) {
+        return (x['甲'] ? '甲「' + esc(x['甲']) + '」' : '（甲無）') +
+               (x['乙'] ? '／乙「' + esc(x['乙']) + '」' : '（乙無）');
+      }).join('；') || '<span class="muted">同文</span>';
+      tt += '<tr><td class="small">' + esc(r['id']) + '<br/><span class="muted">卷 ' + r['卷'] + '</span></td>' +
+        '<td class="small">' + esc(r['甲']) + '</td><td class="small">' + esc(r['乙']) + '</td>' +
+        '<td class="small muted">' + d + '</td></tr>';
+    });
+    var tw = h('div', '', 'table-wrap'); tw.innerHTML = '<table>' + tt + '</table>';
+    fc.appendChild(tw);
+    fc.appendChild(h('p', '「字形／通假」類差異（府腑、太、著着等）已另外計數，不在上表逐條列；' +
+      '其餘差異包含改寫、脫衍與訛字，本站不判是非。', 'small muted'));
+    box.appendChild(fc);
+  }
+
   nextLinks(box, [['限制：還沒解決的', '#/limits'], ['方法：稽核怎麼做', '#/method'], ['回原文對照', '#/read']]);};
 
 /* ---------------- 限制 ---------------- */

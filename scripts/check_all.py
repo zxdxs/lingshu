@@ -223,6 +223,22 @@ def zhu_coverage():
     return sum(1 for n in ns if n in a | b | c), sum(1 for n in ns if n not in a | b | c)
 
 
+def jiayi_tiao():
+    """甲乙條對應：id 須在句索引、卷 1–12、相似度 ≥0.85、兩邊文非空。回傳（對上數, 壞列）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '甲乙經條.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0
+    ids = {x['id'] for x in json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'),
+                                          encoding='utf-8'))['句']}
+    bad = 0
+    for r in d['條']:
+        if (r['id'] not in ids or not (1 <= r['卷'] <= 12) or r['比'] < 0.85
+                or not r['甲'] or not r['乙']):
+            bad += 1
+    return len(d['條']), bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -258,6 +274,8 @@ def metrics():
         '類經注引不符': leizhu_stats()[1],
         '甲乙經落點': jiayi_stats()[0],
         '甲乙經落點不符': jiayi_stats()[1],
+        '甲乙經條對應': jiayi_tiao()[0],
+        '甲乙經條不符': jiayi_tiao()[1],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

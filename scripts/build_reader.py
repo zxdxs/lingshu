@@ -139,15 +139,33 @@ def main():
     jizhu['覆蓋'] = {'統計': _dist, '條': [x for x in _cov if x['家']]}
     bianti = load('data/變體.json')
     path = load('data/學習路徑.json')
-    # D 型模組（逐篇小模組）：把 D1–D8 合成一份，供「模組」頁使用
+    # 模組：D 型（結構統一）＋舊的主題型（結構各異，原樣帶去前端做通用渲染）
+    NAME = {p['序']: p['篇名'] for p in ch}
     mods = []
-    for f in sorted(glob.glob(os.path.join(ROOT, 'data', '模組_D*.json'))):
+    generic = []
+    for f in sorted(glob.glob(os.path.join(ROOT, 'data', '模組_*.json'))):
         d = json.load(open(f, encoding='utf-8'))
-        for x in d.get('篇', []):
-            mods.append(x)
+        base = os.path.basename(f)
+        if base.startswith('模組_D'):
+            for x in d.get('篇', []):
+                mods.append(x)
+            continue
+        src = d.get('出處')
+        seqs = []
+        if isinstance(src, list):
+            seqs = [x.get('篇序') for x in src if isinstance(x, dict)]
+        elif isinstance(src, dict):
+            seqs = [src.get('篇序')]
+        content = {k: v for k, v in d.items() if k not in ('模組', '出處', '說明')}
+        for q in seqs:
+            if q in NAME and content:
+                generic.append({'序': q, '篇': NAME[q], '組': d.get('模組', base), '內容': content})
     mods.sort(key=lambda x: x['篇序'])
+    generic.sort(key=lambda x: x['序'])
     modules = {'說明': 'D 型逐篇小模組：一句、分層（原文＋解）、原文要點、誤讀、相連通則。'
-                       '原文由句索引按 id 取，非手打。', '篇數': len(mods), '篇': mods}
+                       '原文由句索引按 id 取，非手打。',
+               '篇數': len(mods), '篇': mods,
+               '主題型': generic, '主題型數': len(generic)}
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
     suwentw = load('data/素問同文.json')

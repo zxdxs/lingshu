@@ -383,6 +383,22 @@ def module_d():
     return seen, bad
 
 
+def module_page_cover():
+    """模組頁要涵蓋 81 篇：D 型 32 篇 ＋ 主題型（舊模組）的 出處 篇序，聯集應為 81。"""
+    seqs = set()
+    for f in glob.glob(os.path.join(ROOT, 'data', '模組_*.json')):
+        d = json.load(open(f, encoding='utf-8'))
+        if os.path.basename(f).startswith('模組_D'):
+            seqs |= {x['篇序'] for x in d.get('篇', [])}
+            continue
+        src = d.get('出處')
+        if isinstance(src, list):
+            seqs |= {x.get('篇序') for x in src if isinstance(x, dict)}
+        elif isinstance(src, dict):
+            seqs.add(src.get('篇序'))
+    return len([q for q in seqs if isinstance(q, int) and 1 <= q <= 81])
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -402,6 +418,7 @@ def metrics():
         '模組原文不符': mb,
         'D型模組': module_d()[0],
         'D型模組不符': module_d()[1],
+        '模組頁覆蓋篇': module_page_cover(),
         '重複題面': sum(v - 1 for v in stems.values() if v > 1),
         '篇名不一致': names,
         '句索引': len(json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'), encoding='utf-8'))['句']),

@@ -1073,39 +1073,106 @@ VIEWS.path = function (box) {
 };
 
 /* ---------------- 模組：一篇一卡 ---------------- */
-VIEWS.module = function (box) {
-  var M = LS.modules || {}, list = M['篇'] || [];
-  box.appendChild(h('h1', '模組：一篇一卡'));
-  box.appendChild(h('p', '八十一篇現在每篇都有模組：一句（這篇在講什麼）、分層（哪幾句撐起它）、'
-    + '原文要點、最容易被讀錯的地方、相連的通則。原文由句索引按 id 取出，不手打。', 'lead'));
-  box.appendChild(h('p', '這一頁只列 D 型（逐篇補的 ' + (M['篇數'] || 0) + ' 篇）。'
-    + '其餘四十九篇的模組是主題型（如五刺、九鍼、營衛），結構各異，未在此呈現。', 'small muted'));
-
-  if (!list.length) { box.appendChild(h('p', '模組資料未載入。', 'small')); return; }
-
-  list.forEach(function (m) {
-    var d = fold(m['篇序'] + '. ' + m['篇名'] + '　' + (m['一句'] || '').slice(0, 40) + '…', false);
-    var body = h('div', '', '');
-    body.appendChild(h('p', '<b>一句</b>：' + esc(m['一句']), 'small'));
-
-    var t = '<tr><th style="width:110px">層</th><th>原文</th><th style="width:38%">解（歸）</th></tr>';
-    (m['分層'] || []).forEach(function (r) {
-      t += '<tr><td class="small"><b>' + esc(r['層']) + '</b><br/><span class="muted">' + esc(r['句']) + '</span></td>' +
-        '<td class="small">' + esc(r['原文']) + '</td><td class="small muted">' + esc(r['解']) + '</td></tr>';
-    });
-    var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + t + '</table>';
-    body.appendChild(w);
-
-    if (m['誤讀']) body.appendChild(h('p', '<b>誤讀</b>：' + esc(m['誤讀']), 'small'));
-    var laws = (m['連通則'] || []);
-    if (laws.length) {
-      body.appendChild(h('p', '<b>相連通則</b>：' + laws.map(function (x) {
-        return '<a href="#/law?n=' + x['n'] + '">' + x['n'] + '. ' + esc(x['名']) + '</a>';
-      }).join('、'), 'small'));
+function renderAny(box, v, depth) {
+  depth = depth || 0;
+  if (v == null || v === '') return;
+  if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') {
+    box.appendChild(h('p', esc(String(v)), 'small'));
+    return;
+  }
+  if (Array.isArray(v)) {
+    if (!v.length) return;
+    var allObj = v.every(function (x) { return x && typeof x === 'object' && !Array.isArray(x); });
+    if (allObj && depth < 3) {
+      var keys = [];
+      v.slice(0, 80).forEach(function (x) {
+        Object.keys(x).forEach(function (k) { if (keys.indexOf(k) < 0) keys.push(k); });
+      });
+      var t = '<tr>' + keys.map(function (k) { return '<th>' + esc(k) + '</th>'; }).join('') + '</tr>';
+      v.slice(0, 80).forEach(function (x) {
+        t += '<tr>' + keys.map(function (k) {
+          var c = x[k];
+          var txt = (c == null) ? '' : (typeof c === 'object' ? JSON.stringify(c) : String(c));
+          return '<td class="small">' + esc(txt) + '</td>';
+        }).join('') + '</tr>';
+      });
+      var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + t + '</table>';
+      box.appendChild(w);
+      return;
     }
-    body.appendChild(h('p', '<a href="#/read?seq=' + m['篇序'] + '">讀這篇原文</a>　·　' +
-      '<a href="#/items?seq=' + m['篇序'] + '">練這篇</a>', 'small'));
-    d.appendChild(body);
+    var ul = el('ul', 'map-list', '');
+    v.slice(0, 60).forEach(function (x) {
+      var li = el('li', 'small', '');
+      if (x && typeof x === 'object' && !Array.isArray(x)) {
+        li.textContent = Object.keys(x).map(function (k) { return k + '：' + x[k]; }).join('；');
+      } else {
+        li.textContent = String(x);
+      }
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+    return;
+  }
+  if (typeof v === 'object') {
+    Object.keys(v).forEach(function (k) {
+      if (depth > 3) return;
+      box.appendChild(h('h4', esc(k), 'small'));
+      var sub = h('div', '', '');
+      renderAny(sub, v[k], depth + 1);
+      box.appendChild(sub);
+    });
+  }
+}
+
+VIEWS.module = function (box) {
+  var M = LS.modules || {}, list = M['篇'] || [], gen = M['主題型'] || [];
+  var bySeq = {};
+  (LS.pian || []).forEach(function (p) { bySeq[p.seq] = p; });
+  box.appendChild(h('h1', '模組：一篇一卡'));
+  box.appendChild(h('p', '八十一篇每篇都有模組。D 型（' + (M['篇數'] || 0) + ' 篇）結構統一：'
+    + '一句、分層、原文要點、誤讀、相連通則；主題型（' + (M['主題型數'] || 0) + ' 組）是早先做的，'
+    + '結構各異，照原樣呈現。原文一律由句索引按 id 取出，不手打。', 'lead'));
+
+  var seqs = [];
+  (LS.pian || []).forEach(function (p) { seqs.push(p.seq); });
+  seqs.sort(function (a, b) { return a - b; });
+
+  seqs.forEach(function (seq) {
+    var p = bySeq[seq] || { name: '第' + seq + '篇', seq: seq };
+    var dm = list.filter(function (x) { return String(x['篇序']) === String(seq); });
+    var gm = gen.filter(function (x) { return String(x['序']) === String(seq); });
+    if (!dm.length && !gm.length) return;
+    var head = seq + '. ' + p.name + (dm.length ? '　' + (dm[0]['一句'] || '').slice(0, 34) + '…' : '');
+    var d = fold(head, false);
+
+    dm.forEach(function (m) {
+      var body = h('div', '', '');
+      body.appendChild(h('p', '<b>一句</b>：' + esc(m['一句']), 'small'));
+      var t = '<tr><th style="width:110px">層</th><th>原文</th><th style="width:38%">解（歸）</th></tr>';
+      (m['分層'] || []).forEach(function (r) {
+        t += '<tr><td class="small"><b>' + esc(r['層']) + '</b><br/><span class="muted">' + esc(r['句']) + '</span></td>' +
+          '<td class="small">' + esc(r['原文']) + '</td><td class="small muted">' + esc(r['解']) + '</td></tr>';
+      });
+      var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + t + '</table>';
+      body.appendChild(w);
+      if (m['誤讀']) body.appendChild(h('p', '<b>誤讀</b>：' + esc(m['誤讀']), 'small'));
+      var laws = (m['連通則'] || []);
+      if (laws.length) {
+        body.appendChild(h('p', '<b>相連通則</b>：' + laws.map(function (x) {
+          return '<a href="#/law?n=' + x['n'] + '">' + x['n'] + '. ' + esc(x['名']) + '</a>';
+        }).join('、'), 'small'));
+      }
+      body.appendChild(h('p', '<a href="#/read?seq=' + seq + '">讀這篇原文</a>　·　' +
+        '<a href="#/items?seq=' + seq + '">練這篇</a>', 'small'));
+      d.appendChild(body);
+    });
+
+    gm.forEach(function (g) {
+      var gb = h('div', '', '');
+      gb.appendChild(h('p', '<span class="pill">主題型</span> ' + esc(g['組']), 'small'));
+      renderAny(gb, g['內容'], 0);
+      d.appendChild(gb);
+    });
     box.appendChild(d);
   });
 

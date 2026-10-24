@@ -90,6 +90,15 @@ def main():
     if not chrome:
         print('找不到 Chrome；設 CHROME=/path/to/chrome'); return 2
     base = os.environ.get('BASE', 'http://127.0.0.1:8080')
+    # 先確認服務活著：否則 Chrome 只會拍到連線失敗頁，還「成功」產圖
+    import urllib.request
+    try:
+        with urllib.request.urlopen(base + '/index.html', timeout=5) as r:
+            if r.status != 200:
+                print(f'✗ 服務回應 {r.status}：{base}'); return 2
+    except Exception as e:
+        print(f'✗ 連不上 {base}（{e}）——先啟動：cd reader && python3 -m http.server 8080 --bind 127.0.0.1')
+        return 2
     name = wrapper(view, width)
     url = f'{base}/{name}#/{view}'
     profile = tempfile.mkdtemp(prefix='shot-')

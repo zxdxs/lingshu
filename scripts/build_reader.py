@@ -138,6 +138,7 @@ def main():
     _dist = {str(k): sum(1 for x in _cov if len(x['家']) == k) for k in range(4)}
     jizhu['覆蓋'] = {'統計': _dist, '條': [x for x in _cov if x['家']]}
     bianti = load('data/變體.json')
+    path = load('data/學習路徑.json')
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
     suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json'),
@@ -256,7 +257,7 @@ def main():
         'jingbie': jb, 'jingjin': jj, 'luomai': luo, 'jingshui': js, 'wushu': ws, 'binghou': bh,
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
-        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti,
+        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti, 'path': path,
         'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao, 'taisuzhu': taisuzhu, 'taisupa': taisupa, 'taisuindex': taisuindex,
         'defs': defs,
         'suwen': suwen,

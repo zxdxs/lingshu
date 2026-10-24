@@ -39,7 +39,7 @@ function nextLinks(box, links) {
 }
 
 var NAV = [
-  ['home','首頁',1], ['themes','主題'], ['law','通則'],
+  ['home','首頁',1], ['themes','主題'], ['path','路徑'], ['law','通則'],
   ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['variant','變體'], ['jizhu','注家'], ['jiugong','九宫'],
   ['items','題庫',1], ['concept','概念'],
   ['suwen','異同',1], ['prep','九鍼'],
@@ -953,6 +953,83 @@ VIEWS.jizhu = function (box) {
   box.appendChild(tail);
 
   nextLinks(box, [['通則：共同點', '#/law'], ['變體：不同寫法', '#/variant'], ['方法：收錄狀況', '#/method']]);
+};
+
+/* ---------------- 學習路徑 ---------------- */
+VIEWS.path = function (box) {
+  var P = LS.path || {}, routes = P['路線'] || [];
+  box.appendChild(h('h1', '學習路徑：先讀哪一篇'));
+  box.appendChild(h('p', '靈樞不是教科書，81 篇也不該從第一頁讀到最後一頁。這一頁給幾條次序建議：' +
+    '每一步都指回原文與既有題目，進度由這台機器的閱讀紀錄自動算（換裝置不會帶走）。' +
+    '次序與分組是編者所加（歸），不是原書次序。', 'lead'));
+  if (!routes.length) { box.appendChild(h('p', '路徑資料未載入。', 'small')); return; }
+
+  var log = STATE.log || {}, read = STATE.read || {};
+  function stats(seqs) {
+    var total = 0, ans = 0, rd = 0;
+    seqs.forEach(function (q) {
+      var its = (LS.items || []).filter(function (i) { return String(i.seq) === String(q); });
+      total += its.length;
+      ans += its.filter(function (i) { return log[i.id] != null; }).length;
+      if (read[q]) rd += 1;
+    });
+    return { total: total, ans: ans, rd: rd, n: seqs.length };
+  }
+
+  routes.forEach(function (r) {
+    var c = h('div', '', 'card');
+    c.appendChild(el('h2', '', r['名']));
+    c.appendChild(h('p', '<b>給誰</b>：' + esc(r['給誰'] || '') + '　<b>時間</b>：' + esc(r['時間'] || ''), 'small'));
+    var tt = '<tr><th style="width:150px">步</th><th>讀什麼</th><th style="width:150px">進度</th>' +
+      '<th style="width:34%">驗收（口頭說得出）</th></tr>';
+    (r['步'] || []).forEach(function (st) {
+      var seqs = st['篇'] || [];
+      var s2 = seqs.length ? stats(seqs) : null;
+      var links = seqs.map(function (q) {
+        var p = bySeq(q);
+        return '<a href="#/read?seq=' + q + '">' + esc(p ? p.name : ('第' + q + '篇')) + '</a>';
+      }).join('、');
+      if (st['主題']) {
+        links = '<a href="#/themes">主題：' + esc(st['主題']) + '</a>';
+      }
+      var prog = '<span class="muted">—</span>';
+      if (s2) {
+        var done = s2.rd >= Math.ceil(s2.n * 0.8) && s2.ans >= Math.ceil(s2.total * 0.5);
+        prog = '已讀 ' + s2.rd + '/' + s2.n + '<br/>答題 ' + s2.ans + '/' + s2.total +
+          (done ? ' <span class="pill g">完成</span>' : '') +
+          '<br/><a href="#/items?seq=' + seqs[0] + '">練這幾篇</a>';
+      }
+      tt += '<tr><td class="small"><b>' + esc(st['名']) + '</b>' +
+        (st['線'] ? '<br/><span class="muted">' + esc(st['線']) + '</span>' : '') + '</td>' +
+        '<td class="small">' + links + '</td>' +
+        '<td class="small">' + prog + '</td>' +
+        '<td class="small muted">' + esc(st['驗收'] || '') + '</td></tr>';
+    });
+    var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + tt + '</table>';
+    c.appendChild(w);
+    var allseq = [];
+    (r['步'] || []).forEach(function (st) { allseq = allseq.concat(st['篇'] || []); });
+    if (allseq.length) {
+      var s3 = stats(allseq);
+      var doneN = 0;
+      (r['步'] || []).forEach(function (st) {
+        var sy = stats(st['篇'] || []);
+        if (sy.rd >= Math.ceil(sy.n * 0.8) && sy.ans >= Math.ceil(sy.total * 0.5)) doneN += 1;
+      });
+      c.appendChild(h('p', '這條線：' + (r['步'] || []).length + ' 步中已完成 <b>' + doneN + '</b> 步；' +
+        '全線 ' + s3.total + ' 題、已答 ' + s3.ans + '。', 'small'));
+    }
+    box.appendChild(c);
+  });
+
+  var tail = h('div', '', 'card');
+  tail.innerHTML = '<h3>怎麼用</h3><ul class="small">' +
+    '<li>不要一天讀完一條線；每天 30–40 分鐘，先讀原文，再答該篇的題。</li>' +
+    '<li>「完成」的門檻是：讀過八成篇、答過一半題——不是「看過」就算。</li>' +
+    '<li>卡住時回通則頁：那一頁是把散在諸篇的同一條原則收在一起。</li></ul>' +
+    '<p class="small"><a href="#/law">通則</a>　·　<a href="#/themes">主題</a>　·　<a href="#/read">通讀</a></p>';
+  box.appendChild(tail);
+  nextLinks(box, [['主題：五個入口', '#/themes'], ['通則：共同點', '#/law'], ['題庫', '#/items']]);
 };
 
 /* ---------------- 九宫八風（背景） ---------------- */

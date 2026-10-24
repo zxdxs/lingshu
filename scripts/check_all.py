@@ -314,6 +314,25 @@ def taisu_pingan():
     return d['統計']['段'], bad
 
 
+def path_stats():
+    """學習路徑：篇序須在 1–81、每步要有名稱與驗收；回傳（路線數, 步數, 壞列）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '學習路徑.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0, 0
+    seqs = {p['序'] for p in CH}
+    steps = bad = 0
+    for r in d['路線']:
+        for st in r.get('步', []):
+            steps += 1
+            if not st.get('名') or not st.get('驗收'):
+                bad += 1
+            for q in st.get('篇', []):
+                if q not in seqs:
+                    bad += 1
+    return len(d['路線']), steps, bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -361,6 +380,9 @@ def metrics():
         '太素索引不符': taisu_index()[1],
         '太素平按條': taisu_pingan()[0],
         '太素平按不符': taisu_pingan()[1],
+        '路徑數': path_stats()[0],
+        '路徑步數': path_stats()[1],
+        '路徑不符': path_stats()[2],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

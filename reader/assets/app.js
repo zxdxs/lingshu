@@ -417,6 +417,46 @@ VIEWS.suwen = function (box) {
   box.appendChild(warn);
 
 
+  // ── 同文表：兩書哪幾句逐字相同 ──
+  var TW = LS.suwentw || {};
+  if ((TW['統計'] || {})['篇對']) {
+    var tws = TW['統計'] || {};
+    var tc = h('div', '', 'card');
+    tc.appendChild(el('h2', '', '同文表：兩書哪幾句逐字相同'));
+    tc.appendChild(h('p', '不是「靈樞抄素問」，也不是反過來：以 4-gram 重合看，' +
+      '兩書絕大多數篇章幾乎不重疊（重合 ≥3% 的篇對只有 ' + tws['篇對'] + ' 組，≥30% 的只有 ' +
+      (tws['重合≥30%的篇對'] || 0) + ' 組）。逐字相同的句子全書只有 <b>' + tws['同文句'] + '</b> 句。', 'small'));
+    var t1 = '<tr><th style="width:110px">靈樞篇</th><th>素問篇（卷）</th><th style="width:64px">重合</th>' +
+      '<th style="width:56px">長段</th><th style="width:56px">同文句</th></tr>';
+    (TW['篇對'] || []).forEach(function (x) {
+      t1 += '<tr><td class="small">' + esc(x['靈樞']) + '</td>' +
+        '<td class="small">' + esc(x['素問']) + '（卷' + x['素問卷'] + '）</td>' +
+        '<td class="num">' + x['重合'] + '%</td><td class="num">' + x['段數'] + '</td>' +
+        '<td class="num">' + x['同文句'] + '</td></tr>';
+    });
+    var w1 = h('div', '', 'table-wrap'); w1.innerHTML = '<table>' + t1 + '</table>';
+    tc.appendChild(w1);
+    if ((TW['篇對'] || []).length && TW['篇對'][0]['例']) {
+      tc.appendChild(h('p', '重合最高的一組（' + esc(TW['篇對'][0]['靈樞']) + ' ↔ ' +
+        esc(TW['篇對'][0]['素問']) + '，' + TW['篇對'][0]['重合'] + '%）的長同文段：', 'small muted'));
+      TW['篇對'][0]['例'].forEach(function (b) {
+        tc.appendChild(h('div', esc(b['文']) + '…（' + b['字數'] + ' 字）', 'quote'));
+      });
+    }
+    box.appendChild(tc);
+
+    var fw = fold('逐字同文的 ' + (TW['句'] || []).length + ' 句（展開看）', false);
+    var t2 = '<tr><th style="width:160px">靈樞</th><th>文</th><th style="width:150px">素問</th></tr>';
+    (TW['句'] || []).forEach(function (x) {
+      t2 += '<tr><td class="small">' + esc(x['靈樞篇']) + '<br/><span class="src">' + esc(x['id']) + '</span></td>' +
+        '<td class="small">「' + esc(x['文']) + '」</td>' +
+        '<td class="small">' + esc(x['素問']) + '<br/><span class="muted">卷' + x['素問卷'] + '</span></td></tr>';
+    });
+    var w2 = h('div', '', 'table-wrap'); w2.innerHTML = '<table>' + t2 + '</table>';
+    fw.appendChild(w2);
+    box.appendChild(fw);
+  }
+
   // ── 五條差別（頁面主體，放在量測之前）──
   var QT = (LS.suwen && LS.suwen.quant) || {};
   var DIFF = (N['差別'] || []);

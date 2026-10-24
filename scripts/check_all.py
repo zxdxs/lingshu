@@ -333,6 +333,24 @@ def path_stats():
     return len(d['路線']), steps, bad
 
 
+def suwen_tongwen():
+    """素問同文表：同文句 id 須存在、素問篇名非空、篇對重合 0–100。回傳（同文句, 篇對, 壞列）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '素問同文.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0, 0
+    ids = {x['id'] for x in json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'),
+                                          encoding='utf-8'))['句']}
+    bad = 0
+    for x in d['句']:
+        if x['id'] not in ids or not x['素問'] or len(x['文']) < 6:
+            bad += 1
+    for x in d['篇對']:
+        if not (0 <= x['重合'] <= 100) or not x['素問'] or x['段數'] < 0:
+            bad += 1
+    return d['統計']['同文句'], d['統計']['篇對'], bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -383,6 +401,9 @@ def metrics():
         '路徑數': path_stats()[0],
         '路徑步數': path_stats()[1],
         '路徑不符': path_stats()[2],
+        '素問同文句': suwen_tongwen()[0],
+        '素問同文篇對': suwen_tongwen()[1],
+        '素問同文不符': suwen_tongwen()[2],
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

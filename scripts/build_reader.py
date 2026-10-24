@@ -141,6 +141,7 @@ def main():
     path = load('data/學習路徑.json')
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
+    suwentw = load('data/素問同文.json')
     suwen = {'narr': load('data/異同_敘述.json'), 'calc': load('data/素問對照.json'),
              'quant': load('data/異同_量化.json')}
 
@@ -260,7 +261,7 @@ def main():
         'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti, 'path': path,
         'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao, 'taisuzhu': taisuzhu, 'taisupa': taisupa, 'taisuindex': taisuindex,
         'defs': defs,
-        'suwen': suwen,
+        'suwen': suwen, 'suwentw': suwentw,
     }
     os.makedirs(OUT, exist_ok=True)
     js = '/* 由 scripts/build_reader.py 生成，請勿手改。 */\nwindow.LS = ' + \

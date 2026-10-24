@@ -119,6 +119,29 @@ def main():
             B.append(nb)
             pos2id.extend([s['id']] * len(nb))
         B = ''.join(B)
+        # 模糊備援：以 4-gram 取候選位置，再比相似度（容忍異文）
+        import difflib
+        gidx = {}
+        for i in range(len(B) - 3):
+            gidx.setdefault(B[i:i + 4], []).append(i)
+
+        def fuzzy_find(nk, thr=0.85):
+            pos = set()
+            for i in range(len(nk) - 3):
+                for q0 in gidx.get(nk[i:i + 4], []):
+                    pos.add(q0)
+                    if len(pos) > 200:
+                        break
+                if len(pos) > 200:
+                    break
+            best = (0.0, -1)
+            for q0 in list(pos)[:200]:
+                win = B[q0:q0 + len(nk)]
+                r = difflib.SequenceMatcher(None, nk, win).ratio()
+                if r > best[0]:
+                    best = (r, q0)
+            return best[1] if best[0] >= thr else -1
+
         items = secs.get(seq, [])
         got = 0
         for para in items:
@@ -133,6 +156,8 @@ def main():
                 if len(nk) < 2:
                     continue
                 q = B.find(nk)
+                if q < 0 and len(nk) >= 4:
+                    q = fuzzy_find(nk)
                 if q >= 0:
                     key = ' '.join(parts[:k])
                     rest = ' '.join(parts[k:])

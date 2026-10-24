@@ -65,6 +65,19 @@ img { max-width:100%; border:1px solid var(--line); background:#fff; }
 def page(inner, foot_l, foot_r, n):
     return f'<section class="page">{inner}<div class="foot"><span>{foot_l}</span><span>{foot_r} · {n}</span></div></section>'
 
+# 三家注（用同一條通則做樣張）
+_ZJ = json.load(open(os.path.join(ROOT, 'data', '張注.json'), encoding='utf-8'))
+_LJ = json.load(open(os.path.join(ROOT, 'data', '類經注.json'), encoding='utf-8'))
+_TS = json.load(open(os.path.join(ROOT, 'data', '太素注.json'), encoding='utf-8'))
+_N = 35
+_zj = [t for t in _ZJ['通則'] if t['n'] == _N][0]
+_lj = [t for t in _LJ['條'] if t['n'] == _N][0]
+_ts = [t for t in _TS['通則'] if t['n'] == _N][0]
+_QUOTE = _zj['引'][0]['文']
+_ZJ_NOTE = _zj['引'][0]['注'][:110]
+_LJ_NOTE = _lj['引'][0]['注'][:110]
+_TS_NOTE = _ts['引'][0]['注'][:110]
+
 pages = []
 
 # 1 封面
@@ -154,6 +167,17 @@ pages.append(page(f'''
 <p class="small">正面不顯示答案；背面固定附出處與免責。異體與簡體由卡片內 JS 判定，與 <code>scripts/grade.py</code> 共用同一張對照表。</p>
 ''', '靈樞 · 自學材料', '卡片', 6))
 
+# 6.5 注家樣張
+pages.append(page(f'''
+<div class="kicker">06 · 注家樣張</div>
+<h2 style="margin-top:18px">同一句，三家怎麼說</h2>
+<div class="quote">{_QUOTE}</div>
+<div class="card"><div class="small"><b>清·張志聰《靈樞集註》</b>（逐篇註，康熙壬子序本）</div><div class="a small">{_ZJ_NOTE}……</div></div>
+<div class="card"><div class="small"><b>明·張介賓《類經》注</b>（按類編排，卷 {_lj['引'][0]['卷']}）</div><div class="a small">{_LJ_NOTE}……</div></div>
+<div class="card"><div class="small"><b>隋·楊上善《太素》注</b>（機器分離，卷 {_ts['引'][0]['卷']}）</div><div class="a small">{_TS_NOTE}……</div></div>
+<p class="small">三家的注都已入庫並繫到經文句：張志聰 772 條、類經 71 段、太素 18 段可對通則引文。注是〔注〕層，不是原文，也不是本站的歸納；太素為機器分離、未與影印本校，注可能屬同篇鄰句。</p>
+''', '靈樞 · 自學材料', '注家', 7))
+
 # 7 限制
 rows = ''.join(f'<tr><td style="width:70px">{r["編號"]}</td><td>{r["問題"][:46]}</td><td style="width:60px">{r["嚴重度"]}</td></tr>' for r in BOUND[:6])
 pages.append(page(f'''
@@ -166,7 +190,7 @@ pages.append(page(f'''
 <p>· 所有臨床主張未經驗證，<b>不可據以施治</b>。<br/>
 · 15 條答案為整理語（已逐題標明），不是原文連續字串。<br/>
 · 6 道案例題與 19 條註家配對<b>待專家核</b>。</p>
-''', '靈樞 · 自學材料', '限制', 7))
+''', '靈樞 · 自學材料', '限制', 8))
 
 # 8 待決與封底
 _left = sum(1 for k in REL.get('必要', []) if REL.get(k) in ('', None, '待定', '待補', '未測'))
@@ -182,7 +206,7 @@ pages.append(page(f'''
 <table>
 <tr><th style="width:130px">項目</th><th>現況</th></tr>
 <tr><td><b>聯絡</b></td><td>{_contact_cell}</td></tr>
-<tr><td><b>Anki 實機</b></td><td>{_anki}；708 張填空卡尚未在真實 Anki 匯入按過一遍</td></tr>
+<tr><td><b>Anki 實機</b></td><td>{_anki}；745 張填空卡（後端已測、GUI 未按）</td></tr>
 </table>
 <div class="alert"><b>{REL["安全提醒"]}</b><br/>使用本站與本樣稿之前，請先確認這一點；它比版式與篇目都重要。</div>
 <div class="box"><span class="label">已定案</span>
@@ -194,7 +218,7 @@ pages.append(page(f'''
 3. 「練習／閱讀／查詢」三分法是否清楚；<br/>
 4. 限制頁是否說得夠坦白、又不嚇跑讀者。</div>
 <div class="small" style="margin-top:70px">大樣稿由 <code>scripts/make_proof.py</code> 產生；數字、授權與待決項目皆由 <code>data/發布資訊.json</code> 帶入。</div>
-''', REL['站名'], '封底', 8))
+''', REL['站名'], '封底', 9))
 
 html = f'''<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <title>{REL["站名"]} · 大樣稿 v{REL["版本"]}</title><style>{CSS}</style></head><body>

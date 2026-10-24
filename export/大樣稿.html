@@ -45,7 +45,7 @@ img { max-width:100%; border:1px solid var(--line); background:#fff; }
 <div class="rule" style="margin-top:60px"></div>
 <table style="font-size:13px">
 <tr><th style="width:110px">版本</th><td>v1.0.0 大樣（未發布）</td></tr>
-<tr><th>規模</th><td>81 篇 · 題庫 1031 題 · 文件 116 份</td></tr>
+<tr><th>規模</th><td>81 篇 · 題庫 1068 題 · 文件 176 份</td></tr>
 <tr><th>底本</th><td>四部叢刊景明嘉靖趙府居敬堂本（Kanripo KR3e0002）</td></tr>
 <tr><th>授權</th><td>CC BY-NC-SA 4.0</td></tr>
 </table>
@@ -57,7 +57,7 @@ img { max-width:100%; border:1px solid var(--line); background:#fff; }
 <h3>三件事，三個入口</h3>
 <table>
 <tr><th style="width:90px">想做的事</th><th>怎麼做</th></tr>
-<tr><td><b>練</b></td><td>Anki 匯入 <code>export/靈樞_填空.apkg</code>，708 張填空卡；正面輸入、Enter 即時判定，接受異體與簡體。</td></tr>
+<tr><td><b>練</b></td><td>Anki 匯入 <code>export/靈樞_填空.apkg</code>，745 張填空卡；正面輸入、Enter 即時判定，接受異體與簡體。</td></tr>
 <tr><td><b>讀</b></td><td>原文看 <code>底本/靈樞經_SBCK_底本.md</code>；概念看 <code>docs/49</code>；一篇一篇看 <code>docs/00_索引.md</code>。</td></tr>
 <tr><td><b>查</b></td><td><code>export/索引.csv</code>（名詞 → 篇）；<code>export/題庫_全.csv</code>（16 欄，可篩）。</td></tr>
 </table>
@@ -92,7 +92,7 @@ img { max-width:100%; border:1px solid var(--line); background:#fff; }
 <div class="card"><div class="q">《靈樞·陰陽清濁》：「受穀者____，受氣者清」</div><div class="a">答：<b>濁</b><span class="tag">答案類型：原文</span></div></div>
 <div class="card"><div class="q">《靈樞·陰陽清濁》的主旨是？</div><div class="a">答：<b>清氣濁氣的生成與升降</b><br/>干擾：耐痛與體質的關係／五藏六府脹的形態與病機／藏府的大小高下堅脆偏傾與體表候</div></div>
 <div class="card"><div class="q">《靈樞·厥病》：「厥心痛，腹脹胷滿，心尤痛甚」。依〈厥病〉，此屬五心痛之哪一型？當取何穴？</div><div class="a">答：<b>胃心痛；取大都、大白</b><span class="tag">待專家核</span></div></div>
-<div class="small">填空考「記得住」，選擇考「分得清」，案例考「用得上」。目前三者的比例是 708 : 304 : 19（辨誤），而案例只有 6 道——這是本稿最需要審的一處。</div>
+<div class="small">填空考「記得住」，選擇考「分得清」，案例考「用得上」。目前三者的比例是 745 : 304 : 19（辨誤），而案例只有 6 道——這是本稿最需要審的一處。</div>
 <div class="foot"><span>靈樞 · 自學材料</span><span>題 · 5</span></div></section><section class="page">
 <div class="kicker">05 · 卡片樣張</div>
 <h2 style="margin-top:18px">Anki 卡：先寫，再核對</h2>
@@ -110,6 +110,14 @@ img { max-width:100%; border:1px solid var(--line); background:#fff; }
 </div>
 <p class="small">正面不顯示答案；背面固定附出處與免責。異體與簡體由卡片內 JS 判定，與 <code>scripts/grade.py</code> 共用同一張對照表。</p>
 <div class="foot"><span>靈樞 · 自學材料</span><span>卡片 · 6</span></div></section><section class="page">
+<div class="kicker">06 · 注家樣張</div>
+<h2 style="margin-top:18px">同一句，三家怎麼說</h2>
+<div class="quote">心小則安，邪弗能傷，易傷以憂。</div>
+<div class="card"><div class="small"><b>清·張志聰《靈樞集註》</b>（逐篇註，康熙壬子序本）</div><div class="a small">上章论在外之皮肤肌腠。因刚柔浓薄而生病。此章论在内之五脏六腑。有大小高下。偏正浓薄之不同。亦因形而生病也。夫营卫血气。脏腑之所生也。脉肉筋骨。脏腑之外合也。精神魂魄。五脏之所藏也。水谷津液。六腑之所化也。是以血气神志和调……</div></div>
+<div class="card"><div class="small"><b>明·張介賓《類經》注</b>（按類編排，卷 4）</div><div class="a small">言所以為強弱者皆由藏府之氣致然也……</div></div>
+<div class="card"><div class="small"><b>隋·楊上善《太素》注</b>（機器分離，卷 6）</div><div class="a small">臟小則神不敢自寬故常安邪不入也臟大則神氣宣縱故憂不能傷邪入不安也……</div></div>
+<p class="small">三家的注都已入庫並繫到經文句：張志聰 772 條、類經 71 段、太素 18 段可對通則引文。注是〔注〕層，不是原文，也不是本站的歸納；太素為機器分離、未與影印本校，注可能屬同篇鄰句。</p>
+<div class="foot"><span>靈樞 · 自學材料</span><span>注家 · 7</span></div></section><section class="page">
 <div class="kicker">06 · 已知限制</div>
 <div class="alert"><b>本站內容僅供在有帶教資格的執業中醫師指導下使用；不得代替就診，不得據以自行診斷、處方或用藥。</b></div>
 <h2 style="margin-top:18px">先說不能做什麼</h2>
@@ -119,13 +127,13 @@ img { max-width:100%; border:1px solid var(--line); background:#fff; }
 <p>· 所有臨床主張未經驗證，<b>不可據以施治</b>。<br/>
 · 15 條答案為整理語（已逐題標明），不是原文連續字串。<br/>
 · 6 道案例題與 19 條註家配對<b>待專家核</b>。</p>
-<div class="foot"><span>靈樞 · 自學材料</span><span>限制 · 7</span></div></section><section class="page">
+<div class="foot"><span>靈樞 · 自學材料</span><span>限制 · 8</span></div></section><section class="page">
 <div class="kicker">07 · 待決事項</div>
 <h2 style="margin-top:18px">發布前還剩 1 件</h2>
 <table>
 <tr><th style="width:130px">項目</th><th>現況</th></tr>
 <tr><td><b>聯絡</b></td><td><b>hello@solve-lab.cn</b>（已可公開聯絡；來信請註明篇序與句ID，並說明依據版本）</td></tr>
-<tr><td><b>Anki 實機</b></td><td><span style="color:#b3261e">未測</span>；708 張填空卡尚未在真實 Anki 匯入按過一遍</td></tr>
+<tr><td><b>Anki 實機</b></td><td>已測；745 張填空卡（後端已測、GUI 未按）</td></tr>
 </table>
 <div class="alert"><b>本站內容僅供在有帶教資格的執業中醫師指導下使用；不得代替就診，不得據以自行診斷、處方或用藥。</b><br/>使用本站與本樣稿之前，請先確認這一點；它比版式與篇目都重要。</div>
 <div class="box"><span class="label">已定案</span>
@@ -137,5 +145,5 @@ img { max-width:100%; border:1px solid var(--line); background:#fff; }
 3. 「練習／閱讀／查詢」三分法是否清楚；<br/>
 4. 限制頁是否說得夠坦白、又不嚇跑讀者。</div>
 <div class="small" style="margin-top:70px">大樣稿由 <code>scripts/make_proof.py</code> 產生；數字、授權與待決項目皆由 <code>data/發布資訊.json</code> 帶入。</div>
-<div class="foot"><span>中醫典籍導讀﹣靈樞經</span><span>封底 · 8</span></div></section>
+<div class="foot"><span>中醫典籍導讀﹣靈樞經</span><span>封底 · 9</span></div></section>
 </body></html>

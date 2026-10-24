@@ -1,0 +1,56 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>大樣稿 p9</title><style>
+:root { --ink:#1c1a17; --mute:#7c7367; --line:#d9d2c6; --paper:#fbf8f2; --accent:#7a5a3a; }
+* { box-sizing:border-box; }
+body { margin:0; background:#efece5; font-family:"Songti SC","Noto Serif CJK TC","Source Han Serif TC",serif;
+       color:var(--ink); -webkit-font-smoothing:antialiased; }
+.page { width:840px; min-height:1188px; background:var(--paper); margin:0 auto 24px; padding:86px 84px 72px;
+        position:relative; box-shadow:0 2px 18px rgba(0,0,0,.08); page-break-after:always; }
+.page:last-child { margin-bottom:0; }
+.kicker { font-size:12px; letter-spacing:.32em; color:var(--mute); text-transform:uppercase; }
+h1 { font-size:46px; letter-spacing:.16em; margin:26px 0 10px; font-weight:600; }
+h2 { font-size:22px; letter-spacing:.08em; margin:0 0 6px; font-weight:600; }
+h3 { font-size:15px; letter-spacing:.12em; margin:34px 0 10px; color:var(--accent); font-weight:600; }
+.sub { font-size:16px; color:var(--mute); letter-spacing:.08em; line-height:1.9; }
+.rule { height:1px; background:var(--line); margin:26px 0; }
+.foot { position:absolute; bottom:34px; left:84px; right:84px; display:flex; justify-content:space-between;
+        font-size:11px; color:var(--mute); letter-spacing:.1em; border-top:1px solid var(--line); padding-top:10px; }
+p { font-size:15.5px; line-height:2.0; margin:0 0 16px; text-align:justify; }
+.small { font-size:13px; color:var(--mute); line-height:1.9; }
+.quote { font-size:19px; line-height:2.2; letter-spacing:.04em; margin:18px 0; padding-left:18px;
+         border-left:3px solid var(--accent); }
+.label { display:inline-block; font-size:11px; letter-spacing:.16em; color:var(--accent);
+         border:1px solid var(--accent); padding:2px 7px; border-radius:2px; margin-right:8px; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+td,th { border-bottom:1px solid var(--line); padding:9px 8px; text-align:left; vertical-align:top; line-height:1.8; }
+th { color:var(--mute); font-weight:500; letter-spacing:.08em; font-size:12px; }
+.card { border:1px solid var(--line); border-radius:4px; padding:22px 24px; background:#fff; margin:14px 0; }
+.card .q { font-size:17px; line-height:2; }
+.card .a { margin-top:14px; font-size:15px; color:var(--mute); }
+.card .a b { color:var(--ink); font-size:18px; }
+.tag { font-size:11px; color:var(--mute); border:1px dashed var(--line); padding:2px 6px; margin-left:6px; }
+.box { border:1px dashed var(--accent); padding:18px 20px; background:#fffdf8; margin:16px 0; }
+.alert { border:1px solid #e2bdb5; border-left:5px solid #9c3427; border-radius:4px; background:#fbe9e6;
+         color:#7a2a1f; padding:16px 18px; margin:18px 0; font-size:15px; line-height:1.95; }
+.alert b { color:#8c2f22; }
+.big { font-size:64px; letter-spacing:.2em; line-height:1.3; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+img { max-width:100%; border:1px solid var(--line); background:#fff; }
+</style></head><body><section class="page">
+<div class="kicker">07 · 待決事項</div>
+<h2 style="margin-top:18px">發布前還剩 1 件</h2>
+<table>
+<tr><th style="width:130px">項目</th><th>現況</th></tr>
+<tr><td><b>聯絡</b></td><td><b>hello@solve-lab.cn</b>（已可公開聯絡；來信請註明篇序與句ID，並說明依據版本）</td></tr>
+<tr><td><b>Anki 實機</b></td><td>已測；745 張填空卡（後端已測、GUI 未按）</td></tr>
+</table>
+<div class="alert"><b>本站內容僅供在有帶教資格的執業中醫師指導下使用；不得代替就診，不得據以自行診斷、處方或用藥。</b><br/>使用本站與本樣稿之前，請先確認這一點；它比版式與篇目都重要。</div>
+<div class="box"><span class="label">已定案</span>
+授權 <b>CC BY-NC-SA 4.0</b>（原文屬公共領域，本計畫之標點、校記、題目、圖表依此釋出；見 <code>LICENSE.txt</code>）。<br/>
+站名「中醫典籍導讀﹣靈樞經」，版本 v1.0.0；案例題維持 6 道樣板；樣張篇目用第 40 篇〈陰陽清濁〉（短、有校記）。</div>
+<div class="box"><span class="label">審閱重點</span>
+1. 版式與字級是否適合列印；<br/>
+2. 從「主題」進站是否比從「篇目」進站更貼近你想教的東西；<br/>
+3. 「練習／閱讀／查詢」三分法是否清楚；<br/>
+4. 限制頁是否說得夠坦白、又不嚇跑讀者。</div>
+<div class="small" style="margin-top:70px">大樣稿由 <code>scripts/make_proof.py</code> 產生；數字、授權與待決項目皆由 <code>data/發布資訊.json</code> 帶入。</div>
+<div class="foot"><span>中醫典籍導讀﹣靈樞經</span><span>封底 · 9</span></div></section></body></html>

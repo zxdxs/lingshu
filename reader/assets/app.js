@@ -39,7 +39,7 @@ function nextLinks(box, links) {
 }
 
 var NAV = [
-  ['home','首頁',1], ['themes','主題'], ['path','路徑'], ['law','通則'],
+  ['home','首頁',1], ['themes','主題'], ['path','路徑'], ['law','通則'], ['module','模組'],
   ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['variant','變體'], ['jizhu','注家'], ['jiugong','九宫'],
   ['items','題庫',1], ['concept','概念'],
   ['suwen','異同',1], ['prep','九鍼'],
@@ -1070,6 +1070,46 @@ VIEWS.path = function (box) {
     '<p class="small"><a href="#/law">通則</a>　·　<a href="#/themes">主題</a>　·　<a href="#/read">通讀</a></p>';
   box.appendChild(tail);
   nextLinks(box, [['主題：五個入口', '#/themes'], ['通則：共同點', '#/law'], ['題庫', '#/items']]);
+};
+
+/* ---------------- 模組：一篇一卡 ---------------- */
+VIEWS.module = function (box) {
+  var M = LS.modules || {}, list = M['篇'] || [];
+  box.appendChild(h('h1', '模組：一篇一卡'));
+  box.appendChild(h('p', '八十一篇現在每篇都有模組：一句（這篇在講什麼）、分層（哪幾句撐起它）、'
+    + '原文要點、最容易被讀錯的地方、相連的通則。原文由句索引按 id 取出，不手打。', 'lead'));
+  box.appendChild(h('p', '這一頁只列 D 型（逐篇補的 ' + (M['篇數'] || 0) + ' 篇）。'
+    + '其餘四十九篇的模組是主題型（如五刺、九鍼、營衛），結構各異，未在此呈現。', 'small muted'));
+
+  if (!list.length) { box.appendChild(h('p', '模組資料未載入。', 'small')); return; }
+
+  list.forEach(function (m) {
+    var d = fold(m['篇序'] + '. ' + m['篇名'] + '　' + (m['一句'] || '').slice(0, 40) + '…', false);
+    var body = h('div', '', '');
+    body.appendChild(h('p', '<b>一句</b>：' + esc(m['一句']), 'small'));
+
+    var t = '<tr><th style="width:110px">層</th><th>原文</th><th style="width:38%">解（歸）</th></tr>';
+    (m['分層'] || []).forEach(function (r) {
+      t += '<tr><td class="small"><b>' + esc(r['層']) + '</b><br/><span class="muted">' + esc(r['句']) + '</span></td>' +
+        '<td class="small">' + esc(r['原文']) + '</td><td class="small muted">' + esc(r['解']) + '</td></tr>';
+    });
+    var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + t + '</table>';
+    body.appendChild(w);
+
+    if (m['誤讀']) body.appendChild(h('p', '<b>誤讀</b>：' + esc(m['誤讀']), 'small'));
+    var laws = (m['連通則'] || []);
+    if (laws.length) {
+      body.appendChild(h('p', '<b>相連通則</b>：' + laws.map(function (x) {
+        return '<a href="#/law?n=' + x['n'] + '">' + x['n'] + '. ' + esc(x['名']) + '</a>';
+      }).join('、'), 'small'));
+    }
+    body.appendChild(h('p', '<a href="#/read?seq=' + m['篇序'] + '">讀這篇原文</a>　·　' +
+      '<a href="#/items?seq=' + m['篇序'] + '">練這篇</a>', 'small'));
+    d.appendChild(body);
+    box.appendChild(d);
+  });
+
+  nextLinks(box, [['學習路徑', '#/path'], ['通則：共同點', '#/law'], ['通讀 81 篇', '#/read']]);
 };
 
 /* ---------------- 九宫八風（背景） ---------------- */

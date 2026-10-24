@@ -361,6 +361,28 @@ def name_key_mismatch():
     return sum(1 for p in CH if p['篇名'] not in keys)
 
 
+def module_d():
+    """D 型模組：篇數應為 81−49（補齊的篇）；每篇須有一句、分層、誤讀。回傳（篇數, 壞列）。"""
+    try:
+        files = glob.glob(os.path.join(ROOT, 'data', '模組_D*.json'))
+    except Exception:
+        return 0, 0
+    seqs = {p['序'] for p in CH}
+    bad = seen = 0
+    seen_list = []
+    for f in files:
+        d = json.load(open(f, encoding='utf-8'))
+        for x in d.get('篇', []):
+            seen += 1
+            seen_list.append(x['篇序'])
+            if (x['篇序'] not in seqs or not x.get('一句') or not x.get('分層')
+                    or not x.get('誤讀')):
+                bad += 1
+    if len(seen_list) != len(set(seen_list)):
+        bad += 1
+    return seen, bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -378,6 +400,8 @@ def metrics():
         '答案推算': kinds.get('推算', 0),
         '模組原文條目': mt,
         '模組原文不符': mb,
+        'D型模組': module_d()[0],
+        'D型模組不符': module_d()[1],
         '重複題面': sum(v - 1 for v in stems.values() if v > 1),
         '篇名不一致': names,
         '句索引': len(json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'), encoding='utf-8'))['句']),

@@ -5,7 +5,7 @@
 資料全部取自現有 JSON/CSV，不手寫內容。
 用法：python3 scripts/build_reader.py
 """
-import csv, json, os
+import csv, glob, json, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'reader', 'assets')
@@ -139,6 +139,15 @@ def main():
     jizhu['覆蓋'] = {'統計': _dist, '條': [x for x in _cov if x['家']]}
     bianti = load('data/變體.json')
     path = load('data/學習路徑.json')
+    # D 型模組（逐篇小模組）：把 D1–D8 合成一份，供「模組」頁使用
+    mods = []
+    for f in sorted(glob.glob(os.path.join(ROOT, 'data', '模組_D*.json'))):
+        d = json.load(open(f, encoding='utf-8'))
+        for x in d.get('篇', []):
+            mods.append(x)
+    mods.sort(key=lambda x: x['篇序'])
+    modules = {'說明': 'D 型逐篇小模組：一句、分層（原文＋解）、原文要點、誤讀、相連通則。'
+                       '原文由句索引按 id 取，非手打。', '篇數': len(mods), '篇': mods}
     dfn = load('data/定義句.json')
     defs = {'n': dfn['候選數'], 'pian': dfn['每篇'][:5], 'bucket': dfn['分桶'][:6]}
     suwentw = load('data/素問同文.json')
@@ -258,7 +267,7 @@ def main():
         'jingbie': jb, 'jingjin': jj, 'luomai': luo, 'jingshui': js, 'wushu': ws, 'binghou': bh,
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
-        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti, 'path': path,
+        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti, 'path': path, 'modules': modules,
         'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao, 'taisuzhu': taisuzhu, 'taisupa': taisupa, 'taisuindex': taisuindex,
         'defs': defs,
         'suwen': suwen, 'suwentw': suwentw,

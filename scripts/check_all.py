@@ -461,6 +461,8 @@ def metrics():
         '太素索引不符': taisu_index()[1],
         '太素索引靈樞': taisu_index_tier()[0],
         '太素索引未繫': taisu_index_tier()[1],
+        '素問篇數': len(json.load(open(os.path.join(ROOT, '底本', '素問_經文.json'), encoding='utf-8'))['篇名']),
+        '素問經文': json.load(open(os.path.join(ROOT, '底本', '素問_經文.json'), encoding='utf-8'))['統計']['經文字'],
         '太素素問篇': taisu_index_tier()[2],
         '太素平按條': taisu_pingan()[0],
         '太素平按不符': taisu_pingan()[1],

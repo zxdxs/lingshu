@@ -233,6 +233,26 @@ def main():
         return idx
 
     gj = gram_index(jnorm)
+    gj3 = {}
+    for _k, (_i, _t) in enumerate(jnorm):
+        for _j in range(len(_t) - 2):
+            gj3.setdefault(_t[_j:_j + 3], set()).add(_k)
+
+    def weak_best(tail, thr=0.60, tol=30):
+        """弱比對：3-gram 候選，相似度 ≥0.60，且句尾落在尾巴終點 ±tol 內。"""
+        cand = set()
+        for i in range(len(tail) - 2):
+            cand |= gj3.get(tail[i:i + 3], set())
+        best_sc, best_k, best_r = -9.0, None, 0.0
+        for k in list(cand)[:300]:
+            t = jnorm[k][1]
+            sm = difflib.SequenceMatcher(None, tail, t)
+            r = sm.ratio()
+            m = sm.find_longest_match(0, len(tail), 0, len(t))
+            dist = abs((m.b + m.size) - len(t))
+            if r >= thr and dist <= tol and r > best_r:
+                best_sc, best_k, best_r = r, k, r
+        return (jnorm[best_k], best_r) if best_k is not None else (None, 0.0)
     # 素問用「位置索引」：卷太長，直接算整卷相似度會趨近 0
     sq_idx = {}
     for (juan, t) in sqnorm:
@@ -302,6 +322,10 @@ def main():
                             pn = sq_pian(j2, max(0, p2))
                             target = '素問·' + (pn or ('卷%d' % j2))
                             kind, ratio, how = '素問', round(r2, 2), '近似'
+                        else:
+                            h3, r3 = weak_best(tail)
+                            if h3:
+                                target, kind, ratio, how = h3[0], '靈樞', round(r3, 2), '弱'
             rows.append({'卷': v['卷'], '類': (v['heads'][0] if v['heads'] else ''),
                          '句': target or '', '屬': kind, '比': ratio, '法': how,
                          '距': (n['pos'] - prev[1]) if prev else -1,

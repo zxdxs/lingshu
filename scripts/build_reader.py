@@ -156,7 +156,9 @@ def main():
             seqs = [x.get('篇序') for x in src if isinstance(x, dict)]
         elif isinstance(src, dict):
             seqs = [src.get('篇序')]
-        content = {k: v for k, v in d.items() if k not in ('模組', '出處', '說明')}
+        KEYMAP = {'九針': '九鍼', '九針所宜': '九鍼所宜', '九針之名': '九鍼之名'}
+        content = {(KEYMAP.get(k, k)): v for k, v in d.items()
+                   if k not in ('模組', '出處', '說明')}
         for q in seqs:
             if q in NAME and content:
                 generic.append({'序': q, '篇': NAME[q], '組': d.get('模組', base), '內容': content})

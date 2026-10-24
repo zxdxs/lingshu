@@ -92,7 +92,7 @@ def parse(paras):
 
 def main():
     ch = json.load(open(os.path.join(ROOT, '底本', '靈樞經_81篇.json'), encoding='utf-8'))['篇']
-    name = {p['序']: p['篇名'] for p in ch}
+    name = {p['序']: p['篇名_規範'] for p in ch}
     ju = json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'), encoding='utf-8'))['句']
     byp = {}
     for s in ju:

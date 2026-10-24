@@ -245,7 +245,7 @@ def mashihao():
         d = json.load(open(os.path.join(ROOT, 'data', '馬蒔轉引.json'), encoding='utf-8'))
     except FileNotFoundError:
         return 0, 0
-    names = {p['篇名'] for p in CH}
+    names = {p['篇名'] for p in CH} | {p['篇名_規範'] for p in CH}
     ids = {x['id'] for x in json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'),
                                           encoding='utf-8'))['句']}
     bad = 0
@@ -351,6 +351,16 @@ def suwen_tongwen():
     return d['統計']['同文句'], d['統計']['篇對'], bad
 
 
+def name_key_mismatch():
+    """底本「篇名」與句索引「pian」的鍵不一致數（9 篇是異體字：經别/經別…）。
+
+    這個數字用來提醒：按篇名 join 前先想清楚用哪個鍵。它不該無故變動。
+    """
+    ju = json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'), encoding='utf-8'))['句']
+    keys = {x['pian'] for x in ju}
+    return sum(1 for p in CH if p['篇名'] not in keys)
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -404,6 +414,7 @@ def metrics():
         '素問同文句': suwen_tongwen()[0],
         '素問同文篇對': suwen_tongwen()[1],
         '素問同文不符': suwen_tongwen()[2],
+        '篇名鍵不一致': name_key_mismatch(),
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],
         '注家有注條': zhu_coverage()[0],

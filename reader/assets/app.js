@@ -944,9 +944,9 @@ VIEWS.jizhu = function (box) {
     var TI = LS.taisuindex || {}, ti = TI['統計'] || {};
     if ((ti['段'] || 0) > 0) {
       var ft5 = fold('逐段索引：' + ti['段'] + ' 段注各繫到哪一句（展開看）', false);
-      ft5.appendChild(h('p', '靈樞句 <b>' + (ti['靈樞'] || 0) + '</b> 段、素問卷 <b>' + (ti['素問'] || 0) +
-        '</b> 段、未繫 <b>' + (ti['未繫'] || 0) + '</b> 段。繫句用 4-gram 候選＋相似度 ≥0.7，容忍異文；' +
-        '「比」是相似度，「距」是注與句末的字數。', 'small'));
+      ft5.appendChild(h('p', '靈樞句 <b>' + (ti['靈樞'] || 0) + '</b> 段、素問（細到篇）<b>' + (ti['素問'] || 0) +
+        '</b> 段、未繫 <b>' + (ti['未繫'] || 0) + '</b> 段。繫句以「注緊接句末」為錨：4-gram 取候選，' +
+        '主級相似度 ≥0.7、次級（句尾對齊）≥0.60；「比」是相似度，「距」是注與句末的字數。', 'small'));
       var pt = '<tr><th style="width:56px">篇</th><th>篇名</th><th style="width:70px">注段</th></tr>';
       (TI['篇'] || []).forEach(function (x) {
         pt += '<tr><td class="num">' + x['序'] + '</td><td><a href="#/read?seq=' + x['序'] + '">' +
@@ -957,8 +957,8 @@ VIEWS.jizhu = function (box) {
       ft5.appendChild(h('p', '前 20 段樣本（繫到靈樞句者）：', 'small muted'));
       var st = '<tr><th style="width:64px">句</th><th>注（節錄）</th><th style="width:56px">比</th></tr>';
       (TI['樣本'] || []).forEach(function (r) {
-        st += '<tr><td class="small">' + esc(r['句']) + '</td><td class="small">' + esc(r['文']) +
-          '</td><td class="num">' + r['比'] + '</td></tr>';
+        st += '<tr><td class="small">' + esc(r['句']) + (r['法'] ? '<br/><span class="muted">' + esc(r['法']) + '</span>' : '') +
+          '</td><td class="small">' + esc(r['文']) + '</td><td class="num">' + r['比'] + '</td></tr>';
       });
       var sw = h('div', '', 'table-wrap'); sw.innerHTML = '<table>' + st + '</table>';
       ft5.appendChild(sw);

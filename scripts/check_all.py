@@ -296,7 +296,7 @@ def taisu_index():
             bad += 1
         elif r['屬'] == '靈樞' and r['句'] not in ids:
             bad += 1
-        elif r['屬'] == '素問' and not r['句'].startswith('素問卷'):
+        elif r['屬'] == '素問' and not (r['句'].startswith('素問·') or r['句'].startswith('素問卷')):
             bad += 1
         elif not (0 <= r['比'] <= 1) or len(r['文']) < 12:
             bad += 1
@@ -399,6 +399,18 @@ def module_page_cover():
     return len([q for q in seqs if isinstance(q, int) and 1 <= q <= 81])
 
 
+def taisu_index_tier():
+    """太素索引的層級數字：靈樞繫上、未繫、素問細到篇者。用來釘住這輪的改善。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '太素注索引.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0, 0
+    ling = sum(1 for r in d['條'] if r['屬'] == '靈樞')
+    miss = sum(1 for r in d['條'] if not r['屬'])
+    pian = sum(1 for r in d['條'] if r['屬'] == '素問' and r['句'].startswith('素問·') and '卷' not in r['句'])
+    return ling, miss, pian
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -447,6 +459,9 @@ def metrics():
         '太素注不符': taisu_zhu()[1],
         '太素索引段': taisu_index()[0],
         '太素索引不符': taisu_index()[1],
+        '太素索引靈樞': taisu_index_tier()[0],
+        '太素索引未繫': taisu_index_tier()[1],
+        '太素素問篇': taisu_index_tier()[2],
         '太素平按條': taisu_pingan()[0],
         '太素平按不符': taisu_pingan()[1],
         '路徑數': path_stats()[0],

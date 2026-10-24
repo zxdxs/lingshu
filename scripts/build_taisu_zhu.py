@@ -207,7 +207,21 @@ def main():
     ju = json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'), encoding='utf-8'))['句']
     sq = json.load(open(os.path.join(ROOT, '底本', '素問_經文.json'), encoding='utf-8'))
     jnorm = [(x['id'], norm_map(x['text'])[0]) for x in ju]
+    import bisect
     sqnorm = [(j['卷'], norm_map(j['文本'])[0]) for j in sq['卷']]
+    sq_starts = {}
+    for j in sq['卷']:
+        raw = j['文本']; idxmap = norm_map(raw)[1]
+        sq_starts[j['卷']] = [(bisect.bisect_left(idxmap, p['起']),
+                               p['名'] or ('（卷%d未名篇%d）' % (j['卷'], p['序'])))
+                              for p in j['篇']]
+
+    def sq_pian(juan, pos):
+        nm = ''
+        for st, n2 in sq_starts.get(juan, []):
+            if st <= pos:
+                nm = n2
+        return nm
     name = {p['序']: p['篇名'] for p in
             json.load(open(os.path.join(ROOT, '底本', '靈樞經_81篇.json'), encoding='utf-8'))['篇']}
 
@@ -234,25 +248,35 @@ def main():
                     break
             if len(pos) > 200:
                 break
-        best_r, best_j = 0.0, None
+        best_r, best_j, best_pos = 0.0, None, 0
         for juan, i in list(pos)[:200]:
             t = dict(sqnorm)[juan]
             win = t[i:i + len(tail)]
             r = difflib.SequenceMatcher(None, tail, win).ratio()
             if r > best_r:
-                best_r, best_j = r, juan
-        return best_j, best_r
+                best_r, best_j, best_pos = r, juan, i
+        return best_j, best_r, best_pos
 
     def best(tail, items, gidx, thr=0.7):
+        """候選句評分：相似度為主，句尾對齊為輔（注緊接句末）。"""
         cand = set()
         for i in range(len(tail) - 3):
             cand |= gidx.get(tail[i:i + 4], set())
-        best_r, best_k = 0.0, None
+        best_sc, best_r, best_k = -9.0, 0.0, None
         for k in list(cand)[:200]:
-            r = difflib.SequenceMatcher(None, tail, items[k][1]).ratio()
-            if r > best_r:
-                best_r, best_k = r, k
-        return (items[best_k], best_r) if best_k is not None and best_r >= thr else (None, best_r)
+            t = items[k][1]
+            sm = difflib.SequenceMatcher(None, tail, t)
+            r = sm.ratio()
+            m = sm.find_longest_match(0, len(tail), 0, len(t))
+            end_t = (m.b + m.size) == len(t)          # 句的末字落在尾巴裡？
+            sc = r + (0.04 if end_t else 0.0)
+            if sc > best_sc:
+                best_sc, best_r, best_k = sc, r, k
+                best_end = end_t
+        # 兩級：相似度 ≥0.7；或句尾對齊且 ≥0.60（次級，另記「法」）
+        if best_k is not None and (best_r >= thr or (best_end and best_r >= 0.60)):
+            return items[best_k], best_r, bool(best_end)
+        return None, best_r, False
 
     rows = []
     for v in vols:
@@ -264,19 +288,22 @@ def main():
                     prev = (a, b)
                 else:
                     break
-            target, kind, ratio = '', '', 0.0
+            target, kind, ratio, how = '', '', 0.0, ''
             if prev:
                 tail = v['stream'][max(prev[0], prev[1] - 40):prev[1]]
                 if len(tail) >= 8:
-                    hit, r = best(tail, jnorm, gj)
+                    hit, r, endok = best(tail, jnorm, gj)
                     if hit:
                         target, kind, ratio = hit[0], '靈樞', round(r, 2)
+                        how = '尾' if endok else '近似'
                     else:
-                        j2, r2 = sq_best(tail)
+                        j2, r2, p2 = sq_best(tail)
                         if j2 is not None and r2 >= 0.7:
-                            target, kind, ratio = '素問卷%d' % j2, '素問', round(r2, 2)
+                            pn = sq_pian(j2, max(0, p2))
+                            target = '素問·' + (pn or ('卷%d' % j2))
+                            kind, ratio, how = '素問', round(r2, 2), '近似'
             rows.append({'卷': v['卷'], '類': (v['heads'][0] if v['heads'] else ''),
-                         '句': target or '', '屬': kind, '比': ratio,
+                         '句': target or '', '屬': kind, '比': ratio, '法': how,
                          '距': (n['pos'] - prev[1]) if prev else -1,
                          '文': n['文'][:120]})
     idx_stat = {'段': len(rows), '靈樞': sum(1 for r in rows if r['屬'] == '靈樞'),
@@ -287,8 +314,9 @@ def main():
         if r['屬'] == '靈樞':
             k = r['句'].split('-')[0]
             per_pian[k] = per_pian.get(k, 0) + 1
-    idx = {'說明': '太素注段索引：每段注繫到它前面的那句經文（靈樞句 id 或素問卷）。'
-                   '比對用 4-gram 取候選＋difflib 相似度 ≥0.7，容忍異文；「距」＝注段起點與該句末的字數。',
+    idx = {'說明': '太素注段索引（v2）：以「注緊接句末」為錨——4-gram 取候選句，'
+                   '以相似度為主、句尾對齊為輔；主級相似度 ≥0.7，次級（句尾對齊）≥0.60。'
+                   '素問已可細到篇名。「法」記取法（尾／近似），「距」＝注段起點與該句末的字數。',
            '來源': 'vendor/KR3ea031_太素；句 id 來自 底本/靈樞經_句索引.json',
            '統計': idx_stat,
            '篇': [{'序': int(k), '篇': name.get(int(k), ''), '段': v}

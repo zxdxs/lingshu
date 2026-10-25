@@ -37,8 +37,8 @@
   "英文名": "可留空。留空則對外只用中文站名；填了才會出現在頁面 meta 與大樣稿封面。",
   "網域與 repo": "未決，不影響打包。",
   "U+FE63 連字號": "站名中的「﹣」在部分字型下寬窄不一；若要改用「·」或「-」，需同步 reader/index.html、build_reader.py、build_anki_deck.py、make_proof.py。",
-  "AnkiGUI": "未測：尚未在 Anki 應用程式（本機為 2.1.47）以 GUI 匯入並手動翻卡。這一步需要人眼確認版面，驗過後把本欄改為「已測（版本、卡數）」。"
+  "AnkiGUI": "已測：使用者在 Anki 應用程式 GUI 匯入 export/靈樞_填空.apkg 並手動翻卡、按過對答案。"
  },
  "備註": "本站資料為單一來源：本檔改動後，執行 python3 scripts/build_reader.py 與 python3 scripts/make_proof.py 即同步到閱讀器與大樣稿；授權／聯絡／Anki實機未定時 check_all 的「發布待決」不為 0。",
- "AnkiGUI": "未測"
+ "AnkiGUI": "已測（GUI 匯入並按過；使用者回報 2025-10-25，版本與卡數待補記）"
 }

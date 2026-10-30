@@ -178,6 +178,11 @@
 - 文件：`docs/179_交付清單.md`（清單本身的取捨與局限）。
 - 打包含此清單；568 檔、28.5 MB 不變。
 
+### 新增（做成網站）
+- `scripts/build_site.py` 產出 `site/`（8 檔、1.8 MB）：reader 的 index.html＋assets，加 LICENSE、交付清單、404、.nojekyll。
+- `scripts/deploy_pages.sh`：把 `site/` 推到 `gh-pages` 分支（暫存 worktree，不污染主分支）。
+- 文件：`docs/180_網站發布.md`；本機預覽已驗（index 與 data.js 皆 200、Chrome 可載入首頁）。
+
 ### 內容
 - 底本：四部叢刊景明嘉靖趙府居敬堂本《黃帝素問靈樞經》81 篇、經文 65,085 字。
 - 題庫 **1031 題**（填空 708、選擇 304、辨誤 19），覆蓋 81/81 篇，每篇 ≥6 題。

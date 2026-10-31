@@ -1,0 +1,224 @@
+/* 靈樞自學材料 · 閱讀器樣式（溫紙底、原文襯線、介面無襯線） */
+:root{
+  --paper:#f6f1e6; --card:#fffdf7; --ink:#221f1a; --ink2:#6a6154;
+  --line:#ddd3c2; --brand:#8f3b2b; --brand2:#b0714f; --ok:#3f6b57; --warn:#a8721c; --bad:#9c3b3b;
+  --hl:#ffe9a8; --maxw:1000px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.75 -apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  -webkit-text-size-adjust:100%}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3{line-height:1.35;margin:1.3em 0 .5em}
+h1{font-size:1.55rem;margin-top:.3em;letter-spacing:.04em}
+h2{font-size:1.16rem;border-left:5px solid var(--brand);padding-left:10px}
+h3{font-size:1.0rem;color:var(--ink2)}
+p{margin:.6em 0}
+.small{font-size:.9rem}.tiny{font-size:.78rem}.muted{color:var(--ink2)}
+code{background:#efe7d8;padding:1px 5px;border-radius:4px;font-size:.88em}
+
+/* 頂欄 */
+.top{position:sticky;top:0;z-index:20;background:rgba(246,241,230,.96);
+  backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid var(--line)}
+.brand{display:flex;gap:12px;align-items:center;padding:12px 18px 4px;max-width:var(--maxw);margin:0 auto;color:inherit}
+.brand:hover{text-decoration:none}
+.brand strong{display:block;font-size:1.02rem;letter-spacing:.06em}
+.brand em{display:block;font-style:normal;font-size:.76rem;color:var(--ink2)}
+.mastery{margin-left:14px;font-size:.72rem;letter-spacing:.08em;color:var(--brand2);
+  border:1px solid var(--line);border-radius:999px;padding:3px 9px;background:var(--card)}
+.seal{flex:none;width:52px;height:52px;border-radius:9px;background:var(--brand);color:#fff;
+  display:grid;place-items:center;font-size:.95rem;letter-spacing:.08em;font-weight:700;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.18)}
+.nav{display:flex;gap:6px;overflow-x:auto;padding:2px 14px 10px;max-width:var(--maxw);margin:0 auto;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{flex:none;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);
+  font-size:.86rem;color:var(--ink2);white-space:nowrap}
+.nav a.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.stripe{margin:0;padding:7px 18px;background:#fbe9e6;color:#8c2f22;font-size:.78rem;border-bottom:1px solid #e6c9c2;
+  text-align:center;letter-spacing:.02em;font-weight:600}
+
+/* 安全提醒：紅底框，用於首次進入、首頁、限制頁、關於頁 */
+.alert{background:#fbe9e6;border:1px solid #e2bdb5;border-left:5px solid #9c3427;border-radius:10px;
+  padding:12px 16px;margin:14px 0;color:#7a2a1f;line-height:1.75}
+.alert b{color:#8c2f22}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:22px 18px 80px}
+
+/* 通用 */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.card h3{margin-top:0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.75rem;border:1px solid var(--line);
+  background:#fff;color:var(--ink2);margin:0 4px 4px 0}
+.pill.b{background:#fdeeea;border-color:#eccfc6;color:var(--brand)}
+.pill.g{background:#eaf4ee;border-color:#cfe4d7;color:var(--ok)}
+.pill.y{background:#fdf3e0;border-color:#eddcc2;color:var(--warn)}
+.pill.r{background:#fbeaea;border-color:#e8c9c9;color:var(--bad)}
+.btn{display:inline-block;padding:8px 16px;border-radius:8px;border:1px solid var(--brand);
+  background:var(--brand);color:#fff;cursor:pointer;font-size:.9rem;font-family:inherit}
+.btn.ghost{background:var(--card);color:var(--brand)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+select,input[type=search],input[type=text]{font:inherit;padding:7px 10px;border:1px solid var(--line);
+  border-radius:8px;background:var(--card);color:var(--ink);max-width:100%}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+.src{font-size:.78rem;color:var(--ink2);margin-top:4px}
+mark,.hl{background:var(--hl);padding:0 2px;border-radius:3px}
+
+/* 首頁 */
+.hero{background:linear-gradient(180deg,#fffdf7,#f7efe1);border:1px solid var(--line);border-radius:16px;
+  padding:30px 28px;margin:6px 0 18px;position:relative;overflow:hidden}
+.hero h1{font-size:2.1rem;letter-spacing:.18em;margin:0 0 6px}
+.hero .lead{color:var(--ink2);font-size:.98rem;max-width:620px}
+.hero .kicker{font-size:.72rem;letter-spacing:.32em;color:var(--brand2);margin-bottom:6px}
+.hero .stamps{position:absolute;right:24px;top:22px;text-align:right;color:var(--brand2);font-size:.72rem;
+  letter-spacing:.2em;line-height:1.9;opacity:.8}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 4px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.stat b{display:block;font-size:1.35rem;color:var(--brand);font-variant-numeric:tabular-nums}
+.stat span{font-size:.76rem;color:var(--ink2)}
+
+/* 原文 */
+.orig{font-family:"Songti TC","Noto Serif TC",Georgia,serif;font-size:1.08rem;line-height:2.0;
+  background:#fffdf6;border:1px solid var(--line);border-left:4px solid var(--brand2);border-radius:8px;
+  padding:14px 16px;margin:10px 0}
+.orig p{text-indent:2em;margin:.4em 0}
+.tiao{border-bottom:1px dashed var(--line);padding:10px 0}
+.tiao:last-child{border-bottom:0}
+.tiao .no{font-weight:700;color:var(--brand);margin-right:6px}
+
+/* 題庫 */
+.q{font-size:1.02rem;margin:4px 0 10px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 13px;border:1px solid var(--line);
+  border-radius:9px;background:var(--card);cursor:pointer;font:inherit;color:inherit}
+.opt:hover{border-color:var(--brand2)}
+.opt.right{background:#eaf4ee;border-color:var(--ok)}
+.opt.wrong{background:#fbeaea;border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.ans{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+
+/* 表格與進度 */
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88rem}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f1ead9;font-weight:600}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.bar{height:9px;border-radius:999px;background:#e9e0cf;overflow:hidden;margin:6px 0}
+.bar>i{display:block;height:100%;background:var(--brand2)}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:.92rem}
+.kv dt{color:var(--ink2)}
+
+/* 概念圖 */
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.gal figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.gal img{width:100%;display:block;background:#fff}
+.gal figcaption{padding:8px 10px;font-size:.85rem;color:var(--ink2)}
+
+/* 頁腳 */
+.foot{max-width:var(--maxw);margin:0 auto;padding:20px 18px 40px;color:var(--ink2);
+  border-top:1px solid var(--line);font-size:.82rem}
+.foot-links a{color:var(--ink2);margin-right:14px}
+.gate{max-width:640px;margin:8vh auto;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:30px 32px}
+@media (max-width:640px){
+  .mastery{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .hero{padding:22px 18px}.hero h1{font-size:1.7rem}
+  .hero .kicker{font-size:.72rem;letter-spacing:.32em;color:var(--brand2);margin-bottom:6px}
+.hero .stamps{display:none}
+}
+
+/* 概念卡（可折疊） */
+details.card>summary{cursor:pointer;font-size:1.05rem;padding:2px 0;list-style:none}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::before{content:"▸ ";color:var(--brand2)}
+details.card[open]>summary::before{content:"▾ "}
+details.card>summary:hover{color:var(--brand)}
+
+/* 句級 ID（預設隱藏） */
+.sid{display:none;font-style:normal;font-size:.68rem;color:var(--brand2);margin-left:2px;
+  vertical-align:super;letter-spacing:.02em}
+body.show-sid .sid{display:inline}
+
+/* 病從外入的路線 */
+.route{margin:8px 0 4px}
+.route .st{display:grid;grid-template-columns:96px 1fr 104px;gap:10px;padding:9px 0 9px 26px;
+  border-bottom:1px dashed var(--line);position:relative;align-items:start}
+.route .st:last-child{border-bottom:0}
+.route .st::before{content:"";position:absolute;left:7px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
+.route .st::after{content:"";position:absolute;left:11px;top:25px;bottom:-4px;width:1px;background:var(--line)}
+.route .st:last-child::after{display:none}
+.route .st b{color:var(--brand)}
+@media (max-width:640px){.route .st{grid-template-columns:84px 1fr;}.route .st>div:last-child{grid-column:2}}
+
+/* 指正與聯絡 */
+.want-k{font-size:.95rem;margin:16px 0 4px;color:var(--brand)}
+.contact-row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;
+  border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.contact-row:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.contact-txt{flex:1 1 260px;min-width:0}
+.mail{display:inline-block;margin-top:4px;font-size:1rem;letter-spacing:.02em;
+  border-bottom:1px solid var(--brand);padding-bottom:1px}
+.site{border-top:1px dashed var(--line);padding-top:12px;margin-top:12px}
+.site:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.site-a{font-weight:600}
+
+/* 異同頁：引文與引言 */
+.lead{font-size:.98rem;color:var(--ink2);max-width:720px;line-height:1.85}
+.quote{font-family:"Songti TC","Noto Serif TC",Georgia,serif;font-size:1.06rem;line-height:1.95;
+  margin:12px 0 2px;padding-left:14px;border-left:3px solid var(--brand2);color:var(--ink)}
+.table-wrap{overflow-x:auto;margin:8px 0}
+.table-wrap table{min-width:100%}
+
+/* 通則頁 */
+.law-item{border-top:1px dashed var(--line);padding-top:14px;margin-top:16px}
+.law-item:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.law-item h3{margin:0 0 6px}
+
+/* 十二經 */
+.mer-card h2{font-size:1.05rem;margin:0 0 8px}
+.mer-row{display:grid;grid-template-columns:96px 1fr;gap:6px 12px;padding:8px 0;border-top:1px dashed var(--line)}
+.mer-row:first-of-type{border-top:0}
+.mer-k{font-size:.78rem;color:var(--brand2);letter-spacing:.08em;padding-top:2px}
+.mer-v{font-size:.95rem;line-height:1.85}
+.mer-row .src{grid-column:2;margin-top:2px}
+
+/* 集註（張志聰注） */
+.zj-case{border-top:1px dashed var(--line);padding-top:12px;margin-top:14px}
+.zj-case:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.zj-case h3{margin:0 0 4px;font-size:.95rem;color:var(--brand)}
+.zj-note{font-size:.92rem;line-height:1.9;color:var(--ink2);background:#f7f4ee;
+  border-left:3px solid var(--brand2);padding:8px 12px;border-radius:0 8px 8px 0;margin:6px 0 0}
+.zj-note b{color:var(--brand2);font-weight:600;letter-spacing:.06em;margin-right:8px}
+
+/* 病候 */
+.bh-item{border-top:1px dashed var(--line);padding-top:12px;margin-top:14px}
+.bh-item:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.bh-item h3{margin:0 0 6px;font-size:.98rem;color:var(--brand)}
+
+/* 導覽分組與「接著看」 */
+.nav-sep{flex:none;width:1px;height:18px;background:var(--line);margin:0 4px;align-self:center}
+.next{margin:28px 0 0;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:6px 12px;
+  flex-wrap:wrap;align-items:baseline}
+.next-k{font-size:.76rem;letter-spacing:.16em;color:var(--brand2)}
+.next a{font-size:.9rem}
+
+/* 導覽分組與「接著看」 */
+.nav-sep{flex:none;width:1px;height:18px;background:var(--line);margin:0 4px;align-self:center}
+.next{margin:28px 0 0;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:6px 12px;
+  flex-wrap:wrap;align-items:baseline}
+.next-k{font-size:.76rem;letter-spacing:.16em;color:var(--brand2)}
+.next a{font-size:.9rem}
+.map-list{margin:.4em 0 0 1.1em;padding:0;font-size:.9rem;line-height:1.9}
+.map-list li{margin:0}
+kbd{font-family:inherit;font-size:.82em;border:1px solid var(--line);border-bottom-width:2px;
+  border-radius:4px;padding:0 4px;background:var(--card)}
+
+/* 摺疊區（注家頁等長頁用；零 JS） */
+.fold{margin:10px 0;border:1px solid var(--line);border-radius:10px;background:#fffdf8}
+.fold>summary{cursor:pointer;padding:10px 14px;font-size:.92rem;font-weight:600;color:var(--brand)}
+.fold>summary::marker{color:var(--brand2)}
+.fold[open]>summary{border-bottom:1px solid var(--line)}
+.fold>*:not(summary){margin:10px 14px}

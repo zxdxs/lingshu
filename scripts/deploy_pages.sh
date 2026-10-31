@@ -66,5 +66,9 @@ fi
 git -C "$WT" push origin "$BRANCH"
 git worktree remove --force "$WT"
 
-echo "已推送 $BRANCH。到 GitHub repo → Settings → Pages，Source 選「Deploy from a branch」，Branch 選 gh-pages / (root)。"
-echo "網址會是 https://<user>.github.io/<repo>/"
+URL="https://${REMOTE#git@github.com:}"
+URL="${URL%.git}"
+URL="${URL/\//.github.io/}"
+echo "已推送 ${BRANCH} 分支。"
+echo "到 GitHub repo → Settings → Pages：Source 選「Deploy from a branch」，Branch 選 gh-pages / (root)，Save。"
+echo "網址：${URL}/"

@@ -34,6 +34,12 @@
    "k": "GitHub Issue",
    "d": "公開、可追蹤，適合單點勘誤；也可直接看別人回報過什麼。",
    "url": "https://github.com/zxdxs/lingshu/issues"
+  },
+  {
+   "k": "微信",
+   "d": "掃碼加維護者「課孫翁」；與傷寒站、聲韻站同一個維護者、同一個微信。加好友請註明「靈樞」。",
+   "wechat": "課孫翁",
+   "qr": "assets/wx-qrcode.jpg"
   }
  ],
  "sites": [

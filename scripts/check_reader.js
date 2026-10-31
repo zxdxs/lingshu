@@ -169,6 +169,11 @@ if ((CONTACT.want || []).length < 3) cFails.push("求助項目少於 3 項");
 (CONTACT.want || []).forEach(x => { if (!cHtml.includes(x.k)) cFails.push("缺求助項：" + x.k.slice(0, 8)); });
 (CONTACT.sites || []).forEach(x => { if (!cHtml.includes(x.url)) cFails.push("缺站點：" + x.k); });
 if (!cHtml.includes(CONTACT.seal)) cFails.push("頁尾沒有安全提醒短句");
+const qrItems = (CONTACT.items || []).filter(x => x.qr);
+qrItems.forEach(x => {
+  if (!cHtml.includes(x.wechat || "")) cFails.push("微信號沒顯示：" + (x.wechat || ""));
+});
+if (qrItems.length && env.classes().indexOf("qr") < 0) cFails.push("微信二維碼沒有 .qr 圖");
 if (CONTACT.feedback) {
   if (!cHtml.includes(CONTACT.feedback.issueUrl)) cFails.push("缺 GitHub Issue 回報入口");
   if (!cHtml.includes("mailto:" + CONTACT.feedback.mail)) cFails.push("缺 email 回報入口");

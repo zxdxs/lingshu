@@ -220,3 +220,6 @@ kbd{font-family:inherit;font-size:.82em;border:1px solid var(--line);border-bott
 .fold>summary::marker{color:var(--brand2)}
 .fold[open]>summary{border-bottom:1px solid var(--line)}
 .fold>*:not(summary){margin:10px 14px}
+
+/* 聯絡頁：微信二維碼 */
+.qr{display:block;width:180px;height:auto;margin:8px 0 4px;border:1px solid var(--line);border-radius:8px;background:#fff}

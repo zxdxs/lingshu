@@ -2184,12 +2184,46 @@ VIEWS.contact = function (box) {
     if (x.mail) {
       var a = el('a', 'mail', x.mailText || x.mail);
       a.href = 'mailto:' + x.mail; left.appendChild(a);
+    } else if (x.url) {
+      var b = el('a', 'mail', x.url.replace(/^https?:\/\//, ''));
+      b.href = x.url; b.setAttribute('target', '_blank'); b.setAttribute('rel', 'noopener noreferrer');
+      left.appendChild(b);
     } else {
       left.appendChild(h('p', '<b>待補</b>——發布前會填上可公開的郵箱；目前請透過下方相關站點聯絡。', 'small'));
     }
     row.appendChild(left); it.appendChild(row);
   });
   box.appendChild(it);
+
+  var FB = C.feedback || {};
+  if (FB.issueUrl || FB.mail) {
+    var fb = h('div', '', 'card');
+    fb.appendChild(el('h3', '', '回報一處，就少一處'));
+    fb.appendChild(h('p', '兩種走法，挑順手的：<b>GitHub Issue</b> 公開可追蹤（單點勘誤最快）；'
+      + '<b>email</b> 適合附圖、長文、整份校表。', 'small'));
+    var fs = '<tr><th style="width:96px">走法</th><th>怎麼做</th></tr>';
+    if (FB.issueUrl) {
+      fs += '<tr><td><b>Issue</b></td><td class="small"><a href="' + esc(FB.issueUrl) +
+        '" target="_blank" rel="noopener noreferrer">開一個勘誤 Issue</a>——有表單，照欄位填即可。</td></tr>';
+    }
+    if (FB.mail) {
+      var subj = encodeURIComponent(FB.mailSubject || '靈樞站勘誤');
+      var body = encodeURIComponent(FB.mailBody || '');
+      fs += '<tr><td><b>Email</b></td><td class="small"><a href="mailto:' + esc(FB.mail) +
+        '?subject=' + subj + '&body=' + body + '">寫信給 ' + esc(FB.mail) + '</a>（主旨與內文已幫你開好格式）。</td></tr>';
+    }
+    var fw = h('div', '', 'table-wrap'); fw.innerHTML = '<table>' + fs + '</table>';
+    fb.appendChild(fw);
+    if ((FB.checklist || []).length) {
+      var ul = el('ul', 'map-list', '');
+      fb.appendChild(h('p', '回報時請附這五樣（少一樣我就得再問一次）：', 'small muted'));
+      FB.checklist.forEach(function (x) { ul.appendChild(el('li', 'small', x)); });
+      fb.appendChild(ul);
+    }
+    fb.appendChild(h('p', '回報會反映到站上；原文異文一律兩處並存，不擅自改定。',
+      'small muted'));
+    box.appendChild(fb);
+  }
 
   var st = h('div', '', 'card');
   st.appendChild(el('h3', '', '相關站點'));

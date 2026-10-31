@@ -48,6 +48,7 @@
 
 ## 線上閱讀器（離線可用）
 
+**網站：[https://zxdxs.github.io/lingshu/](https://zxdxs.github.io/lingshu/)**（GitHub Pages；原始碼 [zxdxs/lingshu](https://github.com/zxdxs/lingshu)）
 `reader/index.html`：純靜態、零依賴，雙擊即可開（或 `cd reader && python3 -m http.server 8765`）。
 二十二個視圖：首頁、**主題（5 個：身體／氣血／病從外入／表現／判斷）**、**路徑（三條學習路線）**、**模組（一篇一卡）**、通讀 81 篇、題庫 1068 題、概念（12 卡）、異同（靈樞與素問）、通則（65 條）、經脉諸層（八籤）、病候（六組模板）、變體（同一原則的多種寫法）、**注家（張志聰集註、張介賓類經注、丹波元簡靈樞識節錄）**、九宫八風（背景）、九鍼、方法、校勘（三源並排）、限制、我的、關於、指正與聯絡。
 索引與覆蓋表已下架（見 `docs/119`）：名詞查詢改用 `export/索引.csv`，覆蓋率留在 `data/三源覆蓋率.json`。

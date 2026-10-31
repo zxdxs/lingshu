@@ -183,6 +183,12 @@
 - `scripts/deploy_pages.sh`：把 `site/` 推到 `gh-pages` 分支（暫存 worktree，不污染主分支）。
 - 文件：`docs/180_網站發布.md`；本機預覽已驗（index 與 data.js 皆 200、Chrome 可載入首頁）。
 
+### 發布（網站上線 GitHub Pages）
+- repo：`github.com/zxdxs/lingshu`（public）；`main` 與 `gh-pages` 皆已推。
+- 網站：**https://zxdxs.github.io/lingshu/**（HTTP 200）；`assets/data.js` 的 sha256 與本機一致。
+- 首次進入顯示安全提醒確認頁（設計）；截圖 `export/reader_live_gate.png`。
+- 文件：`docs/180_網站發布.md`（部署步驟、驗證、限制）。
+
 ### 內容
 - 底本：四部叢刊景明嘉靖趙府居敬堂本《黃帝素問靈樞經》81 篇、經文 65,085 字。
 - 題庫 **1031 題**（填空 708、選擇 304、辨誤 19），覆蓋 81/81 篇，每篇 ≥6 題。

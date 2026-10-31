@@ -2188,6 +2188,12 @@ VIEWS.contact = function (box) {
       var b = el('a', 'mail', x.url.replace(/^https?:\/\//, ''));
       b.href = x.url; b.setAttribute('target', '_blank'); b.setAttribute('rel', 'noopener noreferrer');
       left.appendChild(b);
+    } else if (x.qr) {
+      left.appendChild(h('p', '<b>' + esc(x.wechat || '') + '</b>　掃碼加好友（同上兩個站的維護者）', 'small'));
+      var q = el('img', 'qr');
+      q.src = x.qr; q.alt = '微信二維碼：' + (x.wechat || '');
+      q.setAttribute('width', '180');
+      left.appendChild(q);
     } else {
       left.appendChild(h('p', '<b>待補</b>——發布前會填上可公開的郵箱；目前請透過下方相關站點聯絡。', 'small'));
     }

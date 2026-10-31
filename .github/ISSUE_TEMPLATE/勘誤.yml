@@ -1,0 +1,59 @@
+name: 勘誤回報
+description: 錯字、引文對不上、句ID 掛錯、答案可議、注家節錄有誤
+title: "勘誤：第 __ 篇 句 __"
+labels: ["勘誤"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感謝指正。本站是訓練材料，不是定本；**句ID 與原文的對應**是最需要人幫忙的地方。
+        回報前請先確認你手上的版本（書名、出版社、頁碼），同一句在不同版本可能不同。
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 問題類型
+      options:
+        - 錯字／異體字
+        - 引文與底本不符（含標點、句讀）
+        - 句ID 掛錯（掛到別句）
+        - 答案可議（題庫）
+        - 注家節錄有誤（張志聰／張介賓／楊上善／丹波元簡）
+        - 其他（請在下面說明）
+    validations:
+      required: true
+  - type: input
+    id: pian
+    attributes:
+      label: 篇序（1–81）
+      placeholder: 例如 40
+    validations:
+      required: true
+  - type: input
+    id: juid
+    attributes:
+      label: 句ID（若已知）
+      placeholder: 例如 40-6-1
+  - type: textarea
+    id: text
+    attributes:
+      label: 原文（照抄，不要只寫「第幾行」）
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: 問題與理由
+      description: 你認為錯在哪？依據是什麼？
+    validations:
+      required: true
+  - type: input
+    id: edition
+    attributes:
+      label: 你手上的版本（書名／出版社／頁碼）
+      placeholder: 例如《黃帝內經靈樞》人民衛生出版社 2012，p.123
+  - type: textarea
+    id: shot
+    attributes:
+      label: 截圖或書影
+      description: 可直接把圖片拖進來。

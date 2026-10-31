@@ -169,6 +169,11 @@ if ((CONTACT.want || []).length < 3) cFails.push("求助項目少於 3 項");
 (CONTACT.want || []).forEach(x => { if (!cHtml.includes(x.k)) cFails.push("缺求助項：" + x.k.slice(0, 8)); });
 (CONTACT.sites || []).forEach(x => { if (!cHtml.includes(x.url)) cFails.push("缺站點：" + x.k); });
 if (!cHtml.includes(CONTACT.seal)) cFails.push("頁尾沒有安全提醒短句");
+if (CONTACT.feedback) {
+  if (!cHtml.includes(CONTACT.feedback.issueUrl)) cFails.push("缺 GitHub Issue 回報入口");
+  if (!cHtml.includes("mailto:" + CONTACT.feedback.mail)) cFails.push("缺 email 回報入口");
+  (CONTACT.feedback.checklist || []).forEach(x => { if (!cHtml.includes(x)) cFails.push("缺回報要附的項目：" + x.slice(0, 8)); });
+}
 if (CONTACT.contact_ready) {
   if (!cHtml.includes(CONTACT.items[0].mail)) cFails.push("郵箱已填卻沒顯示");
   if (cHtml.includes("待補")) cFails.push("郵箱已填卻仍顯示待補");

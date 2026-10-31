@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 以 email 回報（附圖、長文、整份校表）
+    url: mailto:hello@solve-lab.cn
+    about: 主旨請寫「靈樞站勘誤：第 __ 篇 句 __」

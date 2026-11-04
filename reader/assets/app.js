@@ -43,7 +43,7 @@ var NAV = [
   ['read','通讀',1], ['meridian','十二經'], ['binghou','病候'], ['variant','變體'], ['jizhu','注家'], ['jiugong','九宫'],
   ['items','題庫',1], ['concept','概念'],
   ['suwen','異同',1], ['prep','九鍼'],
-  ['search','搜尋',1], ['method','方法'], ['collation','校勘'], ['limits','限制'],
+  ['search','搜尋',1], ['method','方法'], ['govern','治理'], ['collation','校勘'], ['limits','限制'],
   ['mine','我的',1], ['about','關於']
 ];
 var VIEWS = {};
@@ -993,6 +993,91 @@ VIEWS.jizhu = function (box) {
   box.appendChild(tail);
 
   nextLinks(box, [['通則：共同點', '#/law'], ['變體：不同寫法', '#/variant'], ['方法：收錄狀況', '#/method']]);
+};
+
+/* ---------------- 治理與預算 ---------------- */
+VIEWS.govern = function (box) {
+  var G = LS.govern || {};
+  box.appendChild(h('h1', '治理與預算：誠實標出「不知道」'));
+  box.appendChild(h('p', '這一頁回答的不是「有什麼內容」，而是「這些內容有多可信、哪裡還沒解決」。'
+    + '分檔、狀態與預算的做法取自數位化整理方法論；不可判定不是失敗，是成果。', 'lead'));
+
+  // 檔位對照
+  var g1 = h('div', '', 'card');
+  g1.appendChild(el('h2', '', '檔位：每一層話是誰說的'));
+  var t1 = '<tr><th style="width:70px">本站</th><th style="width:190px">方法論檔位</th><th>意思</th></tr>';
+  (G['檔位對照'] || []).forEach(function (x) {
+    t1 += '<tr><td><b>' + esc(x['本站']) + '</b></td><td class="small">' + esc(x['方法論']) + '</td>' +
+      '<td class="small muted">' + esc(x['說明']) + '</td></tr>';
+  });
+  var w1 = h('div', '', 'table-wrap'); w1.innerHTML = '<table>' + t1 + '</table>';
+  g1.appendChild(w1);
+  if (G['狀態機']) g1.appendChild(h('p', esc(G['狀態機']), 'small muted'));
+  box.appendChild(g1);
+
+  // 確定性預算
+  var B = G['預算'] || {};
+  var g2 = h('div', '', 'card');
+  g2.appendChild(el('h2', '', '確定性預算：不是「已發布越多越好」'));
+  g2.appendChild(h('p', '方法論要求把 published／suspended／兩存／blocked 一起報，且「長期歸零視為過度收斂警訊」。'
+    + '本站只有一位維護者，所以把「還在懸置的」當成正常產出，而不是待清帳。', 'small'));
+  var t2 = '<tr><th style="width:210px">指標</th><th style="width:110px">數</th><th>說明</th></tr>';
+  var ROWS = [
+    ['題數／題有句ID', (B['題數'] || 0) + '／' + (B['題有句ID'] || 0), '每題都能回到句索引；回鏈率 ' + (B['題回鏈率'] || 0) + '%'],
+    ['句數', B['句數'] || 0, '底本句索引；句ID 為編者所加'],
+    ['通則／有界', (B['通則條數'] || 0) + '／' + (B['通則有界'] || 0), '每條通則都寫了適用邊界（界）'],
+    ['未決條目', B['未決條數'] || 0, 'blocked ' + (B['blocked'] || 0) + '、suspended ' + (B['suspended'] || 0)],
+    ['裁決：兩存／未定', (B['both_preserved'] || 0) + '／' + (B['undetermined'] || 0), '「兩存」是結果，不是拖著不辦'],
+    ['未決占（通則＋未決）', (B['未決占比'] || 0) + '%', '比例高不代表品質差，代表沒把不知道藏起來']
+  ];
+  ROWS.forEach(function (r) {
+    t2 += '<tr><td><b>' + esc(r[0]) + '</b></td><td class="num">' + esc(String(r[1])) + '</td>' +
+      '<td class="small muted">' + esc(r[2]) + '</td></tr>';
+  });
+  var w2 = h('div', '', 'table-wrap'); w2.innerHTML = '<table>' + t2 + '</table>';
+  g2.appendChild(w2);
+  box.appendChild(g2);
+
+  // 未決登記簿
+  var UN = G['未決'] || [];
+  var g3 = h('div', '', 'card');
+  g3.appendChild(el('h2', '', '未決登記簿（' + UN.length + ' 條）'));
+  g3.appendChild(h('p', '每一條都寫了「什麼證據會推翻它」。狀態只有 blocked（取不到）與 suspended（取到但未定）；'
+    + '裁決 single／both_preserved／undetermined。', 'small'));
+  ['blocked', 'suspended'].forEach(function (st) {
+    var rows = UN.filter(function (x) { return x['狀態'] === st; });
+    if (!rows.length) return;
+    g3.appendChild(el('h3', '', (st === 'blocked' ? '取不到（blocked）' : '取到但未定（suspended）') + '：' + rows.length + ' 條'));
+    rows.forEach(function (x) {
+      var it = h('div', '', 'law-item');
+      it.appendChild(h('h4', '', x['id'] + '　' + esc(x['題']) + '　'
+        + '<span class="pill y">' + esc(x['狀態']) + '</span> '
+        + '<span class="pill">' + esc(x['裁決']) + '</span> '
+        + '<span class="pill">' + esc(x['檔']) + '</span>'));
+      it.appendChild(h('p', esc(x['說明']), 'small'));
+      it.appendChild(h('p', '<b>證偽條件</b>：' + esc(x['證偽']), 'small'));
+      it.appendChild(h('p', '<b>影響</b>：' + esc(x['影響']), 'small muted'));
+      g3.appendChild(it);
+    });
+  });
+  box.appendChild(g3);
+
+  // 方法論採納
+  var AD = G['採納'] || [];
+  var g4 = h('div', '', 'card');
+  g4.appendChild(el('h2', '', '方法論：哪幾條採用、哪幾條不'));
+  var t4 = '<tr><th style="width:190px">規則</th><th style="width:80px">本站</th><th>做法</th></tr>';
+  AD.forEach(function (x) {
+    t4 += '<tr><td class="small"><b>' + esc(x['條']) + '</b></td><td class="small">' + esc(x['本站']) + '</td>' +
+      '<td class="small muted">' + esc(x['做法']) + '</td></tr>';
+  });
+  var w4 = h('div', '', 'table-wrap'); w4.innerHTML = '<table>' + t4 + '</table>';
+  g4.appendChild(w4);
+  g4.appendChild(h('p', '沒做的：五層齊備（本站是原文／注／歸三層加解讀層）、golden set 回歸、'
+    + '多人 reviewed_by、JSON Schema 硬檢。理由與替代做法見 docs/184。', 'small muted'));
+  box.appendChild(g4);
+
+  nextLinks(box, [['方法：稽核怎麼做', '#/method'], ['限制：還沒解決的', '#/limits'], ['通則', '#/law']]);
 };
 
 /* ---------------- 學習路徑 ---------------- */

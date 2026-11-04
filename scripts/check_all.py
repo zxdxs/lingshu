@@ -411,6 +411,29 @@ def taisu_index_tier():
     return ling, miss, pian
 
 
+def govern_stats():
+    """治理：未決條目的枚舉合法、證偽非空、id 不重；回傳（未決數, blocked, suspended, both）。"""
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '未決.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0, 0, 0, 0
+    e = d.get('枚舉', {})
+    ST = set(e.get('status', []))
+    RS = set(e.get('resolution', []))
+    GR = set(e.get('grade', []))
+    ids = [x['id'] for x in d['條']]
+    bad = 0
+    for x in d['條']:
+        if (x['狀態'] not in ST or x['裁決'] not in RS or x['檔'] not in GR
+                or len(x.get('證偽', '')) < 10 or len(x.get('說明', '')) < 10):
+            bad += 1
+    if len(ids) != len(set(ids)):
+        bad += 1
+    st = [x['狀態'] for x in d['條']]
+    rs = [x['裁決'] for x in d['條']]
+    return len(ids), st.count('blocked'), st.count('suspended'), rs.count('both_preserved'), bad
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -472,6 +495,11 @@ def metrics():
         '素問同文句': suwen_tongwen()[0],
         '素問同文篇對': suwen_tongwen()[1],
         '素問同文不符': suwen_tongwen()[2],
+        '治理未決': govern_stats()[0],
+        '治理blocked': govern_stats()[1],
+        '治理suspended': govern_stats()[2],
+        '治理兩存': govern_stats()[3],
+        '治理不符': govern_stats()[4],
         '篇名鍵不一致': name_key_mismatch(),
         '靈樞識繫上': lingshi_stats()[0],
         '靈樞識引不符': lingshi_stats()[1],

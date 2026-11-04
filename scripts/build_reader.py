@@ -139,6 +139,7 @@ def main():
     jizhu['覆蓋'] = {'統計': _dist, '條': [x for x in _cov if x['家']]}
     bianti = load('data/變體.json')
     path = load('data/學習路徑.json')
+    govern = load('data/治理.json')
     # 模組：D 型（結構統一）＋舊的主題型（結構各異，原樣帶去前端做通用渲染）
     NAME = {p['序']: p['篇名'] for p in ch}
     mods = []
@@ -287,7 +288,7 @@ def main():
         'jingbie': jb, 'jingjin': jj, 'luomai': luo, 'jingshui': js, 'wushu': ws, 'binghou': bh,
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
-        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti, 'path': path, 'modules': modules,
+        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti, 'path': path, 'govern': govern, 'modules': modules,
         'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao, 'taisuzhu': taisuzhu, 'taisupa': taisupa, 'taisuindex': taisuindex,
         'defs': defs,
         'suwen': suwen, 'suwentw': suwentw,

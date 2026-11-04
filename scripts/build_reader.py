@@ -140,6 +140,20 @@ def main():
     bianti = load('data/變體.json')
     path = load('data/學習路徑.json')
     govern = load('data/治理.json')
+    # 誦讀：每篇的逐句原文（供 TTS 逐句朗讀與高亮）
+    _ju = load('底本/靈樞經_句索引.json')['句']
+    byp = {}
+    for s0 in _ju:
+        byp.setdefault(s0['pian'], []).append(s0)
+    name2 = {p['篇名_規範']: p['序'] for p in ch}
+    recite = []
+    for nm, rows in byp.items():
+        seq = name2.get(nm)
+        if not seq:
+            continue
+        recite.append({'seq': seq, 'name': nm,
+                       'sents': [{'id': x['id'], 't': x['text']} for x in sorted(rows, key=lambda z: z['seq'])]})
+    recite.sort(key=lambda x: x['seq'])
     # 模組：D 型（結構統一）＋舊的主題型（結構各異，原樣帶去前端做通用渲染）
     NAME = {p['序']: p['篇名'] for p in ch}
     mods = []
@@ -288,7 +302,7 @@ def main():
         'jingbie': jb, 'jingjin': jj, 'luomai': luo, 'jingshui': js, 'wushu': ws, 'binghou': bh,
         'shier_yuan': yuan, 'yingwei': yw,
         'wuci': wuci, 'wuxie': wuxie,
-        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti, 'path': path, 'govern': govern, 'modules': modules,
+        'bounds': bounds, 'abscess': abscess, 'covmap': covmap, 'jiugong': jiugong, 'zhujia': zhujia, 'bianti': bianti, 'path': path, 'govern': govern, 'recite': recite, 'modules': modules,
         'jizhu': jizhu, 'leizhu': leizhu, 'jiayi': jiayi, 'lingshi': lingshi, 'jiayitiao': jiayitiao, 'taisuzhu': taisuzhu, 'taisupa': taisupa, 'taisuindex': taisuindex,
         'defs': defs,
         'suwen': suwen, 'suwentw': suwentw,

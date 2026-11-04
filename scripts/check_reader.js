@@ -32,7 +32,7 @@ function walk(n, acc) {
   return acc;
 }
 
-const views = ["home", "themes", "path", "module", "search", "binghou", "variant", "jizhu", "jiugong", "read", "items", "concept", "law", "meridian", "suwen", "prep", "method", "govern", "collation", "limits", "mine", "about", "contact"];
+const views = ["home", "themes", "path", "module", "recite", "search", "binghou", "variant", "jizhu", "jiugong", "read", "items", "concept", "law", "meridian", "suwen", "prep", "method", "govern", "collation", "limits", "mine", "about", "contact"];
 let fails = 0;
 
 function Option(text, value) { const o = mkEl("option"); o.textContent = text; o.value = value; return o; }
@@ -147,6 +147,8 @@ const NEED = {
   "/jizhu": ["card", "quote", "zj-note", "zj-case"],
   "/path": ["card", "table-wrap"],
   "/govern": ["card", "law-item", "table-wrap"],
+  "/recite": ["card", "recite-line"],
+  "/recite?seq=40": ["card", "recite-line"],
   "/module": ["fold", "table-wrap"],
   "/limits": ["alert"],
   "/contact": ["card", "want-k", "site", "contact-row"],

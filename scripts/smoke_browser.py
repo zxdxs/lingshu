@@ -44,6 +44,7 @@ ROUTES = {
     'path': {'card': 3, 'table-wrap': 3},
     'module': {'fold': 8, 'table-wrap': 5},
     'govern': {'card': 4, 'law-item': 8, 'table-wrap': 3},
+    'recite': {'card': 2, 'recite-line': 10},
     'jizhu': {'card': 5, 'quote': 3, 'zj-note': 3, 'zj-case': 5},
     'jiugong': {'card': 4, 'quote': 3},
     'meridian': {'card': 5, 'mercard': 12},
@@ -77,7 +78,7 @@ setTimeout(function () {
     row: q('.row'), tiao: q('.tiao'), orig: q('.orig'), list: q('.list'), quote: q('.quote'),
     mercard: q('.mer-card'),
     'zj-note': q('.zj-note'), 'zj-case': q('.zj-case'), 'table-wrap': q('.table-wrap'), 'fold': q('details.fold'),
-    'law-item': q('.law-item'),
+    'law-item': q('.law-item'), 'recite-line': q('.recite-line'),
     stripe: (document.querySelector('#stripe') || {}).textContent || '',
     nav: q('#nav a'), foot: q('#footLinks a'),
     routes: window.__ROUTES || [],
@@ -209,8 +210,8 @@ def main():
             bad.append('沒有 h1')
         if rep['stripe'] != STRIPE:
             bad.append(f'頂欄不是安全提醒（{rep["stripe"][:20]}）')
-        if rep['nav'] != 22 or rep['foot'] != 5:
-            bad.append(f'導覽 {rep["nav"]}／頁腳 {rep["foot"]}（應 22／5）')
+        if rep['nav'] != 24 or rep['foot'] != 5:
+            bad.append(f'導覽 {rep["nav"]}／頁腳 {rep["foot"]}（應 24／5）')
         for k, v in need.items():
             if rep.get(k, 0) < v:
                 bad.append(f'.{k}={rep.get(k, 0)}（至少 {v}）')

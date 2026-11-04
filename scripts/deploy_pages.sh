@@ -34,15 +34,18 @@ else
   git remote set-url origin "$REMOTE"
 fi
 
-# 清掉舊 worktree
+# 清掉舊 worktree（含 git 的登記；否則本地分支會被佔住而無法 checkout -B）
+git worktree prune
 if [ -d "$WT" ]; then
   git worktree remove --force "$WT" 2>/dev/null || rm -rf "$WT"
+  git worktree prune
 fi
 
 # 取遠端 gh-pages（有就接續，沒有就開 orphan）
 if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
   git fetch origin "$BRANCH"
   git worktree add --detach "$WT" FETCH_HEAD
+  git branch -D "$BRANCH" >/dev/null 2>&1 || true
   git -C "$WT" checkout -B "$BRANCH"
 else
   git worktree add --detach "$WT" HEAD

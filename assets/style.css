@@ -331,3 +331,26 @@ body.show-sid .duan-body .sid{display:inline}
 .recite-para .recite-line{display:inline;margin:0;padding:0;line-height:2.05;font-size:1.04rem}
 .recite-sid{display:none}
 .recite-line ruby{ruby-align:center}
+
+/* ===== 名訓層 ===== */
+.nm-source{border-left:4px solid var(--brand2)}
+.nm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:8px}
+.nm-principle{background:#faf7f0;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.nm-k{font-size:.7rem;letter-spacing:.08em;color:#fff;background:var(--brand2);border-radius:4px;display:inline-block;padding:0 5px;font-family:ui-monospace,monospace}
+.nm-principle h3{font-size:.94rem;margin:5px 0 4px;color:var(--brand)}
+.nm-steps{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.nm-step{display:grid;grid-template-columns:30px minmax(0,1fr);gap:9px;align-items:start;border-top:1px dashed var(--line);padding-top:8px}
+.nm-step:first-child{border-top:0;padding-top:0}
+.nm-stepno{width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;text-align:center;line-height:26px;font-size:.78rem}
+.nm-step p{margin:2px 0 0}
+.nm-q{border-left:3px solid #d8c7a8;background:#fcf9f1;padding:6px 10px;border-radius:0 6px 6px 0;margin:5px 0;font-family:"Songti TC","Noto Serif TC",Georgia,serif;font-size:.94rem;line-height:1.85}
+.nm-qtext{display:block}
+.nm-qsrc{display:block;font-family:inherit;font-size:.72rem;color:var(--ink2);margin-top:2px}
+.nm-qsrc a{color:var(--brand2)}
+.nm-ex{border-left:4px solid #cbb99a}
+.nm-exhead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.nm-exhead b{font-size:1.02rem;color:var(--brand)}
+.nm-exno{font-size:.72rem;background:var(--brand);color:#fff;border-radius:999px;padding:1px 8px}
+.nm-refs{margin:4px 0 8px}
+.nm-machine{padding-left:1.3em;line-height:1.9}
+.nm-machine li{margin:3px 0}

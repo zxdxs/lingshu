@@ -44,7 +44,7 @@ var NAV = [
                   ['binghou', '病候'], ['variant', '變體'], ['jiugong', '九宫八風']]],
   ['grp', '學', [['map', '81 篇地圖'], ['path', '學習路徑'], ['themes', '五個主題'], ['law', '通則 65 條'], ['module', '模組（一篇一卡）']]],
   ['grp', '練', [['items', '題庫'], ['concept', '概念卡'], ['prep', '九鍼']]],
-  ['grp', '校', [['collation', '校勘'], ['suwen', '異同'], ['govern', '治理與預算'], ['limits', '限制']]],
+  ['grp', '校', [['collation', '校勘'], ['naming', '名訓層'], ['suwen', '異同'], ['govern', '治理與預算'], ['limits', '限制']]],
   ['grp', '更多', [['search', '搜尋'], ['method', '方法'], ['mine', '我的'], ['about', '關於'], ['contact', '指正與聯絡']]]
 ];
 var VIEWS = {};
@@ -75,7 +75,7 @@ VIEWS.home = function (box) {
     ['讀', '一篇一篇讀，每句可回查', [['通讀 81 篇', '#/read'], ['誦讀（出聲）', '#/recite'], ['注家節錄', '#/jizhu']]],
     ['學', '先看骨幹，再看細節', [['81 篇地圖', '#/map'], ['學習路徑', '#/path'], ['通則 65 條', '#/law'], ['五個主題', '#/themes'], ['模組（一篇一卡）', '#/module']]],
     ['練', '作答、對答案、回原文', [['題庫 ' + stat('items') + ' 題', '#/items'], ['概念卡 12 張', '#/concept'], ['九鍼', '#/prep']]],
-    ['校', '哪些可信、哪裡還沒解決', [['校勘', '#/collation'], ['異同（靈樞 vs 素問）', '#/suwen'], ['治理與預算', '#/govern'], ['限制 34 條', '#/limits']]]
+    ['校', '哪些可信、哪裡還沒解決', [['校勘', '#/collation'], ['名訓層（穴名）', '#/naming'], ['異同（靈樞 vs 素問）', '#/suwen'], ['治理與預算', '#/govern'], ['限制 34 條', '#/limits']]]
   ];
   var dg = h('div', '', 'grid');
   DOORS.forEach(function (d) {
@@ -106,7 +106,8 @@ VIEWS.home = function (box) {
     ['學', [['81 篇地圖', '#/map', '十一組'], ['學習路徑', '#/path', '三條路線'], ['五個主題', '#/themes', '五個斜切'],
             ['通則', '#/law', ((LS.law || {})['條數'] || 0) + ' 條'], ['模組', '#/module', '81 篇一篇一卡']]],
     ['練', [['題庫', '#/items', stat('items') + ' 題'], ['概念', '#/concept', '12 張'], ['九鍼', '#/prep', '九種鍼']]],
-    ['校', [['校勘', '#/collation', '三源並排＋甲乙經'], ['異同', '#/suwen', '靈樞 vs 素問'],
+    ['校', [['校勘', '#/collation', '三源並排＋甲乙經'], ['名訓層', '#/naming', '穴名怎麼訓'],
+            ['異同', '#/suwen', '靈樞 vs 素問'],
             ['治理', '#/govern', '未決登記簿＋預算'], ['限制', '#/limits', '34 條']]],
     ['更多', [['搜尋', '#/search', '全站一次查'], ['方法', '#/method', '稽核怎麼做'],
              ['我的', '#/mine', '進度'], ['關於', '#/about', '授權與出處'], ['指正與聯絡', '#/contact', '回報一處']]]
@@ -2235,7 +2236,8 @@ function renderShu(box) {
     });
     box.appendChild(c);
   });
-  box.appendChild(h('p', '<a href="#/read?seq=2">讀〈本輸〉全文</a>', 'small'));
+  box.appendChild(h('p', '<a href="#/read?seq=2">讀〈本輸〉全文</a>　·　' +
+    '<a href="#/naming">穴名用字與位次爭議：名訓層</a>', 'small'));
 }
 
 
@@ -2268,7 +2270,8 @@ function renderYuan(box) {
     });
     box.appendChild(c);
   }
-  box.appendChild(h('p', '原穴用於五藏之疾的診與治，具體操作需師授；本頁只列關係。', 'small muted'));
+  box.appendChild(h('p', '原穴用於五藏之疾的診與治，具體操作需師授；本頁只列關係。' +
+    '　<a href="#/naming">十二原的兩套 scope（名訓層）</a>', 'small muted'));
 }
 
 function renderYingwei(box) {
@@ -2612,7 +2615,217 @@ VIEWS.method = function (box) {
   });
   box.appendChild(t2);
 
-  nextLinks(box, [['校勘：19 條三源並排', '#/collation'], ['限制：34 條能力邊界', '#/limits'], ['異同：與素問的比較', '#/suwen']]);};
+  nextLinks(box, [['名訓層：穴名怎麼訓', '#/naming'], ['校勘：19 條三源並排', '#/collation'], ['限制：34 條能力邊界', '#/limits'], ['異同：與素問的比較', '#/suwen']]);};
+
+/* ---------------- 名訓層（穴名辨析） ---------------- */
+VIEWS.naming = function (box) {
+  var N = LS.naming;
+  if (!N) { box.appendChild(h('p', '名訓資料未載入。', 'small')); return; }
+  var S = N['統計'] || {};
+  function sidLink(sid) {
+    var seq = String(sid).split('-')[0];
+    return '<a class="small" href="#/read?seq=' + seq + '&sid=' + encodeURIComponent(sid) + '">句 ' + esc(sid) + '</a>';
+  }
+  function quote(r) {
+    return '<div class="nm-q"><span class="nm-qtext">' + esc(r.text) + '</span>' +
+      '<span class="nm-qsrc">' + sidLink(r.id) + '　·　' + esc((bySeq(r.seq) || {}).name || '') + '</span></div>';
+  }
+  function refs(list) { return (list || []).map(quote).join(''); }
+
+  box.appendChild(h('h1', '名訓層：穴名能解釋到什麼程度'));
+  box.appendChild(h('p', '這一頁只問三件事：一個穴名能不能解釋；解釋到什麼程度才算合規；古今異名與歸屬爭議怎樣才不污染底本。' +
+    '它不問「這個穴治什麼病」。', 'lead'));
+
+  var src = h('div', '', 'card nm-source');
+  src.innerHTML = '<div class="small muted">方法稿審查</div>' +
+    '<p><b>' + esc(N['來源']['檔名']) + '</b>（' + N['來源']['大小'].toLocaleString() + ' bytes，sha256 ' +
+    '<code>' + esc(N['來源']['sha256'].slice(0, 16)) + '…</code>）</p>' +
+    '<p class="small"><b>審查結論：</b>' + esc(N['來源']['狀態']) + ' ' + esc(N['來源']['處置']) + '</p>' +
+    '<p class="small muted">本站不把外部稿的通行本字形當底本；本頁每一條經文引文都由句索引取字，句 id 可回查。' +
+    '與底本不合的 7 處，列在下面審查表，不靜默改字。</p>';
+  box.appendChild(src);
+
+  var rv = h('div', '', 'card');
+  rv.appendChild(el('h2', '', '先審查：外部稿與底本的 7 處不合'));
+  var rt = '<tr><th style="width:120px">爭點</th><th>外部稿說法</th><th>底本核對</th><th style="width:220px">本站處置</th></tr>';
+  (N['審查'] || []).forEach(function (x) {
+    rt += '<tr><td><b>' + esc(x['題']) + '</b></td><td class="small">' + esc(x['外部稿']) + '</td>' +
+      '<td class="small">' + esc(x['底本']) + '</td><td class="small">' + esc(x['處置']) + '</td></tr>';
+  });
+  var rw = h('div', '', 'table-wrap'); rw.innerHTML = '<table>' + rt + '</table>';
+  rv.appendChild(rw);
+  rv.appendChild(h('p', '審查的原則：外部稿的「方法」可用，它的「錄文」不可直接當本站原文；凡底本與外部稿不同，先照錄底本，再另立待核，不反過來改底本。', 'small muted'));
+  box.appendChild(rv);
+
+  var pr = h('div', '', 'card');
+  pr.appendChild(el('h2', '', '八條原則'));
+  var pg = h('div', '', 'nm-grid');
+  (N['原則'] || []).forEach(function (x) {
+    var c = h('div', '', 'nm-principle');
+    c.innerHTML = '<div class="nm-k">' + esc(x.id) + '</div><h3>' + esc(x['題']) + '</h3><p class="small">' + esc(x['文']) + '</p>';
+    pg.appendChild(c);
+  });
+  pr.appendChild(pg);
+  box.appendChild(pr);
+
+  var st = h('div', '', 'card');
+  st.appendChild(el('h2', '', '六步法'));
+  var sg = h('div', '', 'nm-steps');
+  (N['六步'] || []).forEach(function (x) {
+    sg.innerHTML += '<div class="nm-step"><span class="nm-stepno">' + esc(x.n) + '</span><div><b>' + esc(x['題']) + '</b>' +
+      '<p class="small">' + esc(x['文']) + '</p></div></div>';
+  });
+  st.appendChild(sg);
+  box.appendChild(st);
+
+  var vo = h('div', '', 'card');
+  vo.appendChild(el('h2', '', '取象類受控詞表（編者的檢索框架，不是經文分類）'));
+  var vt = '<tr><th style="width:86px">類</th><th style="width:150px">取象根據</th><th style="width:120px">代表字</th><th>例穴</th><th>舉證要點</th></tr>';
+  (N['詞表'] || []).forEach(function (x) {
+    vt += '<tr><td><b>' + esc(x['類']) + '</b></td><td class="small">' + esc(x['取象']) + '</td>' +
+      '<td class="small">' + esc(x['代表字']) + '</td><td class="small">' + esc(x['例穴']) + '</td>' +
+      '<td class="small">' + esc(x['舉證']) + '</td></tr>';
+  });
+  var vw = h('div', '', 'table-wrap'); vw.innerHTML = '<table>' + vt + '</table>';
+  vo.appendChild(vw);
+  vo.appendChild(h('p', '同一字可以跨類，但一條依據只能記一類；「病機功效」最危險，因為它把後世用穴偷換成古人命名，凡入此類一律 C 檔並標 later_view。', 'small muted'));
+  box.appendChild(vo);
+
+  var gr = h('div', '', 'card');
+  gr.appendChild(el('h2', '', '證據分檔與措辭紅線'));
+  var gt = '<tr><th style="width:120px">檔位</th><th>證據要求</th><th>可用措辭</th><th>禁用措辭</th><th style="width:56px">本站標</th></tr>';
+  (N['檔位'] || []).forEach(function (x) {
+    gt += '<tr><td><b>' + esc(x['檔']) + '</b></td><td class="small">' + esc(x['要求']) + '</td>' +
+      '<td class="small">' + esc(x['可用']) + '</td><td class="small">' + esc(x['禁用']) + '</td>' +
+      '<td class="num">' + esc(x['本站標']) + '</td></tr>';
+  });
+  var gw = h('div', '', 'table-wrap'); gw.innerHTML = '<table>' + gt + '</table>';
+  gr.appendChild(gw);
+  gr.appendChild(h('p', '檔位取證據鏈的最短板，不取最亮點；C 檔不得使用定論句式。本站把 A／B／C 對到〔原〕／〔注〕／〔歸〕，但兩套標記不是自動等價，仍以證據為準。', 'small'));
+  box.appendChild(gr);
+
+  var df = h('div', '', 'card');
+  df.appendChild(el('h2', '', '三類差異：異名、異體、標目歸經'));
+  df.appendChild(h('p', '穴名不同進 v 表；用字異體也進 v 表；經脈標目不同進 l 表。兩表不得互填。', 'small'));
+  var xt = '<tr><th style="width:64px">編號</th><th>底本錄文</th><th>今名</th><th>類型</th><th>處置</th><th style="width:64px">句</th></tr>';
+  (N['異名'] || []).forEach(function (x) {
+    xt += '<tr><td><b>' + esc(x.id) + '</b></td><td>' + esc(x['底本']) + '</td><td>' + esc(x['今名']) + '</td>' +
+      '<td class="small">' + esc(x['類型']) + '</td><td class="small">' + esc(x['處置']) + '</td>' +
+      '<td>' + sidLink(x.sid) + '</td></tr>';
+  });
+  var xw = h('div', '', 'table-wrap'); xw.innerHTML = '<table>' + xt + '</table>';
+  df.appendChild(xw);
+  var lt = '<tr><th style="width:64px">編號</th><th>本輸標目</th><th>今制歸經</th><th>說明</th><th style="width:64px">句</th></tr>';
+  (N['標目'] || []).forEach(function (x) {
+    lt += '<tr><td><b>' + esc(x.id) + '</b></td><td>' + esc(x['本輸標目']) + '</td><td>' + esc(x['今制']) + '</td>' +
+      '<td class="small">' + esc(x['說明']) + '</td><td>' + sidLink(x.sid) + '</td></tr>';
+  });
+  var lw = h('div', '', 'table-wrap'); lw.innerHTML = '<table>' + lt + '</table>';
+  df.appendChild(lw);
+  if (N['十二原'] && N['十二原'].d001) {
+    var dd = N['十二原'];
+    [dd.d001, dd.d002].forEach(function (d) {
+      df.appendChild(h('p', '<b>' + esc(d['題']) + '</b>：甲 ' + esc(d['甲']) + '；乙 ' + esc(d['乙']) +
+        '；判定 <span class="pill y">' + esc(d['狀態']) + '</span>。' + esc(d['理由']), 'small'));
+    });
+  }
+  box.appendChild(df);
+
+  var ex = h('div', '');
+  ex.appendChild(h('h2', '七個實例：每例都給錄文、拆字、兩證、檔位與證偽'));
+  (N['實例'] || []).forEach(function (e, i) {
+    var c = h('div', '', 'card nm-ex');
+    var et = '<tr><th style="width:44px">字</th><th style="width:90px">類</th><th>字書層</th><th>醫理層</th><th style="width:86px">檔位</th></tr>';
+    (e.elements || []).forEach(function (x) {
+      et += '<tr><td><b>' + esc(x.char) + '</b></td><td class="small">' + esc(x.cls) + '</td>' +
+        '<td class="small">' + esc(x.lexis) + '</td><td class="small">' + esc(x.medical) + '</td>' +
+        '<td class="small">' + esc(x.grade) + '</td></tr>';
+    });
+    c.innerHTML = '<div class="nm-exhead"><span class="nm-exno">例 ' + (i + 1) + '</span><b>' + esc(e.name) + '</b>' +
+      '<span class="pill">' + esc(e.tag) + '</span><span class="pill ' + (e.status.indexOf('blocked') >= 0 ? 'y' : 'g') + '">' + esc(e.status) + '</span></div>' +
+      '<div class="nm-refs">' + refs(e.refs) + '</div>' +
+      (e.elements && e.elements.length ? '<div class="table-wrap"><table>' + et + '</table></div>' : '<p class="small muted">elements 留空：無可證依據。</p>') +
+      '<p><b>判</b>：' + esc(e.conclusion) + '</p>' +
+      '<p class="small"><b>證偽</b>：' + esc(e.falsifier) + '</p>' +
+      '<p class="small"><b>關聯</b>：' + esc((e.links || []).join('；')) + '</p>' +
+      '<p class="small"><b>本例誤判</b>：' + esc(e.mistake) + '</p>' +
+      '<p class="small muted"><b>審查注</b>：' + esc(e.review) + '</p>';
+    ex.appendChild(c);
+  });
+  box.appendChild(ex);
+
+  var ws = h('div', '', 'card');
+  ws.appendChild(el('h2', '', '五輸：先訓類名，再約束穴名'));
+  ws.appendChild(h('p', '本輸十一經，每經一句；陰經無原，陽經多一原。表內用底本字，今名另欄，不用今名回填。', 'small'));
+  var wt = '<tr><th style="width:76px">本輸標目</th><th style="width:120px">今制</th><th>井</th><th>滎</th><th>腧</th><th>原</th><th>經</th><th>合</th><th>差異</th><th style="width:56px">句</th></tr>';
+  (N['五腧'] || []).forEach(function (x) {
+    wt += '<tr><td><b>' + esc(x.base) + '</b></td><td class="small">' + esc(x.modern) + '</td>' +
+      [x.jing, x.ying, x.shu, x.yuan, x.jing2, x.he].map(function (y) { return '<td class="small">' + esc(y || '—') + '</td>'; }).join('') +
+      '<td class="small">' + esc(x.diff) + '</td><td>' + sidLink(x.sid) + '</td></tr>';
+  });
+  var ww = h('div', '', 'table-wrap'); ww.innerHTML = '<table>' + wt + '</table>';
+  ws.appendChild(ww);
+  ws.appendChild(h('p', '類名的經文依據在 1-8-3（底本作「所以為合」，外部稿作「所入為合」，已列審查）；' +
+    '五藏井木、六府井金是本輸的標注事實，但不能延伸為子母補瀉取穴。', 'small muted'));
+  box.appendChild(ws);
+
+  var yz = h('div', '', 'card');
+  yz.appendChild(el('h2', '', '十二原的兩套 scope'));
+  var A = N['十二原'].A, B = N['十二原'].B;
+  var at = '<tr><th>藏</th><th>原</th><th>數</th><th>句</th></tr>';
+  (A['條'] || []).forEach(function (x) { at += '<tr><td>' + esc(x['藏']) + '</td><td><b>' + esc(x['原']) + '</b></td><td class="num">' + x['數'] + '</td><td>' + sidLink(x.sid) + '</td></tr>'; });
+  yz.innerHTML = '<p class="small"><b>' + esc(A['名']) + '</b>：' + esc(A['說明']) + '</p>' +
+    '<div class="table-wrap"><table>' + at + '</table></div>' +
+    '<p class="small" style="margin-top:10px"><b>' + esc(B['名']) + '</b>：' + esc(B['說明']) + '</p>' +
+    '<p class="small">' + (B['條'] || []).map(esc).join('、') + '。</p>' +
+    '<p class="small muted">' + esc(B['注']) + '</p>' +
+    '<p class="small">出題或檢索時必須先標 scope；不標 scope 的「十二原」答案不唯一。</p>';
+  box.appendChild(yz);
+
+  var pf = h('div', '', 'card');
+  pf.appendChild(el('h2', '', '常見誤判與攔截'));
+  var pt = '<tr><th style="width:220px">誤判形態</th><th>後果</th><th style="width:240px">攔截</th></tr>';
+  (N['誤判'] || []).forEach(function (x) {
+    pt += '<tr><td>' + esc(x[0]) + '</td><td class="small">' + esc(x[1]) + '</td><td class="small">' + esc(x[2]) + '</td></tr>';
+  });
+  var pw = h('div', '', 'table-wrap'); pw.innerHTML = '<table>' + pt + '</table>';
+  pf.appendChild(pw);
+  box.appendChild(pf);
+
+  var mc = h('div', '', 'card');
+  mc.appendChild(el('h2', '', '機器參與的硬邊界（外部稿摘要）'));
+  var ml = '<ol class="small nm-machine">';
+  (N['機器'] || []).forEach(function (x) { ml += '<li><b>' + esc(x[0]) + '</b>：' + esc(x[1]) + '</li>'; });
+  ml += '</ol>';
+  mc.innerHTML += ml;
+  mc.appendChild(h('p', '本站只在詞表、檔位、措辭層採用這些約束；外部稿宣稱的 CI 指標尚未在本站建立，不拿來當已驗證的口號。', 'small muted'));
+  box.appendChild(mc);
+
+  var fd = h('div', '', 'card');
+  fd.appendChild(el('h2', '', '欄位契約速查'));
+  var ft = '<tr><th style="width:150px">欄位</th><th>含義</th><th>約束</th></tr>';
+  (N['欄位'] || []).forEach(function (x) { ft += '<tr><td><code>' + esc(x[0]) + '</code></td><td class="small">' + esc(x[1]) + '</td><td class="small">' + esc(x[2]) + '</td></tr>'; });
+  var fw = h('div', '', 'table-wrap'); fw.innerHTML = '<table>' + ft + '</table>';
+  fd.appendChild(fw);
+  fd.appendChild(h('p', '字段之外兩條紀律：檔位取最短板；寫不出證據的地方，留白是成果，填充是事故。', 'small'));
+  box.appendChild(fd);
+
+  var td = h('div', '', 'card');
+  td.innerHTML = '<h2>驗收與待辦</h2><p>' + esc(N['驗收']) + '</p><ol class="small">' +
+    (N['待辦'] || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>';
+  box.appendChild(td);
+
+  var stat = h('div', '', 'card');
+  stat.innerHTML = '<div class="stats" style="margin:0"><div class="stat"><b>' + (S['原則'] || 0) + '</b><span>原則</span></div>' +
+    '<div class="stat"><b>' + (S['詞表'] || 0) + '</b><span>取象類</span></div>' +
+    '<div class="stat"><b>' + (S['實例'] || 0) + '</b><span>實例</span></div>' +
+    '<div class="stat"><b>' + (S['五腧'] || 0) + '</b><span>五輸經</span></div>' +
+    '<div class="stat"><b>' + (S['審查'] || 0) + '</b><span>審查點</span></div></div>';
+  box.appendChild(stat);
+
+  nextLinks(box, [['通讀：回到原文與段旨', '#/read?seq=2'], ['五輸表：本輸十一經', '#/meridian?tab=shu'],
+    ['校勘：三源並排', '#/collation'], ['注家：四家怎麼讀', '#/jizhu']]);
+};
 
 /* ---------------- 校勘 ---------------- */
 VIEWS.collation = function (box) {

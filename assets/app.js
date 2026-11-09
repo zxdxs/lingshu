@@ -42,7 +42,7 @@ var NAV = [
   ['home', '首頁'],
   ['grp', '讀', [['read', '通讀 81 篇'], ['recite', '誦讀'], ['jizhu', '注家'], ['meridian', '十二經'],
                   ['binghou', '病候'], ['variant', '變體'], ['jiugong', '九宫八風']]],
-  ['grp', '學', [['map', '81 篇地圖'], ['path', '學習路徑'], ['themes', '五個主題'], ['law', '通則 65 條'], ['module', '模組（一篇一卡）']]],
+  ['grp', '學', [['map', '81 篇地圖'], ['path', '學習路徑'], ['why', '為什麼讀'], ['themes', '五個主題'], ['law', '通則 65 條'], ['module', '模組（一篇一卡）']]],
   ['grp', '練', [['items', '題庫'], ['concept', '概念卡'], ['prep', '九鍼']]],
   ['grp', '校', [['collation', '校勘'], ['naming', '名訓層'], ['suwen', '異同'], ['govern', '治理與預算'], ['limits', '限制']]],
   ['grp', '更多', [['search', '搜尋'], ['method', '方法'], ['mine', '我的'], ['about', '關於'], ['contact', '指正與聯絡']]]
@@ -77,6 +77,8 @@ VIEWS.home = function (box) {
     '<h2>為什麼讀《靈樞》</h2>' +
     '<p class="why-lead">不是把它當針灸技術手冊，也不是拿現代解剖逐條比附。它更值得讀的，' +
     '是用有限觀測去<b>分層、辨狀態、調變量</b>的一套眼法。</p>' +
+    '<p class="why-claim"><b>編者更具體的主張：</b>把《靈樞》當作孩子第一本精讀的元典——先給可驗的具體，再給抽象；' +
+    '先讓事情作答，再讓人裁決。不是因為它淺，而是因為它把判斷交給身體作答。</p>' +
     '<div class="why-grid">' +
       '<div class="why-box">' +
         '<h3>原文先說話</h3>' +
@@ -98,14 +100,17 @@ VIEWS.home = function (box) {
         '<p class="small muted">這不否認針灸技藝：刺法、深度、禁忌照樣讀；只是不把它降成操作手冊，也不把它抬成玄學。</p>' +
       '</div>' +
     '</div>' +
+    '<p class="why-note"><b>開篇三關</b>：文字由師長擔、師承防玄學、身體是護持，不讓孩子行針。' +
+    '<b>AI 時代</b>：答案可以外包，驗收權不能。</p>' +
     '<p class="why-close">讀到最後，讀的不是醫，是明變。<span class="small muted">——編者的話，不是原文</span></p>' +
-    '<p class="small"><a href="#/read">先讀原文</a>　·　<a href="#/path">照路徑讀</a>　·　' +
+    '<p class="small"><a href="#/why"><b>讀全文：先讀身體，再讀天地 →</b></a>　·　' +
+    '<a href="#/read">先讀原文</a>　·　<a href="#/path">照路徑讀</a>　·　' +
     '<a href="#/naming">穴名怎麼訓</a>　·　<a href="#/limits">哪裡還不可靠</a></p>';
   box.appendChild(why);
 
   var DOORS = [
     ['讀', '一篇一篇讀，每句可回查', [['通讀 81 篇', '#/read'], ['誦讀（出聲）', '#/recite'], ['注家節錄', '#/jizhu']]],
-    ['學', '先看骨幹，再看細節', [['81 篇地圖', '#/map'], ['學習路徑', '#/path'], ['通則 65 條', '#/law'], ['五個主題', '#/themes'], ['模組（一篇一卡）', '#/module']]],
+    ['學', '先看骨幹，再看細節', [['81 篇地圖', '#/map'], ['學習路徑', '#/path'], ['為什麼讀', '#/why'], ['通則 65 條', '#/law'], ['五個主題', '#/themes'], ['模組（一篇一卡）', '#/module']]],
     ['練', '作答、對答案、回原文', [['題庫 ' + stat('items') + ' 題', '#/items'], ['概念卡 12 張', '#/concept'], ['九鍼', '#/prep']]],
     ['校', '哪些可信、哪裡還沒解決', [['校勘', '#/collation'], ['名訓層（穴名）', '#/naming'], ['異同（靈樞 vs 素問）', '#/suwen'], ['治理與預算', '#/govern'], ['限制 34 條', '#/limits']]]
   ];
@@ -135,7 +140,7 @@ VIEWS.home = function (box) {
             ['注家', '#/jizhu', '張志聰／張介賓／楊上善／丹波元簡'],
             ['十二經', '#/meridian', '六套通道'], ['病候', '#/binghou', '證候怎麼寫'],
             ['變體', '#/variant', '同一原則的多種寫法'], ['九宫八風', '#/jiugong', '背景知識']]],
-    ['學', [['81 篇地圖', '#/map', '十一組'], ['學習路徑', '#/path', '三條路線'], ['五個主題', '#/themes', '五個斜切'],
+    ['學', [['81 篇地圖', '#/map', '十一組'], ['學習路徑', '#/path', '三條路線'], ['為什麼讀', '#/why', '童蒙開篇'], ['五個主題', '#/themes', '五個斜切'],
             ['通則', '#/law', ((LS.law || {})['條數'] || 0) + ' 條'], ['模組', '#/module', '81 篇一篇一卡']]],
     ['練', [['題庫', '#/items', stat('items') + ' 題'], ['概念', '#/concept', '12 張'], ['九鍼', '#/prep', '九種鍼']]],
     ['校', [['校勘', '#/collation', '三源並排＋甲乙經'], ['名訓層', '#/naming', '穴名怎麼訓'],
@@ -2648,6 +2653,78 @@ VIEWS.method = function (box) {
   box.appendChild(t2);
 
   nextLinks(box, [['名訓層：穴名怎麼訓', '#/naming'], ['校勘：19 條三源並排', '#/collation'], ['限制：34 條能力邊界', '#/limits'], ['異同：與素問的比較', '#/suwen']]);};
+
+/* ---------------- 為什麼讀（長文） ---------------- */
+VIEWS.why = function (box) {
+  var D = LS.why;
+  if (!D) { box.appendChild(h('p', '文章未載入。', 'small')); return; }
+  function sidLink(sid) {
+    return '<a class="small" href="#/read?seq=' + String(sid).split('-')[0] + '&sid=' +
+      encodeURIComponent(sid) + '">句 ' + esc(sid) + '</a>';
+  }
+  box.appendChild(h('p', '編者長文　·　不是原文，也不是臨床建議', 'small muted'));
+  box.appendChild(h('h1', D['題']));
+  box.appendChild(h('p', D['副'], 'lead'));
+
+  var intro = h('div', '', 'card why-article');
+  intro.innerHTML = '<p><b>' + esc(D['說明']) + '</b></p>' +
+    (D['導言'] || []).map(function (x) { return '<p>' + esc(x) + '</p>'; }).join('');
+  box.appendChild(intro);
+
+  var bd = h('div', '', 'card why-boundary');
+  bd.innerHTML = '<h2>先劃邊界</h2><ul class="map-list">' +
+    (D['邊界'] || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+  box.appendChild(bd);
+
+  (D['節'] || []).forEach(function (sec) {
+    var c = h('div', '', 'card why-sec');
+    c.appendChild(h('h2', (sec.n ? sec.n + '、' : '') + (sec['題'] || '')));
+    (sec['塊'] || []).forEach(function (b) {
+      if (b.p) { c.appendChild(h('p', esc(b.p))); return; }
+      if (b.h) { c.appendChild(h('h3', esc(b.h))); return; }
+      if (b.list) {
+        c.appendChild(h('ul', (b.list || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join(''), 'map-list'));
+        return;
+      }
+      if (b.q) {
+        (b.q || []).forEach(function (r) {
+          var qq = h('div', '', 'quote');
+          qq.innerHTML = esc(r.text) + '<div class="src">句 ' + sidLink(r.id) + '　·　' +
+            esc((bySeq(r.seq) || {}).name || '') + '</div>';
+          c.appendChild(qq);
+        });
+        if (b.note) c.appendChild(h('p', esc(b.note), 'small muted'));
+        return;
+      }
+      if (b.table) {
+        var t = '<tr>' + b.table.head.map(function (x) { return '<th>' + esc(x) + '</th>'; }).join('') + '</tr>';
+        (b.table.rows || []).forEach(function (row) {
+          t += '<tr>' + row.map(function (x) { return '<td class="small">' + esc(x) + '</td>'; }).join('') + '</tr>';
+        });
+        var w = h('div', '', 'table-wrap'); w.innerHTML = '<table>' + t + '</table>'; c.appendChild(w);
+        return;
+      }
+      if (b.cards) {
+        var g = h('div', '', 'why-cards');
+        (b.cards || []).forEach(function (x) {
+          var d = h('div', '', 'why-card');
+          d.innerHTML = '<h3>' + esc(x.t) + '</h3><p class="small">' + esc(x.d) + '</p>';
+          g.appendChild(d);
+        });
+        c.appendChild(g);
+      }
+    });
+    box.appendChild(c);
+  });
+
+  var nt = h('div', '', 'card');
+  nt.innerHTML = '<h2>文獻與邊界</h2><ul class="map-list small">' +
+    (D['注'] || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+  box.appendChild(nt);
+
+  nextLinks(box, [['首頁：四扇門', '#/home'], ['通讀：原文與段旨', '#/read?seq=1'],
+    ['名訓層：穴名怎麼訓', '#/naming'], ['限制：哪裡還不可靠', '#/limits']]);
+};
 
 /* ---------------- 名訓層（穴名辨析） ---------------- */
 VIEWS.naming = function (box) {

@@ -367,3 +367,18 @@ body.show-sid .duan-body .sid{display:inline}
 .why-box .quote{margin:6px 0;font-size:.92rem;line-height:1.8}
 .why-box .map-list{font-size:.88rem;line-height:1.85}
 .why-close{margin:10px 0 4px;font-family:"Songti TC","Noto Serif TC",Georgia,serif;font-size:1rem;color:var(--brand)}
+
+/* ===== 為什麼讀：長文 ===== */
+.why-article{border-left:4px solid var(--brand2)}
+.why-article p{line-height:1.95}
+.why-boundary{background:#fbf6ec;border-left:4px solid #b08a4a}
+.why-sec h2{margin-top:0}
+.why-sec h3{margin:16px 0 4px;color:var(--brand)}
+.why-sec .quote{margin:8px 0}
+.why-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:8px 0}
+.why-card{background:#faf7f0;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.why-card h3{margin:0 0 4px;font-size:.9rem;color:var(--brand)}
+.why-card p{margin:0;line-height:1.8}
+.why-claim{margin:6px 0 10px;padding:8px 12px;background:#faf7f0;border-left:3px solid var(--brand2);border-radius:0 8px 8px 0;font-size:.96rem;line-height:1.8}
+.why-note{margin:8px 0;font-size:.86rem;color:var(--ink2);line-height:1.8}
+.why-note b{color:var(--brand)}

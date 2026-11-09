@@ -880,9 +880,10 @@ function anchorHTML(it) {
   var tag = { '句': '題幹／答案直引', '引文': '題幹引文', '他篇引文': '他篇引文',
     '答案': '答案對應原文', '篇首': '題幹無直引，定位篇首' }[it.ak] || '';
   var cross = (String(aseq) !== String(it.seq)) ? '（他篇）' : '';
+  var pd = it.apd || it.ad || 1;
   return '<div class="small" style="margin-top:8px">' +
-    '<a class="btn ghost" href="#/read?seq=' + aseq + '&sid=' + encodeURIComponent(it.a) + '">' +
-    '回原文 · ' + esc(ap ? ap.name : '') + ' · 句 ' + esc(it.a) + '</a> ' +
+    '<a class="btn ghost" href="#/read?seq=' + aseq + '&sid=' + encodeURIComponent(it.a) + '&d=' + pd + '">' +
+    '回原文 · ' + esc(ap ? ap.name : '') + ' · 段 ' + pd + '（句 ' + esc(it.a) + '）</a> ' +
     '<span class="muted">' + esc(tag + cross) + '</span></div>';
 }
 function itemCard(it) {

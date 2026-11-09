@@ -19,3 +19,6 @@ reader/_preview_*.html
 # 站台產物（由 scripts/build_site.py 重建，不進版控）
 site/
 .gh-pages-worktree/
+
+# 自用資料（真人錄音等，不對外、不進版控/打包）
+private/

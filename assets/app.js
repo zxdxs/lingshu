@@ -2636,26 +2636,19 @@ VIEWS.naming = function (box) {
   box.appendChild(h('p', '這一頁只問三件事：一個穴名能不能解釋；解釋到什麼程度才算合規；古今異名與歸屬爭議怎樣才不污染底本。' +
     '它不問「這個穴治什麼病」。', 'lead'));
 
-  var src = h('div', '', 'card nm-source');
-  src.innerHTML = '<div class="small muted">方法稿審查</div>' +
-    '<p><b>' + esc(N['來源']['檔名']) + '</b>（' + N['來源']['大小'].toLocaleString() + ' bytes，sha256 ' +
-    '<code>' + esc(N['來源']['sha256'].slice(0, 16)) + '…</code>）</p>' +
-    '<p class="small"><b>審查結論：</b>' + esc(N['來源']['狀態']) + ' ' + esc(N['來源']['處置']) + '</p>' +
-    '<p class="small muted">本站不把外部稿的通行本字形當底本；本頁每一條經文引文都由句索引取字，句 id 可回查。' +
-    '與底本不合的 7 處，列在下面審查表，不靜默改字。</p>';
-  box.appendChild(src);
-
-  var rv = h('div', '', 'card');
-  rv.appendChild(el('h2', '', '先審查：外部稿與底本的 7 處不合'));
-  var rt = '<tr><th style="width:120px">爭點</th><th>外部稿說法</th><th>底本核對</th><th style="width:220px">本站處置</th></tr>';
-  (N['審查'] || []).forEach(function (x) {
-    rt += '<tr><td><b>' + esc(x['題']) + '</b></td><td class="small">' + esc(x['外部稿']) + '</td>' +
-      '<td class="small">' + esc(x['底本']) + '</td><td class="small">' + esc(x['處置']) + '</td></tr>';
+  var us = h('div', '', 'card');
+  us.appendChild(el('h2', '', '用字先於名訓'));
+  us.appendChild(h('p', '名訓的第一步是定形：錄文用哪個字，就先照哪個字。底本本身有幾處用字不一致或疑訛，' +
+    '這裡先列出，不替底本改字，也不拿今名回填。', 'small'));
+  var ut = '<tr><th style="width:110px">用字</th><th>底本</th><th style="width:280px">本站處置</th></tr>';
+  (N['用字'] || []).forEach(function (x) {
+    ut += '<tr><td><b>' + esc(x['題']) + '</b></td><td class="small">' + esc(x['底本']) + '</td>' +
+      '<td class="small">' + esc(x['處置']) + '</td></tr>';
   });
-  var rw = h('div', '', 'table-wrap'); rw.innerHTML = '<table>' + rt + '</table>';
-  rv.appendChild(rw);
-  rv.appendChild(h('p', '審查的原則：外部稿的「方法」可用，它的「錄文」不可直接當本站原文；凡底本與外部稿不同，先照錄底本，再另立待核，不反過來改底本。', 'small muted'));
-  box.appendChild(rv);
+  var uw = h('div', '', 'table-wrap'); uw.innerHTML = '<table>' + ut + '</table>';
+  us.appendChild(uw);
+  us.appendChild(h('p', '原則：未回影印本核錄的字，不改、不並、不補；名訓只能在照錄的字上做，不能先換成今字再解釋。', 'small muted'));
+  box.appendChild(us);
 
   var pr = h('div', '', 'card');
   pr.appendChild(el('h2', '', '八條原則'));
@@ -2749,7 +2742,7 @@ VIEWS.naming = function (box) {
       '<p class="small"><b>證偽</b>：' + esc(e.falsifier) + '</p>' +
       '<p class="small"><b>關聯</b>：' + esc((e.links || []).join('；')) + '</p>' +
       '<p class="small"><b>本例誤判</b>：' + esc(e.mistake) + '</p>' +
-      '<p class="small muted"><b>審查注</b>：' + esc(e.review) + '</p>';
+      '<p class="small muted"><b>說明</b>：' + esc(e.review) + '</p>';
     ex.appendChild(c);
   });
   box.appendChild(ex);
@@ -2765,7 +2758,7 @@ VIEWS.naming = function (box) {
   });
   var ww = h('div', '', 'table-wrap'); ww.innerHTML = '<table>' + wt + '</table>';
   ws.appendChild(ww);
-  ws.appendChild(h('p', '類名的經文依據在 1-8-3（底本作「所以為合」，外部稿作「所入為合」，已列審查）；' +
+  ws.appendChild(h('p', '類名的經文依據在 1-8-3（底本作「所以為合」；通行本多作「所入為合」，未回影印本核錄，不逕改）；' +
     '五藏井木、六府井金是本輸的標注事實，但不能延伸為子母補瀉取穴。', 'small muted'));
   box.appendChild(ws);
 
@@ -2793,12 +2786,12 @@ VIEWS.naming = function (box) {
   box.appendChild(pf);
 
   var mc = h('div', '', 'card');
-  mc.appendChild(el('h2', '', '機器參與的硬邊界（外部稿摘要）'));
+  mc.appendChild(el('h2', '', '機器參與的硬邊界（本站寫作規約）'));
   var ml = '<ol class="small nm-machine">';
   (N['機器'] || []).forEach(function (x) { ml += '<li><b>' + esc(x[0]) + '</b>：' + esc(x[1]) + '</li>'; });
   ml += '</ol>';
   mc.innerHTML += ml;
-  mc.appendChild(h('p', '本站只在詞表、檔位、措辭層採用這些約束；外部稿宣稱的 CI 指標尚未在本站建立，不拿來當已驗證的口號。', 'small muted'));
+  mc.appendChild(h('p', '這些是本站採用的寫作約束；CI 與回歸用例尚未建立，不把它們說成已驗證的指標。', 'small muted'));
   box.appendChild(mc);
 
   var fd = h('div', '', 'card');
@@ -2820,7 +2813,7 @@ VIEWS.naming = function (box) {
     '<div class="stat"><b>' + (S['詞表'] || 0) + '</b><span>取象類</span></div>' +
     '<div class="stat"><b>' + (S['實例'] || 0) + '</b><span>實例</span></div>' +
     '<div class="stat"><b>' + (S['五腧'] || 0) + '</b><span>五輸經</span></div>' +
-    '<div class="stat"><b>' + (S['審查'] || 0) + '</b><span>審查點</span></div></div>';
+    '<div class="stat"><b>' + (S['用字'] || 0) + '</b><span>用字備註</span></div></div>';
   box.appendChild(stat);
 
   nextLinks(box, [['通讀：回到原文與段旨', '#/read?seq=2'], ['五輸表：本輸十一經', '#/meridian?tab=shu'],

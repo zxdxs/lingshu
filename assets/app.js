@@ -42,7 +42,7 @@ var NAV = [
   ['home', '首頁'],
   ['grp', '讀', [['read', '通讀 81 篇'], ['recite', '誦讀'], ['jizhu', '注家'], ['meridian', '十二經'],
                   ['binghou', '病候'], ['variant', '變體'], ['jiugong', '九宫八風']]],
-  ['grp', '學', [['path', '學習路徑'], ['themes', '五個主題'], ['law', '通則 65 條'], ['module', '模組（一篇一卡）']]],
+  ['grp', '學', [['map', '81 篇地圖'], ['path', '學習路徑'], ['themes', '五個主題'], ['law', '通則 65 條'], ['module', '模組（一篇一卡）']]],
   ['grp', '練', [['items', '題庫'], ['concept', '概念卡'], ['prep', '九鍼']]],
   ['grp', '校', [['collation', '校勘'], ['suwen', '異同'], ['govern', '治理與預算'], ['limits', '限制']]],
   ['grp', '更多', [['search', '搜尋'], ['method', '方法'], ['mine', '我的'], ['about', '關於'], ['contact', '指正與聯絡']]]
@@ -73,7 +73,7 @@ VIEWS.home = function (box) {
 
   var DOORS = [
     ['讀', '一篇一篇讀，每句可回查', [['通讀 81 篇', '#/read'], ['誦讀（出聲）', '#/recite'], ['注家節錄', '#/jizhu']]],
-    ['學', '先看骨幹，再看細節', [['學習路徑', '#/path'], ['通則 65 條', '#/law'], ['五個主題', '#/themes'], ['模組（一篇一卡）', '#/module']]],
+    ['學', '先看骨幹，再看細節', [['81 篇地圖', '#/map'], ['學習路徑', '#/path'], ['通則 65 條', '#/law'], ['五個主題', '#/themes'], ['模組（一篇一卡）', '#/module']]],
     ['練', '作答、對答案、回原文', [['題庫 ' + stat('items') + ' 題', '#/items'], ['概念卡 12 張', '#/concept'], ['九鍼', '#/prep']]],
     ['校', '哪些可信、哪裡還沒解決', [['校勘', '#/collation'], ['異同（靈樞 vs 素問）', '#/suwen'], ['治理與預算', '#/govern'], ['限制 34 條', '#/limits']]]
   ];
@@ -88,8 +88,10 @@ VIEWS.home = function (box) {
   box.appendChild(dg);
 
   var stats = h('div', '', 'stats');
+  var segn = ((LS.reading || {})['統計'] || {}).段 || 0;
   stats.innerHTML = '<div class="stat"><b>' + stat('pian') + '</b><span>篇</span></div>' +
     '<div class="stat"><b>' + stat('chars').toLocaleString() + '</b><span>經文字</span></div>' +
+    '<div class="stat"><b>' + segn + '</b><span>段（含段旨）</span></div>' +
     '<div class="stat"><b>' + stat('items') + '</b><span>題</span></div>' +
     '<div class="stat"><b>' + stat('quote_seg') + '</b><span>逐字核過的引文段</span></div>';
   box.appendChild(stats);
@@ -97,11 +99,11 @@ VIEWS.home = function (box) {
   box.appendChild(h('h2', '全部頁面'));
   box.appendChild(h('p', '依「讀、學、練、校」分組；導覽列也是同一套分組。', 'small muted'));
   var MAP = [
-    ['讀', [['通讀 81 篇', '#/read', '原文＋校記'], ['誦讀', '#/recite', '系統語音逐句'],
+    ['讀', [['通讀 81 篇', '#/read', '原文＋段旨＋注'], ['誦讀', '#/recite', '系統語音、以段為單位'],
             ['注家', '#/jizhu', '張志聰／張介賓／楊上善／丹波元簡'],
             ['十二經', '#/meridian', '六套通道'], ['病候', '#/binghou', '證候怎麼寫'],
             ['變體', '#/variant', '同一原則的多種寫法'], ['九宫八風', '#/jiugong', '背景知識']]],
-    ['學', [['學習路徑', '#/path', '三條路線'], ['五個主題', '#/themes', '五個入口'],
+    ['學', [['81 篇地圖', '#/map', '十一組'], ['學習路徑', '#/path', '三條路線'], ['五個主題', '#/themes', '五個斜切'],
             ['通則', '#/law', ((LS.law || {})['條數'] || 0) + ' 條'], ['模組', '#/module', '81 篇一篇一卡']]],
     ['練', [['題庫', '#/items', stat('items') + ' 題'], ['概念', '#/concept', '12 張'], ['九鍼', '#/prep', '九種鍼']]],
     ['校', [['校勘', '#/collation', '三源並排＋甲乙經'], ['異同', '#/suwen', '靈樞 vs 素問'],
@@ -130,7 +132,7 @@ VIEWS.home = function (box) {
   box.appendChild(no);
 };
 
-/* ---------------- 誦讀 ---------------- */
+/* ---------------- 誦讀（以段為單位） ---------------- */
 VIEWS.recite = function (box, q) {
   var R = LS.recite || [];
   if (!R.length) { box.appendChild(h('p', '誦讀資料未載入。', 'small')); return; }
@@ -139,10 +141,35 @@ VIEWS.recite = function (box, q) {
   R.forEach(function (x) { if (x.seq === seq) P = x; });
   if (!P) { P = R[0]; seq = P.seq; }
   STATE.reciteSeq = seq; save();
+  var DZ = ((LS.reading || {}).段旨 || {}).篇 || {};
+  var dz = {};
+  (DZ[String(seq)] || []).forEach(function (z) { dz[z.d] = z.旨; });
+  var SEG = (((LS.reading || {}).閱讀段 || {}).篇 || {})[String(seq)] || null;
+  var sid2pd = {};
+  if (SEG) SEG.forEach(function (g) { (g.sids || []).forEach(function (sid) { sid2pd[sid] = g.pd; }); });
 
-  box.appendChild(h('h1', '誦讀：把經文讀出聲'));
-  box.appendChild(h('p', '逐句朗讀，讀到哪一句就亮到哪一句。用的是<b>這台機器的系統語音</b>：' +
-    '不預錄音檔、可離線、速度可調；發音與斷句不是定本，遇到多音字請以紙本音釋為準。', 'lead'));
+  box.appendChild(h('h1', '誦讀：一段一段讀出聲'));
+  box.appendChild(h('p', '以<b>段落</b>為單位，不再一句一停：一段讀完，留一點白，再進下一段。' +
+    '用的是<b>這台機器的系統語音</b>：不預錄音檔、可離線、速度可調；發音與斷句不是定本，遇到多音字請以紙本音釋為準。', 'lead'));
+
+  var paras = [], byD = {};
+  (P.sents || []).forEach(function (s) {
+    var d = sid2pd[s.id] || s.d || 1;
+    if (!byD[d]) { byD[d] = { d: d, sents: [] }; paras.push(byD[d]); }
+    byD[d].sents.push(s);
+  });
+  paras.sort(function (a, b) { return a.d - b.d; });
+  // 長段誦讀時按句群分口氣（不改變原文分段）；避免四十、九十句一口氣讀完
+  var readParas = [];
+  paras.forEach(function (pa) {
+    var n = pa.sents.length, size = n > 12 ? Math.ceil(n / Math.ceil(n / 6)) : n;
+    if (n <= 8) { pa.part = 1; pa.parts = 1; readParas.push(pa); return; }
+    var parts = Math.ceil(n / size);
+    for (var k = 0; k < parts; k++) {
+      readParas.push({ d: pa.d, sents: pa.sents.slice(k * size, (k + 1) * size),
+                       part: k + 1, parts: parts });
+    }
+  });
 
   var card = h('div', '', 'card');
   var sel = document.createElement('select');
@@ -178,9 +205,9 @@ VIEWS.recite = function (box, q) {
 
   var row2 = h('div', '', 'recite-row');
   var btnPlay = el('button', 'btn', '▶ 播放'); btnPlay.type = 'button';
-  var btnPrev = el('button', 'btn ghost', '↑ 上一句'); btnPrev.type = 'button';
-  var btnNext = el('button', 'btn ghost', '↓ 下一句'); btnNext.type = 'button';
-  var btnAgain = el('button', 'btn ghost', '↻ 重讀'); btnAgain.type = 'button';
+  var btnPrev = el('button', 'btn ghost', '↑ 上一段'); btnPrev.type = 'button';
+  var btnNext = el('button', 'btn ghost', '↓ 下一段'); btnNext.type = 'button';
+  var btnAgain = el('button', 'btn ghost', '↻ 重讀本段'); btnAgain.type = 'button';
   [btnPlay, btnPrev, btnNext, btnAgain].forEach(function (b) { row2.appendChild(b); });
   var status = h('span', '', 'small muted');
   row2.appendChild(status);
@@ -203,11 +230,31 @@ VIEWS.recite = function (box, q) {
     }
     return out;
   }
-  P.sents.forEach(function (s, i) {
-    var p = h('p', '', 'recite-line');
-    p.setAttribute('data-i', i);
-    p.innerHTML = '<span class="recite-id">' + esc(s.id) + '</span>' + withPinyin(s.t, s.p);
-    list.appendChild(p);
+  readParas.forEach(function (pa, i) {
+    var d = h('div', '', 'recite-para');
+    d.setAttribute('data-i', i);
+    var head = h('div', '', 'recite-phead');
+    head.innerHTML = '<span class="pill b">段 ' + pa.d +
+      (pa.parts > 1 ? ' · ' + pa.part + '/' + pa.parts : '') + '</span>' +
+      (dz[pa.d] ? '<span class="recite-pzhi">' + esc(dz[pa.d]) + '</span>' : '') +
+      '<span class="small muted">' + pa.sents.length + ' 句</span>';
+    d.appendChild(head);
+    pa.sents.forEach(function (s) {
+      var p = h('p', '', 'recite-line');
+      p.innerHTML = '<span class="recite-sid">' + esc(s.id) + '</span>' + withPinyin(s.t, s.p);
+      d.appendChild(p);
+    });
+    d.onclick = function (ev) {
+      if (ev.target && ev.target.tagName === 'A') return;
+      highlight(i);
+      if (playing) {
+        stop();
+        playing = true;
+        btnPlay.textContent = '⏸ 暫停';
+        speak(i);
+      }
+    };
+    list.appendChild(d);
   });
   card.appendChild(list);
   pyCb.onchange = function () {
@@ -218,24 +265,22 @@ VIEWS.recite = function (box, q) {
 
   var note = h('div', '', 'card');
   note.innerHTML = '<h3>怎麼用</h3><ul class="small">' +
-    '<li>先按「播放」聽第一句；如果聲音不對（沒裝中文語音、或變成英文腔），換一個系統語音再試。</li>' +
-    '<li>「循環本篇」適合通篇聽；「重讀」適合一句反覆跟讀。</li>' +
-    '<li>讀到哪裡，左邊的句ID 就亮到哪裡——可以對照紙本或本站的原文頁。</li>' +
-    '<li>「拼音」可開關；拼音由程式生成（帶聲調），多音字與古讀只校了常見幾條（五藏、寫＝瀉、俞＝腧…），'
-    + '不是定本，遇到疑處請以紙本音釋與字典為準。</li>' +
+    '<li>按「播放」從目前段落開始；一段讀完會停約 0.35 秒，再進下一段。點任何一段，可從那一段起讀。</li>' +
+    '<li>超過八句的長段，誦讀時按句群分「口氣」（如段 1 · 2/5），只為換氣，不改變原文分段。</li>' +
+    '<li>上一段／下一段用滑桿或按鈕；「重讀本段」適合反覆跟讀一段。</li>' +
+    '<li>段首的短句是<b>編者段旨（歸）</b>，不是原文；用來提示這一段在做什麼，讀完可自己改寫。</li>' +
+    '<li>拼音由程式生成（帶聲調），多音字與古讀只校了常見幾條；不是定本，遇疑處請以紙本音釋與字典為準。</li>' +
     '<li>本站不提供人聲錄音；系統語音的發音也不是定本，音釋層（罕字反切）沒有唸進來。</li></ul>';
   box.appendChild(note);
 
   var synth = window.speechSynthesis;
-  var zh = [];
-  var cur = 0, playing = false;
+  var zh = [], cur = 0, playing = false, pend = null;
 
   function pickVoices() {
     var all = (synth && synth.getVoices) ? synth.getVoices() : [];
     var cand = all.filter(function (v) {
       return /^(zh|cmn)/i.test(v.lang || '') || /chinese|中文|國語|普通话/i.test(v.name || '');
     });
-    // 偏好：台灣 > 香港 > 其他中文
     cand.sort(function (a, b) {
       function w(v) {
         var l = (v.lang || '').toLowerCase();
@@ -246,15 +291,14 @@ VIEWS.recite = function (box, q) {
       return w(a) - w(b);
     });
     zh = cand;
-    if (!synth) setStatus('此瀏覽器不支援語音合成；仍可手動逐句閱讀。');
+    if (!synth) setStatus('此瀏覽器不支援語音合成；仍可手動逐段閱讀。');
     else if (!zh.length) setStatus('系統還沒有回報中文語音：可在系統設定安裝（macOS：系統設定 → 輔助使用 → 語音內容），裝好後重開本頁。');
     else setStatus('準備好：' + zh[0].name + '（' + zh[0].lang + '）');
   }
-
   function setStatus(msg) { status.textContent = msg; }
   function highlight(i) {
     Array.prototype.forEach.call(list.children, function (n, k) {
-      n.className = 'recite-line' + (k === i ? ' on' : '');
+      n.className = 'recite-para' + (k === i ? ' on' : '');
     });
     var n = list.children[i];
     if (n && n.scrollIntoView) n.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -262,25 +306,30 @@ VIEWS.recite = function (box, q) {
   function stop() {
     playing = false;
     btnPlay.textContent = '▶ 播放';
+    if (pend) { clearTimeout(pend); pend = null; }
     if (synth) synth.cancel();
   }
   function speak(i) {
     if (!synth) { setStatus('此瀏覽器沒有語音合成（speechSynthesis）'); return; }
     if (i < 0) i = 0;
-    if (i >= P.sents.length) {
-      if (loopCb.checked) { i = 0; } else { stop(); setStatus('讀完了（' + P.sents.length + ' 句）'); return; }
+    if (i >= readParas.length) {
+      if (loopCb.checked) { i = 0; } else { stop(); setStatus('讀完了（' + readParas.length + ' 口氣）'); return; }
     }
     cur = i;
     highlight(i);
-    var u = new SpeechSynthesisUtterance(P.sents[i].t);
+    var text = readParas[i].sents.map(function (s) { return s.t; }).join('');
+    var u = new SpeechSynthesisUtterance(text);
     u.lang = 'zh-TW';
     u.rate = parseFloat(rate.value) || 0.9;
     if (zh.length) u.voice = zh[0];
-    u.onend = function () { if (playing) speak(cur + 1); };
+    u.onend = function () {
+      if (!playing) return;
+      pend = setTimeout(function () { if (playing) speak(cur + 1); }, 350);
+    };
     u.onerror = function () { setStatus('語音中斷（可能是系統語音問題）'); };
     synth.cancel();
     synth.speak(u);
-    setStatus((i + 1) + ' / ' + P.sents.length);
+    setStatus('第 ' + (i + 1) + ' / ' + readParas.length + ' 口氣（段 ' + readParas[i].d + '，' + readParas[i].sents.length + ' 句）');
   }
   btnPlay.onclick = function () {
     if (!synth) return;
@@ -288,24 +337,26 @@ VIEWS.recite = function (box, q) {
     if (playing) { btnPlay.textContent = '⏸ 暫停'; speak(cur); }
     else { stop(); setStatus('已暫停'); }
   };
-  btnPrev.onclick = function () { stop(); speak(Math.max(0, cur - 1)); cur = Math.max(0, cur - 1); };
-  btnNext.onclick = function () { stop(); speak(Math.min(P.sents.length - 1, cur + 1)); };
-  btnAgain.onclick = function () { stop(); speak(cur); };
+  btnPrev.onclick = function () { stop(); cur = Math.max(0, cur - 1); highlight(cur); };
+  btnNext.onclick = function () { stop(); cur = Math.min(readParas.length - 1, cur + 1); highlight(cur); };
+  btnAgain.onclick = function () { stop(); playing = true; btnPlay.textContent = '⏸ 暫停'; speak(cur); };
   sel.onchange = function () { stop(); location.hash = '#/recite?seq=' + sel.value; };
   rate.onchange = function () { STATE.reciteRate = parseFloat(rate.value); save(); };
 
   pickVoices();
   if (synth && synth.addEventListener) synth.addEventListener('voiceschanged', pickVoices);
+  highlight(0);
 
-  nextLinks(box, [['讀原文（含校記）', '#/read?seq=' + seq], ['注家怎麼讀', '#/jizhu'], ['學習路徑', '#/path']]);
+  nextLinks(box, [['讀原文（段旨＋注＋音義）', '#/read?seq=' + seq], ['注家怎麼讀', '#/jizhu'], ['學習路徑', '#/path']]);
 };
 
 /* ---------------- 主題 ---------------- */
 VIEWS.themes = function (box) {
   box.appendChild(h('h1', '靈樞在講什麼'));
   var note = h('div', '', 'card');
-  note.innerHTML = '<b>先說清楚</b>：以下五個主題的<b>劃分與命名是編者所加</b>，不是《靈樞》原有的分類。原文只提供材料；' +
-    '每一條主張下面都附原文與句 ID，讀者可以不同意這個分法，直接讀原文。';
+  note.innerHTML = '<b>先說清楚</b>：以下五個主題的<b>劃分與命名是編者所加</b>，不是《靈樞》原有的分類；' +
+    '它們是<b>斜切</b>五刀，只各取幾篇，不是八十一篇的完整分組。完整分組見 <a href="#/map">81 篇地圖（十一組）</a>。' +
+    '原文只提供材料；每一條主張下面都附原文與句 ID，讀者可以不同意這個分法，直接讀原文。';
   box.appendChild(note);
   (LS.themes || []).forEach(function (t, i) {
     var c = h('div', '', 'card');
@@ -339,90 +390,430 @@ VIEWS.themes = function (box) {
   });
 };
 
-/* ---------------- 通讀 ---------------- */
+/* ---------------- 81 篇地圖（十一組） ---------------- */
+VIEWS.map = function (box) {
+  var GD = LS.groups || {};
+  var G = (GD.組 || []).slice().sort(function (a, b) { return parseInt(a.id.slice(1), 10) - parseInt(b.id.slice(1), 10); });
+  if (!G.length) { box.appendChild(h('p', '分組資料未載入。', 'small')); return; }
+  var maxN = Math.max.apply(null, G.map(function (g) { return g.篇.length; }));
+  var COL = ['#7a5c3e', '#8a6a3f', '#6d7a4a', '#4f7a6a', '#4a6d84', '#6a5a88', '#8a4f5a', '#9a7040', '#5a7a8a', '#7a6a50', '#6a6a6a'];
+
+  box.appendChild(h('h1', '81 篇地圖：十一組'));
+  box.appendChild(h('p', '把八十一篇按「讀它要做什麼」分成十一組。分組取自本專案的學習模組規劃，' +
+    '名、主旨與讀法是編者整理（歸），<b>不是《靈樞》原有的分類</b>；原書次序仍可從卷次讀。', 'lead'));
+
+  var stats = h('div', '', 'stats');
+  stats.innerHTML = '<div class="stat"><b>' + GD.篇數 + '</b><span>篇</span></div>' +
+    '<div class="stat"><b>' + GD.組數 + '</b><span>組</span></div>' +
+    '<div class="stat"><b>' + ((LS.law || {})['條數'] || 0) + '</b><span>通則</span></div>' +
+    '<div class="stat"><b>' + ((LS.reading || {})['統計'] || {}).段 + '</b><span>段</span></div>';
+  box.appendChild(stats);
+
+  var chart = h('div', '', 'card');
+  chart.innerHTML = '<h2>十一組的篇數</h2><div class="hbars">' + G.map(function (g, i) {
+    return '<a class="hbar" href="#/read?g=' + g.id + '" title="' + esc(g.名) + '">' +
+      '<span class="hbar-k"><b>' + g.id + '</b> ' + esc(g.名) + '</span>' +
+      '<i style="width:' + Math.round(g.篇.length / maxN * 100) + '%;background:' + COL[i % COL.length] + '"></i>' +
+      '<span class="hbar-v">' + g.篇.length + ' 篇 · ' + g.題數 + ' 題</span></a>';
+  }).join('') + '</div><p class="small muted">長條＝該組篇數；點一組可只讀那一組。' +
+    '分組不平均是故意的：病證各論本來就最多，經絡與刺法是兩條主幹。</p>';
+  box.appendChild(chart);
+
+  var grid = h('div', '', 'card');
+  var cells = '';
+  G.forEach(function (g, i) {
+    g.篇.forEach(function (seq) {
+      var p = bySeq(seq);
+      if (!p) return;
+      cells += '<a class="gcell" href="#/read?seq=' + seq + '" title="' + esc(g.id + ' ' + g.名 + ' · ' + p.name) +
+        '" style="border-top-color:' + COL[i % COL.length] + '">' + seq + '<span>' + esc(p.name.slice(0, 3)) + '</span></a>';
+    });
+  });
+  grid.innerHTML = '<h2>八十一篇一覽</h2><div class="ggrid">' + cells + '</div>' +
+    '<div class="legend">' + G.map(function (g, i) {
+      return '<span><i style="background:' + COL[i % COL.length] + '"></i>' + g.id + ' ' + esc(g.名) + '</span>';
+    }).join('') + '</div>';
+  box.appendChild(grid);
+
+  G.forEach(function (g, i) {
+    var c = h('div', '', 'card gcard');
+    c.style.borderTop = '4px solid ' + COL[i % COL.length];
+    var ps = g.篇.map(function (seq) {
+      var p = bySeq(seq);
+      return '<a class="pill" href="#/read?seq=' + seq + '">' + seq + '. ' + esc(p.name) + '</a>';
+    }).join('');
+    var rules = (g.通則 || []).slice(0, 10).map(function (x) {
+      return '<a href="#/law?n=' + x.n + '">' + x.n + '. ' + esc(x.名) + '</a>';
+    }).join('、');
+    c.innerHTML = '<div class="small muted">' + g.id + '　' + g.篇.length + ' 篇 · ' +
+      g.字數.toLocaleString() + ' 字 · ' + g.題數 + ' 題</div>' +
+      '<h2 style="margin:.2em 0">' + esc(g.名) + '</h2>' +
+      '<p><b>' + esc(g.主旨) + '</b></p>' +
+      '<p class="small muted">讀法：' + esc(g.讀法) + '</p>' +
+      '<div class="row">' + ps + '</div>' +
+      (g.概念 && g.概念.length ? '<p class="small">概念：' + g.概念.map(function (x) {
+        return '<a class="pill" href="#/concept">' + esc(x) + '</a>';
+      }).join('') + '</p>' : '') +
+      (rules ? '<p class="small">相關通則：' + rules + ((g.通則 || []).length > 10 ? '…' : '') + '</p>' : '');
+    box.appendChild(c);
+  });
+
+  var tb = h('div', '', 'card');
+  var tr = '<tr><th>組</th><th>篇</th><th>字</th><th>題</th><th>通則數</th><th>通則（前五）</th></tr>';
+  G.forEach(function (g) {
+    tr += '<tr><td><a href="#/read?g=' + g.id + '">' + g.id + ' ' + esc(g.名) + '</a></td>' +
+      '<td class="num">' + g.篇.length + '</td><td class="num">' + g.字數.toLocaleString() + '</td>' +
+      '<td class="num">' + g.題數 + '</td><td class="num">' + (g.通則 || []).length + '</td>' +
+      '<td class="small">' + (g.通則 || []).slice(0, 5).map(function (x) { return x.n + '. ' + esc(x.名); }).join('、') + '</td></tr>';
+  });
+  tb.innerHTML = '<h2>組 × 通則</h2><p class="small muted">通則可跨組；這裡算的是「這一組的篇被哪些通則引用」。' +
+    '同一條通則可能在多組出現，這正是它成為通則的理由。</p><div class="table-wrap"><table>' + tr + '</table></div>';
+  box.appendChild(tb);
+
+  var note = h('div', '', 'card');
+  note.innerHTML = '<h3>怎麼用</h3><ul class="small">' +
+    '<li>第一次讀：照 M0 → M1 → M2 走，先建立骨架；之後挑一組有興趣的讀。</li>' +
+    '<li>要查病：直接跳 M6 病證各論；要查刺法：M4；要查診斷：M5。</li>' +
+    '<li>五個「斜切主題」（身體、氣血、病從外入、病的表現、判斷）不是分組，是穿過多組的閱讀軸，見<a href="#/themes">五個主題</a>。</li>' +
+    '<li>每篇的段旨、校勘、音義與四家注在<a href="#/read?seq=1">通讀</a>頁；題目可一鍵跳回原文。</li></ul>';
+  box.appendChild(note);
+
+  nextLinks(box, [['通讀 81 篇', '#/read'], ['五個主題（斜切）', '#/themes'], ['通則 65 條', '#/law']]);
+};
+
+/* ---------------- 通讀（段旨＋校勘＋音義＋四家注） ---------------- */
 VIEWS.read = function (box, q) {
-  if (q.seq) return readOne(box, q.seq);
-  box.appendChild(h('h1', '通讀'));
+  if (q.seq) return readOne(box, parseInt(q.seq, 10), q);
+  box.appendChild(h('h1', '通讀 81 篇'));
+  box.appendChild(h('p', '按<b>十一個學習模組</b>分組（編者整理，非原書分類）；每篇進去，會看到逐段主旨、' +
+    '校勘、音義與四家注。你也可以完全不理分組，用搜尋或卷次找篇。', 'lead'));
+  var G = (LS.groups && LS.groups.組) || [];
+  G = G.slice().sort(function (a, b) { return parseInt(a.id.slice(1), 10) - parseInt(b.id.slice(1), 10); });
+
   var row = h('div', '', 'row');
+  var gs = document.createElement('select');
+  gs.appendChild(new Option('全部分組', ''));
+  G.forEach(function (g) { gs.appendChild(new Option(g.id + ' ' + g.名 + '（' + g.篇.length + '）', g.id)); });
+  if (q.g) gs.value = q.g;
   var sel = document.createElement('select');
   sel.appendChild(new Option('全部卷', ''));
   (LS.juan || []).forEach(function (j) { sel.appendChild(new Option(j.label + '（' + j.n + ' 篇）', j.no)); });
-  var inp = document.createElement('input'); inp.type = 'search'; inp.placeholder = '搜篇名…';
+  var inp = document.createElement('input'); inp.type = 'search'; inp.placeholder = '搜篇名、分組…';
   var note = el('span', 'small muted', '');
-  row.appendChild(sel); row.appendChild(inp); row.appendChild(note);
+  row.appendChild(inp); row.appendChild(gs); row.appendChild(sel); row.appendChild(note);
   box.appendChild(row);
+
   var pb = h('div', ''); box.appendChild(pb);
-  var list = h('div', '', 'list'); box.appendChild(list);
+  var list = h('div', ''); box.appendChild(list);
+
   function render() {
     list.innerHTML = '';
-    var jf = sel.value, kw = inp.value.trim(), done = 0, total = 0;
-    (LS.pian || []).forEach(function (p) {
-      if (jf !== '' && String(p.juan) !== jf) return;
-      if (kw && p.name.indexOf(kw) < 0) return;
-      total++;
-      var read = STATE.read && STATE.read[p.seq];
-      if (read) done++;
-      var d = h('div', '', 'tiao');
-      d.innerHTML = '<span class="no">' + p.seq + '</span>' +
-        '<a href="#/read?seq=' + p.seq + '">' + esc(p.name) + '</a>' +
-        ' <span class="small muted">' + (p.juan ? '卷' + p.juan + ' · ' : '') + p.chars + ' 字 · ' + (p.items || 0) + ' 題</span>' +
-        (read ? ' <span class="pill g">已讀</span>' : '');
+    var kw = inp.value.trim(), gf = gs.value, jf = sel.value, total = 0, shown = 0;
+    G.forEach(function (g) {
+      if (gf && g.id !== gf) return;
+      var ps = g.篇.map(bySeq).filter(Boolean).filter(function (p) {
+        if (jf !== '' && String(p.juan) !== jf) return false;
+        if (kw && !(p.name.indexOf(kw) >= 0 || g.名.indexOf(kw) >= 0 || g.id.indexOf(kw) >= 0)) return false;
+        return true;
+      });
+      total += ps.length;
+      if (!ps.length) return;
+      shown++;
+      var d = document.createElement('details');
+      d.className = 'gsec'; d.open = true;
+      var sm = document.createElement('summary');
+      sm.innerHTML = '<span class="gid">' + esc(g.id) + '</span> <b>' + esc(g.名) + '</b>' +
+        ' <span class="small muted">' + ps.length + ' 篇 · ' + g.字數.toLocaleString() + ' 字</span>';
+      d.appendChild(sm);
+      var desc = el('p', 'small muted', g.主旨);
+      d.appendChild(desc);
+      var gl = h('div', '', 'glist');
+      ps.forEach(function (p) {
+        var read = STATE.read && STATE.read[p.seq];
+        var it = h('div', '', 'tiao');
+        it.innerHTML = '<span class="no">' + p.seq + '</span>' +
+          '<a href="#/read?seq=' + p.seq + '">' + esc(p.name) + '</a>' +
+          ' <span class="small muted">' + (p.juan ? '卷' + p.juan + ' · ' : '') + p.chars + ' 字 · ' + (p.items || 0) + ' 題</span>' +
+          (read ? ' <span class="pill g">已讀</span>' : '');
+        gl.appendChild(it);
+      });
+      d.appendChild(gl);
       list.appendChild(d);
     });
     var all = Object.keys(STATE.read || {}).length;
-    pb.innerHTML = bar(all, (LS.pian || []).length) + '<div class="small muted">全書已讀 ' + all + '/' + (LS.pian || []).length + '　·　本次顯示 ' + total + ' 篇</div>';
+    pb.innerHTML = bar(all, (LS.pian || []).length) + '<div class="small muted">全書已讀 ' + all + '/' +
+      (LS.pian || []).length + '　·　本次顯示 ' + total + ' 篇、' + shown + ' 組' +
+      (total === 0 ? '（試試清除搜尋）' : '') + '</div>';
   }
-  sel.onchange = render; inp.oninput = render; render();
+  inp.oninput = render; gs.onchange = render; sel.onchange = render; render();
 
-  nextLinks(box, [['通則：這幾篇在講什麼規矩', '#/law'], ['十二經：把篇裡的經脉抽出來看', '#/meridian'], ['練這一篇的題', '#/items']]);};
-function readOne(box, seq) {
+  if (q.g) {
+    var g0 = G.filter(function (g) { return g.id === q.g; })[0];
+    if (g0) {
+      var intro = h('div', '', 'card');
+      intro.innerHTML = '<span class="gid">' + esc(g0.id) + '</span> <b>' + esc(g0.名) + '</b>' +
+        '<p>' + esc(g0.主旨) + '</p><p class="small muted">讀法：' + esc(g0.讀法) + '</p>' +
+        '<p class="small"><a href="#/map">看完整地圖</a>　·　<a href="#/law">這一組的通則</a></p>';
+      if (box.insertBefore) box.insertBefore(intro, row); else box.appendChild(intro);
+    }
+  }
+
+  nextLinks(box, [['81 篇地圖：十一組怎麼分', '#/map'], ['通則：這幾篇在講什麼規矩', '#/law'],
+    ['注家：四家怎麼讀', '#/jizhu']]);
+};
+
+function readOne(box, seq, q) {
+  seq = parseInt(seq, 10);
   var p = bySeq(seq);
   if (!p) { box.appendChild(h('p', '本篇不存在。')); return; }
+  var RD = LS.reading || {};
+  var DZ = ((RD.段旨 || {}).篇 || {})[String(seq)] || [];
+  var dz = {};
+  DZ.forEach(function (z) { dz[z.d] = z; });
+  var SEG = ((RD.閱讀段 || {}).篇 || {})[String(seq)] || null;
+  var sid2pd = {};
+  if (SEG) SEG.forEach(function (g) { (g.sids || []).forEach(function (sid) { sid2pd[sid] = g.pd; }); });
+  var NOTES = (RD.注 || {}).句 || {};
+  var YIN = (RD.音義 || {}).句 || {};
+  var COLL = RD.校勘 || {};
+  var CBYQ = COLL.句 || {}, CBYP = COLL.篇 || {};
+  var JZ = COLL.夾註 || {};
+  var R = (LS.recite || []).filter(function (x) { return x.seq === seq; })[0];
+  var sents = (R && R.sents) || [];
+  var paras = [], byD = {};
+  sents.forEach(function (s) {
+    var d = sid2pd[s.id] || s.d || 1;
+    if (!byD[d]) { byD[d] = { d: d, sents: [] }; paras.push(byD[d]); }
+    byD[d].sents.push(s);
+  });
+  paras.sort(function (a, b) { return a.d - b.d; });
+  var grp = (LS.groups && LS.groups.組 || []).filter(function (g) { return g.id === p.g; })[0];
+
+  var crumb = h('p', '', 'crumb');
+  crumb.innerHTML = '<a href="#/read">通讀</a> / <a href="#/read?g=' + esc(p.g || '') + '">' +
+    esc((p.g || '') + ' ' + (p.gname || '')) + '</a> / ' + esc(p.name);
+  box.appendChild(crumb);
   box.appendChild(h('h1', p.name));
-  box.appendChild(h('p', (p.juan ? '卷' + p.juan + ' · ' : '') + p.chars + ' 字 · ' + (p.items || 0) + ' 題', 'small muted'));
+  box.appendChild(h('p', (p.juan ? '卷' + p.juan + ' · ' : '') + p.chars + ' 字 · ' +
+    sents.length + ' 句 · ' + paras.length + ' 段 · ' + (p.items || 0) + ' 題', 'small muted'));
+
   var row = h('div', '', 'row');
   var b = el('button', 'btn', STATE.read && STATE.read[p.seq] ? '已讀 ✓' : '標為已讀'); b.type = 'button';
   var b2 = el('button', 'btn ghost', '← 回通讀'); b2.type = 'button';
   var b3 = el('a', 'btn ghost', '看本篇題目'); b3.href = '#/items?seq=' + p.seq;
   var b4 = el('a', 'btn ghost', '誦讀本篇'); b4.href = '#/recite?seq=' + p.seq;
+  var b5 = el('button', 'btn ghost', '只讀原文'); b5.type = 'button';
+  var b6 = el('button', 'btn ghost', '展開全部注'); b6.type = 'button';
+  var b7 = el('button', 'btn ghost', '顯示句ID'); b7.type = 'button';
   b.onclick = function () { STATE.read = STATE.read || {}; STATE.read[p.seq] = 1; save(); b.textContent = '已讀 ✓'; };
   b2.onclick = function () { location.hash = '#/read'; };
-  row.appendChild(b); row.appendChild(b2); row.appendChild(b3); row.appendChild(b4);
+  row.appendChild(b); row.appendChild(b2); row.appendChild(b3); row.appendChild(b4); row.appendChild(b5); row.appendChild(b6); row.appendChild(b7);
   box.appendChild(row);
-  var t = h('div', '', 'orig');
-  p.text.split('\n').forEach(function (line, dn) {
-    if (!line.trim()) return;
-    var para = document.createElement('p');
-    var parts = line.split(/(?<=[。！？])/);
-    parts.forEach(function (sent, jn) {
-      if (!sent) return;
-      var sp = document.createElement('span');
-      sp.className = 'sent';
-      sp.appendChild(document.createTextNode(sent));
-      var sid = document.createElement('i');
-      sid.className = 'sid';
-      sid.textContent = p.seq + '-' + (dn + 1) + '-' + (jn + 1);
-      sp.appendChild(sid);
-      para.appendChild(sp);
-    });
-    t.appendChild(para);
+
+  if (q.sid || q.d) {
+    var al = h('div', '', 'alert anchor-alert');
+    var sid0 = q.sid || '';
+    al.innerHTML = '<b>已定位到題目原文</b>　' +
+      (sid0 ? '句 ' + esc(sid0) + '　' : '') +
+      '<a href="#/read?seq=' + p.seq + '">清除定位，讀全篇</a>';
+    box.appendChild(al);
+  }
+
+  var grid = h('div', '', 'read-grid');
+  var side = h('aside', 'read-side');
+  var sc = h('div', '', 'card');
+  var navh = '<h3>段目錄</h3><ol class="duan-nav">';
+  paras.forEach(function (pa) {
+    var z = dz[pa.d];
+    navh += '<li><a href="#d' + pa.d + '" data-d="' + pa.d + '"><b>段 ' + pa.d + '</b>' +
+      '<span>' + esc((z && z.旨) || '（段旨待補）') + '</span></a></li>';
   });
-  box.appendChild(t);
-  var tg = el('button', 'btn ghost', '顯示句號'); tg.type = 'button';
-  tg.onclick = function () {
-    document.body.classList.toggle('show-sid');
-    tg.textContent = document.body.classList.contains('show-sid') ? '隱藏句號' : '顯示句號';
+  navh += '</ol>';
+  var myRules = [], seenR = {};
+  ((LS.law || {}).組 || []).forEach(function (g) {
+    (g.條 || []).forEach(function (x) {
+      if (seenR[x.n]) return;
+      if ((x.引 || []).some(function (q) { return q.seq === seq; })) {
+        seenR[x.n] = 1; myRules.push(x);
+      }
+    });
+  });
+  var ruleList = myRules.length ? myRules : (grp && grp.通則 || []);
+  if (ruleList.length) {
+    navh += '<h3>' + (myRules.length ? '本篇通則' : '本組通則') + '（' + ruleList.length + '）</h3><p class="small">' +
+      ruleList.slice(0, 10).map(function (x) {
+        return '<a href="#/law?n=' + x.n + '">' + x.n + '. ' + esc(x.名) + '</a>';
+      }).join('<br/>') + '</p>';
+  }
+  var cp = CBYP[String(seq)] || [], jz = JZ[String(seq)] || [];
+  if (cp.length || jz.length) {
+    navh += '<h3>校勘與夾註</h3><p class="small muted">' +
+      (cp.length ? '篇級校勘 ' + cp.length + ' 條　' : '') +
+      (jz.length ? '底本夾註 ' + jz.length + ' 條' : '') + '</p>';
+  }
+  sc.innerHTML = navh;
+  side.appendChild(sc);
+  grid.appendChild(side);
+
+  var main = h('div', 'read-main'); main.id = 'read-main';
+  var intro = h('div', '', 'card read-intro');
+  var mod = ((LS.modules || {}).篇 || []).filter(function (x) { return x.篇序 === seq; })[0];
+  intro.innerHTML = '<div class="small muted"><span class="gid">' + esc(p.g || '') + '</span> ' +
+    esc(p.gname || '') + ' · 段旨、音義、注文皆為輔助，原文為準</div>' +
+    (grp ? '<p style="margin:6px 0 2px"><b>這一組在讀什麼：</b>' + esc(grp.主旨) + '</p>' +
+      '<p class="small muted" style="margin:0">讀法：' + esc(grp.讀法) + '</p>' : '') +
+    (mod && mod.一句 ? '<p style="margin:10px 0 0"><b>篇旨（編者）：</b>' + esc(mod.一句) + '</p>' : '') +
+    '<p class="small muted" style="margin:10px 0 0">段旨＝編者歸納（歸）；注文為節錄，張注、馬蒔多為簡體照錄，不與經文混同；' +
+    '音義為史崧舊注與本站罕字整理。讀者可以不同意段旨，直接讀原文。</p>' +
+    '<p class="small" style="margin:8px 0 0"><span class="pill y">技藝</span> 原文涉及刺法、出血、深度、留呼與禁忌，本站不迴避；' +
+    '但只作文本閱讀，實際操作須由合格中醫師指導，切勿照書自行施治。</p>';
+  main.appendChild(intro);
+
+  if (cp.length) {
+    main.appendChild(collBlock(cp, '篇級校勘'));
+  }
+  if (jz.length) {
+    var jd = document.createElement('details'); jd.className = 'card fold';
+    var js = document.createElement('summary');
+    js.textContent = '底本夾註 ' + jz.length + ' 條（展開）';
+    jd.appendChild(js);
+    var jw = h('div', '');
+    jz.forEach(function (x) {
+      jw.appendChild(h('p', '<b>' + esc(x.type) + '</b>　' + esc(x.text) + '　<span class="small muted">' + esc(x.note) + '</span>', 'small'));
+    });
+    jd.appendChild(jw); main.appendChild(jd);
+  }
+
+  paras.forEach(function (pa) {
+    var sec = document.createElement('section');
+    sec.className = 'duan'; sec.id = 'd' + pa.d;
+    var head = h('div', '', 'duan-head');
+    var z = dz[pa.d];
+    head.innerHTML = '<span class="duan-no">段 ' + pa.d + '</span>' +
+      '<span class="duan-zhi">' + esc((z && z.旨) || '段旨待補') + '</span>' +
+      '<span class="duan-meta">' + pa.sents.length + ' 句</span>';
+    sec.appendChild(head);
+    var body = h('div', '', 'duan-body');
+    pa.sents.forEach(function (s) {
+      var sp = document.createElement('span');
+      sp.className = 'sent'; sp.id = 's-' + s.id;
+      sp.appendChild(document.createTextNode(s.t));
+      var i = document.createElement('i');
+      i.className = 'sid'; i.textContent = s.id;
+      sp.appendChild(i);
+      body.appendChild(sp);
+    });
+    sec.appendChild(body);
+
+    var sids = pa.sents.map(function (s) { return s.id; });
+    // 音義
+    var ys = [], seen = {};
+    sids.forEach(function (sid) {
+      (YIN[sid] || []).forEach(function (y) {
+        var k = y['字'] + '|' + (y['音'] || '');
+        if (seen[k]) return; seen[k] = 1; ys.push(y);
+      });
+    });
+    if (ys.length) {
+      var yb = h('div', '', 'yin');
+      yb.innerHTML = '<b>音義</b>' + ys.map(function (y) {
+        return '<span class="yin-item" title="' + esc(y['家'] || '') + '"><b>' + esc(y['字']) + '</b>' +
+          (y['音'] ? ' ' + esc(y['音']) : '') +
+          (y['義'] ? '　<span class="muted">' + esc(y['義']) + '</span>' : '') + '</span>';
+      }).join('');
+      sec.appendChild(yb);
+    }
+    // 句級校勘
+    var cs = [];
+    sids.forEach(function (sid) { (CBYQ[sid] || []).forEach(function (c) { cs.push(c); }); });
+    if (cs.length) sec.appendChild(collBlock(cs, '句級校勘'));
+
+    // 四家注
+    var ns = [];
+    sids.forEach(function (sid) { (NOTES[sid] || []).forEach(function (n) { ns.push(n); }); });
+    if (ns.length) {
+      var fam = [];
+      ns.forEach(function (n) { if (fam.indexOf(n['家']) < 0) fam.push(n['家']); });
+      var nb = h('div', '', 'notes');
+      var first = ns[0];
+      nb.innerHTML = '<div class="note-brief"><span class="pill b">注</span><b>' + esc(first['家']) + '</b>　' +
+        esc(first['文'].slice(0, 90)) + (first['文'].length > 90 ? '…' : '') + '</div>';
+      var det = document.createElement('details');
+      det.className = 'duan-notes';
+      var sm = document.createElement('summary');
+      sm.textContent = '展開 ' + ns.length + ' 則（' + fam.join('／') + '）';
+      det.appendChild(sm);
+      ns.forEach(function (n) {
+        var item = h('div', '', 'note-item');
+        item.innerHTML = '<div class="note-fam">' + esc(n['家']) + ' <span class="muted">' + esc(n['源'] || '') + '</span></div>' +
+          '<div class="note-text">' + esc(n['文']) + '</div>';
+        det.appendChild(item);
+      });
+      nb.appendChild(det);
+      sec.appendChild(nb);
+    }
+    main.appendChild(sec);
+  });
+
+  grid.appendChild(main);
+  box.appendChild(grid);
+
+  b5.onclick = function () {
+    main.classList.toggle('read-plain');
+    b5.textContent = main.classList.contains('read-plain') ? '顯示注與音義' : '只讀原文';
   };
-  row.appendChild(tg);
-  if (p.note) {
-    box.appendChild(h('h3', '校記'));
-    box.appendChild(h('p', esc(p.note), 'small'));
+  b6.onclick = function () {
+    var ds = main.querySelectorAll('details.duan-notes');
+    var open = ds.length && ds[0].open;
+    Array.prototype.forEach.call(ds, function (d) { d.open = !open; });
+    b6.textContent = open ? '展開全部注' : '收起全部注';
+  };
+  b7.onclick = function () {
+    document.body.classList.toggle('show-sid');
+    b7.textContent = document.body.classList.contains('show-sid') ? '隱藏句ID' : '顯示句ID';
+  };
+
+  // 側欄點擊：只滾動，不改路由
+  Array.prototype.forEach.call(side.querySelectorAll('.duan-nav a'), function (a) {
+    a.onclick = function (ev) {
+      ev.preventDefault();
+      var el = document.getElementById('d' + a.getAttribute('data-d'));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  });
+  if (window.IntersectionObserver) {
+    var links = side.querySelectorAll('.duan-nav a');
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        Array.prototype.forEach.call(links, function (a) {
+          a.classList.toggle('on', a.getAttribute('data-d') === en.target.id.replace(/^d/, ''));
+        });
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    Array.prototype.forEach.call(main.querySelectorAll('.duan'), function (d) { io.observe(d); });
   }
-  var yin = (LS.yinshi || []).filter(function (y) { return String(y.juan).replace(/^0+/, '') === String(p.juan); })[0];
-  if (yin) {
-    box.appendChild(h('h3', '音釋'));
-    box.appendChild(h('p', esc(yin.text) + '…', 'small'));
+  if (q.sid || q.d) {
+    setTimeout(function () {
+      var t = q.sid ? document.getElementById('s-' + q.sid) : null;
+      if (!t && q.d) t = document.getElementById('d' + q.d);
+      if (t) {
+        t.classList.add('target');
+        t.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }, 80);
   }
+}
+
+function collBlock(cs, label) {
+  var d = h('div', '', 'collate');
+  d.innerHTML = '<b>' + esc(label) + '</b>' + cs.map(function (c) {
+    return '<div class="collate-item"><span class="pill y">' + esc(c.id) + '</span> ' +
+      '<b>底本</b> ' + esc(c.base) + '　<b>太素</b> ' + esc(c.taisu) +
+      '　<b>類經</b> ' + esc(c.leijing) + '　<b>別本</b> ' + esc(c.other) +
+      '<div class="small">判定：' + esc(c.verdict) + '（' + esc(c.basis) + '；影響：' + esc(c.impact) + '）</div></div>';
+  }).join('');
+  return d;
 }
 
 /* ---------------- 題庫 ---------------- */
@@ -437,6 +828,10 @@ VIEWS.items = function (box, q) {
     '<div class="small muted">已作答 ' + attempts + ' / ' + stat('items') + '　·　答對 ' + ok +
     '（' + pct(ok, attempts) + '%）</div>';
   box.appendChild(head);
+  var asid = (LS.meta.stats && LS.meta.stats.anchor_sid) || 0;
+  var aoth = (LS.meta.stats && LS.meta.stats.anchor_other) || 0;
+  box.appendChild(h('p', '每題作答後都有「回原文」：' + asid + ' 題直接定位到句，' + aoth +
+    ' 題依題幹引文、答案或篇首定位（會標明是哪一種）。先讀再答，比刷題有用。', 'small muted'));
 
   var row = h('div', '', 'row');
   var f1 = document.createElement('select');
@@ -478,6 +873,18 @@ VIEWS.items = function (box, q) {
   f1.onchange = f2.onchange = f3.onchange = render; render();
 
   nextLinks(box, [['我的：看成績與正確率', '#/mine'], ['通則：題目背後的原則', '#/law'], ['限制：哪些題還待專家核', '#/limits']]);};
+function anchorHTML(it) {
+  if (!it.a) return '';
+  var aseq = parseInt(String(it.a).split('-')[0], 10);
+  var ap = bySeq(aseq);
+  var tag = { '句': '題幹／答案直引', '引文': '題幹引文', '他篇引文': '他篇引文',
+    '答案': '答案對應原文', '篇首': '題幹無直引，定位篇首' }[it.ak] || '';
+  var cross = (String(aseq) !== String(it.seq)) ? '（他篇）' : '';
+  return '<div class="small" style="margin-top:8px">' +
+    '<a class="btn ghost" href="#/read?seq=' + aseq + '&sid=' + encodeURIComponent(it.a) + '">' +
+    '回原文 · ' + esc(ap ? ap.name : '') + ' · 句 ' + esc(it.a) + '</a> ' +
+    '<span class="muted">' + esc(tag + cross) + '</span></div>';
+}
 function itemCard(it) {
   var c = h('div', '', 'card');
   var head = h('div', '');
@@ -494,7 +901,7 @@ function itemCard(it) {
     opts.sort(function (a, b) { return (hash(a + seed) % 97) - (hash(b + seed) % 97); });
     var ans = el('div', 'ans', ''); ans.style.display = 'none';
     ans.innerHTML = '<b>正解：' + esc(it.answer) + '</b>' +
-      (it.note ? '<div class="small">' + md(it.note) + '</div>' : '');
+      (it.note ? '<div class="small">' + md(it.note) + '</div>' : '') + anchorHTML(it);
     opts.forEach(function (o) {
       var b = el('button', 'opt', o); b.type = 'button';
       b.onclick = function () {
@@ -518,7 +925,7 @@ function itemCard(it) {
       (it.acc && it.acc.length ? ' <span class="small muted">（亦可：' + esc(it.acc.join('、')) + '）</span>' : '') +
       (it.kind ? ' <span class="pill">' + esc(it.kind) + '</span>' : '') +
       (it.note ? '<div class="small">' + md(it.note) + '</div>' : '') +
-      '<div class="small">《靈樞·' + esc(it.pian) + '》' + (it.sid ? ' · 句 ' + esc(it.sid) : '') + '</div>';
+      '<div class="small">《靈樞·' + esc(it.pian) + '》' + (it.sid ? ' · 句 ' + esc(it.sid) : '') + '</div>' + anchorHTML(it);
     b.onclick = function () { a.style.display = a.style.display === 'none' ? '' : 'none'; };
     r1.onclick = function () { log2(it.id, true); r1.textContent = '答對 ✓'; };
     r2.onclick = function () { log2(it.id, false); r2.textContent = '答錯 ✓'; };
@@ -549,7 +956,39 @@ VIEWS.concept = function (box) {
   });
   box.appendChild(g);
 
-  nextLinks(box, [['通則：這些詞在哪些原則裡', '#/law'], ['十二經病候', '#/meridian'], ['練概念類題目', '#/items']]);};
+  var CM = LS.conceptmap;
+  if (CM && (CM.節點 || []).length) {
+    var mc = h('div', '', 'card');
+    var byId = {};
+    CM.節點.forEach(function (n) { byId[n.id] = n; });
+    var layers = CM.層 || [];
+    var bands = layers.map(function (L) {
+      var ns = CM.節點.filter(function (n) { return n.層 === L; });
+      return '<div class="cm-layer"><div class="cm-lname">' + esc(L) + '</div><div class="cm-nodes">' +
+        ns.map(function (n) {
+          return '<span class="cm-node" title="' + esc(n.註 || '') + '">' + esc(n.名) + '</span>';
+        }).join('') + '</div></div>';
+    }).join('');
+    var tr = '<tr><th>從</th><th>關係</th><th>到</th><th>證據</th><th>出處</th></tr>';
+    (CM.連線 || []).forEach(function (e) {
+      var a = byId[e.a] || { 名: e.a }, b = byId[e.b] || { 名: e.b };
+      tr += '<tr><td>' + esc(a.名) + '</td><td class="small">' + esc(e['關係']) + '</td><td>' + esc(b.名) +
+        '</td><td><span class="pill ' + (e['證據'] === '原文' ? 'g' : '') + '">' + esc(e['證據']) + '</span></td>' +
+        '<td class="small">' + esc(e['出'] || '') + '</td></tr>';
+    });
+    mc.innerHTML = '<h2>概念地圖：' + CM.節點.length + ' 個節點、' + (CM.連線 || []).length + ' 條連線</h2>' +
+      '<p class="small muted">' + esc(CM['說明'] || '') + '</p>' +
+      '<div class="cm-layers">' + bands + '</div>' +
+      '<p class="small muted">節點按層排列；連線是閱讀時可追的方向，不是生理流程圖。證據標「原文」者，出處可回句索引。</p>' +
+      '<div class="table-wrap"><table>' + tr + '</table></div>' +
+      ((CM.矛盾 || []).length ? '<h3>圖上未解的矛盾</h3><ul class="small">' + CM.矛盾.map(function (x) {
+        return '<li><b>' + esc(x['爭點']) + '</b>：' + esc(x['甲']) + '；' + esc(x['乙']) +
+          '（' + esc(x['狀態']) + '）</li>';
+      }).join('') + '</ul>' : '');
+    box.appendChild(mc);
+  }
+
+  nextLinks(box, [['81 篇地圖：十一組', '#/map'], ['通則：這些詞在哪些原則裡', '#/law'], ['十二經病候', '#/meridian'], ['練概念類題目', '#/items']]);};
 
 
 /* ---------------- 異同：靈樞與素問 ---------------- */
@@ -1915,6 +2354,18 @@ VIEWS.law = function (box, q) {
     '<li><b>界</b>寫的是不能推到哪裡——通則最容易變成過度推論。</li>' +
     '<li>本頁只講「怎麼讀」，不講「怎麼做」。操作、劑量、手法不在這裡，也不該從網頁學。</li></ul>';
   box.appendChild(intro);
+
+  // 通則分布圖：先看六十五條落在哪些組，再讀細目
+  var gc = (L['組'] || []).map(function (g) { return { 名: g['組'], n: (g['條'] || []).length }; });
+  var gmax = Math.max.apply(null, gc.map(function (x) { return x.n; }).concat([1]));
+  var chart = h('div', '', 'card');
+  chart.innerHTML = '<h2>六十五條的分布</h2><div class="hbars">' + gc.map(function (x) {
+    return '<div class="hbar"><span class="hbar-k">' + esc(x['名']) + '</span>' +
+      '<i style="width:' + Math.round(x.n / gmax * 100) + '%"></i>' +
+      '<span class="hbar-v">' + x.n + ' 條</span></div>';
+  }).join('') + '</div><p class="small muted">長條只表示條數，不表示重要性；同一條通則可能跨多篇。' +
+    '想看「哪一組的篇被哪些通則引用」，去<a href="#/map">81 篇地圖</a>的組 × 通則表。</p>';
+  box.appendChild(chart);
 
   // 學習路徑
   if ((L['路徑'] || []).length) {

@@ -1,0 +1,17 @@
+站台：/Users/adonis/Desktop/lingshu/site
+  檔案 9 個、2.27 MB
+  站名：中醫典籍導讀﹣靈樞經　v1.0.0　授權：CC BY-NC-SA 4.0
+  入口：site/index.html（開起來就是首頁）
+From github.com:zxdxs/lingshu
+ * branch            gh-pages   -> FETCH_HEAD
+Preparing worktree (detached HEAD 11da07b)
+HEAD is now at 11da07b site: 發布 2026-11-04 11:56（由 scripts/deploy_pages.sh 產生）
+Switched to a new branch 'gh-pages'
+[gh-pages a88cec5] site: 發布 2026-11-09 08:26（由 scripts/deploy_pages.sh 產生）
+ 3 files changed, 239 insertions(+), 77 deletions(-)
+To github.com:zxdxs/lingshu.git
+   11da07b..a88cec5  gh-pages -> gh-pages
+已推送 gh-pages 分支。
+到 GitHub repo → Settings → Pages：Source 選「Deploy from a branch」，Branch 選 gh-pages / (root)，Save。
+網址：https://zxdxs.github.io/lingshu/
+EXIT=0

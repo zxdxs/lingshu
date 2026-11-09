@@ -354,3 +354,16 @@ body.show-sid .duan-body .sid{display:inline}
 .nm-refs{margin:4px 0 8px}
 .nm-machine{padding-left:1.3em;line-height:1.9}
 .nm-machine li{margin:3px 0}
+
+/* ===== 首頁：為什麼讀 ===== */
+.why{border-top:4px solid var(--brand2);margin-top:18px}
+.why .kicker{font-size:.7rem;letter-spacing:.22em;color:var(--brand2)}
+.why h2{margin:4px 0 6px}
+.why-lead{font-size:1.12rem;line-height:1.9;color:var(--ink)}
+.why-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin:12px 0 8px}
+@media(max-width:760px){.why-grid{grid-template-columns:1fr}}
+.why-box{background:#faf7f0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.why-box h3{margin:2px 0 8px;font-size:.95rem;color:var(--brand)}
+.why-box .quote{margin:6px 0;font-size:.92rem;line-height:1.8}
+.why-box .map-list{font-size:.88rem;line-height:1.85}
+.why-close{margin:10px 0 4px;font-family:"Songti TC","Noto Serif TC",Georgia,serif;font-size:1rem;color:var(--brand)}

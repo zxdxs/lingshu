@@ -71,6 +71,38 @@ VIEWS.home = function (box) {
     '不提供劑量、療程或操作步驟；任何臨床處置請由指導醫師決定。</span>';
   box.appendChild(safe);
 
+  var why = h('div', '', 'card why');
+  why.innerHTML =
+    '<div class="kicker">讀法 · 編者主張</div>' +
+    '<h2>為什麼讀《靈樞》</h2>' +
+    '<p class="why-lead">不是把它當針灸技術手冊，也不是拿現代解剖逐條比附。它更值得讀的，' +
+    '是用有限觀測去<b>分層、辨狀態、調變量</b>的一套眼法。</p>' +
+    '<div class="why-grid">' +
+      '<div class="why-box">' +
+        '<h3>原文先說話</h3>' +
+        '<div class="quote">小鍼之要，易陳而難入，粗守形，上守神。<div class="src">——〈九鍼十二原〉 · 句 1-2-3</div></div>' +
+        '<div class="quote">五藏有六府，六府有十二原，十二原出於四闗，四闗主治五藏。<div class="src">——〈九鍼十二原〉 · 句 1-10-3</div></div>' +
+        '<div class="quote">凡用鍼者，虚則實之，滿則泄之，宛陳則除之，邪勝則虚之。<div class="src">——〈九鍼十二原〉 · 句 1-3-1</div></div>' +
+        '<p class="small muted">三句只支持三件事：分層觀察、外周與內藏的遠端對應、先辨狀態再定操作。' +
+        '它們不等於療效，也不等於現代的實時驗證。</p>' +
+      '</div>' +
+      '<div class="why-box">' +
+        '<h3>三層讀法</h3>' +
+        '<ul class="map-list">' +
+          '<li><b>〔原〕</b> 分層、遠端對應、先辨後調；句 id 可回查，原文是底線。</li>' +
+          '<li><b>〔歸〕</b> 把《靈樞》讀成『人體動力學的結構說明書』、與《素問》《易》《論語》的比較、' +
+          '分類／系統／調控三重訓練，都是編者讀法。</li>' +
+          '<li><b>〔空〕</b> 唯一、最早、醫家先於禮樂、十二原等於現代反射調控等說法，未入庫、未證，不當結論；' +
+          '臨床療效不在本站範圍。</li>' +
+        '</ul>' +
+        '<p class="small muted">這不否認針灸技藝：刺法、深度、禁忌照樣讀；只是不把它降成操作手冊，也不把它抬成玄學。</p>' +
+      '</div>' +
+    '</div>' +
+    '<p class="why-close">讀到最後，讀的不是醫，是明變。<span class="small muted">——編者的話，不是原文</span></p>' +
+    '<p class="small"><a href="#/read">先讀原文</a>　·　<a href="#/path">照路徑讀</a>　·　' +
+    '<a href="#/naming">穴名怎麼訓</a>　·　<a href="#/limits">哪裡還不可靠</a></p>';
+  box.appendChild(why);
+
   var DOORS = [
     ['讀', '一篇一篇讀，每句可回查', [['通讀 81 篇', '#/read'], ['誦讀（出聲）', '#/recite'], ['注家節錄', '#/jizhu']]],
     ['學', '先看骨幹，再看細節', [['81 篇地圖', '#/map'], ['學習路徑', '#/path'], ['通則 65 條', '#/law'], ['五個主題', '#/themes'], ['模組（一篇一卡）', '#/module']]],

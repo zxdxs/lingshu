@@ -895,7 +895,7 @@ function itemCard(it) {
     (it.case ? '<span class="pill y">案例題</span>' : '') +
     (it.level ? '<span class="pill">' + esc(it.level) + '</span>' : '');
   c.appendChild(head);
-  c.appendChild(h('div', 'q', md(it.stem)));
+  c.appendChild(h('div', md(it.stem), 'q'));
 
   if (it.type === 'mcq' || it.case) {
     var opts = [it.answer].concat(it.dis || []);

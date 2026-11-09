@@ -22,3 +22,4 @@ site/
 
 # 自用資料（真人錄音等，不對外、不進版控/打包）
 private/
+deploy.log

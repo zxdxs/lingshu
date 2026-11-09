@@ -140,7 +140,8 @@ def main():
     bianti = load('data/變體.json')
     path = load('data/學習路徑.json')
     govern = load('data/治理.json')
-    # 誦讀：每篇的逐句原文（供 TTS 逐句朗讀與高亮）
+    # 誦讀：每篇的逐句原文與拼音（供 TTS 逐句朗讀、高亮與注音）
+    _py = load('data/拼音.json')['句']
     _ju = load('底本/靈樞經_句索引.json')['句']
     byp = {}
     for s0 in _ju:
@@ -152,7 +153,8 @@ def main():
         if not seq:
             continue
         recite.append({'seq': seq, 'name': nm,
-                       'sents': [{'id': x['id'], 't': x['text']} for x in sorted(rows, key=lambda z: z['seq'])]})
+                       'sents': [{'id': x['id'], 't': x['text'], 'p': _py.get(x['id'], '')}
+                                 for x in sorted(rows, key=lambda z: z['seq'])]})
     recite.sort(key=lambda x: x['seq'])
     # 模組：D 型（結構統一）＋舊的主題型（結構各異，原樣帶去前端做通用渲染）
     NAME = {p['序']: p['篇名'] for p in ch}

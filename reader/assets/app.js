@@ -168,6 +168,12 @@ VIEWS.recite = function (box, q) {
   var loopCb = document.createElement('input'); loopCb.type = 'checkbox';
   loop.appendChild(loopCb); loop.appendChild(document.createTextNode(' 循環本篇'));
   row1.appendChild(loop);
+  var pyLb = document.createElement('label');
+  pyLb.className = 'small';
+  var pyCb = document.createElement('input'); pyCb.type = 'checkbox';
+  pyCb.checked = STATE.recitePy !== false;
+  pyLb.appendChild(pyCb); pyLb.appendChild(document.createTextNode(' 拼音'));
+  row1.appendChild(pyLb);
   card.appendChild(row1);
 
   var row2 = h('div', '', 'recite-row');
@@ -180,14 +186,34 @@ VIEWS.recite = function (box, q) {
   row2.appendChild(status);
   card.appendChild(row2);
 
-  var list = h('div', '', 'recite-list');
+  var list = h('div', '', 'recite-list' + (pyCb.checked ? '' : ' no-py'));
+  var CJK = /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/;
+  function withPinyin(t, py) {
+    if (!py) return esc(t);
+    var sy = py.split(' ');
+    var k = 0, out = '';
+    for (var i = 0; i < t.length; i++) {
+      var ch = t.charAt(i);
+      if (CJK.test(ch) && sy[k]) {
+        out += '<ruby>' + esc(ch) + '<rt>' + esc(sy[k]) + '</rt></ruby>';
+        k++;
+      } else {
+        out += esc(ch);
+      }
+    }
+    return out;
+  }
   P.sents.forEach(function (s, i) {
     var p = h('p', '', 'recite-line');
     p.setAttribute('data-i', i);
-    p.innerHTML = '<span class="recite-id">' + esc(s.id) + '</span>' + esc(s.t);
+    p.innerHTML = '<span class="recite-id">' + esc(s.id) + '</span>' + withPinyin(s.t, s.p);
     list.appendChild(p);
   });
   card.appendChild(list);
+  pyCb.onchange = function () {
+    STATE.recitePy = pyCb.checked; save();
+    list.className = 'recite-list' + (pyCb.checked ? '' : ' no-py');
+  };
   box.appendChild(card);
 
   var note = h('div', '', 'card');
@@ -195,7 +221,9 @@ VIEWS.recite = function (box, q) {
     '<li>先按「播放」聽第一句；如果聲音不對（沒裝中文語音、或變成英文腔），換一個系統語音再試。</li>' +
     '<li>「循環本篇」適合通篇聽；「重讀」適合一句反覆跟讀。</li>' +
     '<li>讀到哪裡，左邊的句ID 就亮到哪裡——可以對照紙本或本站的原文頁。</li>' +
-    '<li>本站不提供人聲錄音；系統語音的發音不是定本，音釋層（罕字反切）也沒有唸進來。</li></ul>';
+    '<li>「拼音」可開關；拼音由程式生成（帶聲調），多音字與古讀只校了常見幾條（五藏、寫＝瀉、俞＝腧…），'
+    + '不是定本，遇到疑處請以紙本音釋與字典為準。</li>' +
+    '<li>本站不提供人聲錄音；系統語音的發音也不是定本，音釋層（罕字反切）沒有唸進來。</li></ul>';
   box.appendChild(note);
 
   var synth = window.speechSynthesis;

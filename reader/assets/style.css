@@ -245,3 +245,9 @@ kbd{font-family:inherit;font-size:.82em;border:1px solid var(--line);border-bott
 .recite-line.on{background:#fdf3e0;color:var(--ink)}
 .recite-id{display:inline-block;min-width:64px;font-family:ui-monospace,monospace;font-size:.72rem;color:var(--brand2);
   margin-right:8px;vertical-align:2px}
+
+/* 誦讀：拼音 ruby */
+.recite-line ruby{ruby-align:center}
+.recite-line rt{font-size:.58em;color:var(--brand2);font-family:"Helvetica Neue",Arial,sans-serif;
+  letter-spacing:.02em;font-weight:400}
+.no-py rt{display:none}

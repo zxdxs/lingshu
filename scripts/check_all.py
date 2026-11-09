@@ -434,6 +434,27 @@ def govern_stats():
     return len(ids), st.count('blocked'), st.count('suspended'), rs.count('both_preserved'), bad
 
 
+def pinyin_stats():
+    """拼音：每句的音節數須等於漢字數（對齊失敗 0）；未收字只記錄、不擋。
+
+    回傳（句數, 對齊失敗, 未收字數）。
+    """
+    import re as _re
+    try:
+        d = json.load(open(os.path.join(ROOT, 'data', '拼音.json'), encoding='utf-8'))
+    except FileNotFoundError:
+        return 0, 0, 0
+    ju = {x['id']: x['text'] for x in json.load(open(os.path.join(ROOT, '底本', '靈樞經_句索引.json'),
+                                                     encoding='utf-8'))['句']}
+    bad = 0
+    for sid, py in d['句'].items():
+        t = ju.get(sid, '')
+        n = len(_re.findall(r'[\u3400-\u4dbf\u4e00-\u9fff]', t))
+        if len(py.split()) != n:
+            bad += 1
+    return len(d['句']), bad, len(d['統計'].get('未收字', {}))
+
+
 def metrics():
     its = items()
     mt, mb = module_text()
@@ -495,6 +516,9 @@ def metrics():
         '素問同文句': suwen_tongwen()[0],
         '素問同文篇對': suwen_tongwen()[1],
         '素問同文不符': suwen_tongwen()[2],
+        '拼音句': pinyin_stats()[0],
+        '拼音對齊失敗': pinyin_stats()[1],
+        '拼音未收字': pinyin_stats()[2],
         '治理未決': govern_stats()[0],
         '治理blocked': govern_stats()[1],
         '治理suspended': govern_stats()[2],
